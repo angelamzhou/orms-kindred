@@ -6,7 +6,7 @@ Usage:
 
 Reads papers.parquet, finds rows with a DOI but no abstract, asks the Semantic Scholar
 Graph API in batches of 500 DOIs (set S2_API_KEY in .env for a higher rate limit), and
-for anything still missing asks Crossref one DOI at a time. Results are appended to
+for anything still missing asks Crossref one DOI at a time (skipping Elsevier 10.1016/*, which has none). Results are appended to
 data/raw/abstracts_backfill.jsonl (resumable: DOIs already present are skipped) and
 picked up by scripts/normalize_works.py on its next run.
 """
@@ -95,6 +95,8 @@ def main() -> int:
     ap.add_argument("--papers", default=str(ROOT / "data" / "papers.parquet"))
     ap.add_argument("--limit", type=int, default=None, help="only try the first N missing DOIs")
     ap.add_argument("--no-crossref", action="store_true")
+    ap.add_argument("--crossref-skip-prefix", default="10.1016",
+                    help="comma-separated DOI prefixes to skip in the Crossref pass (Elsevier deposits no abstracts)")
     ap.add_argument("--s2-sleep", type=float, default=1.2, help="pause between S2 batch calls")
     ap.add_argument("--crossref-sleep", type=float, default=0.1)
     args = ap.parse_args()
@@ -144,7 +146,12 @@ def main() -> int:
             time.sleep(args.s2_sleep)
 
         if not args.no_crossref:
-            log.info("Crossref fallback for %d DOIs", len(still))
+            skip = tuple(x.strip() + "/" for x in args.crossref_skip_prefix.split(",") if x.strip())
+            skipped = [d for d in still if d.startswith(skip)]
+            still = [d for d in still if not d.startswith(skip)]
+            log.info("Crossref fallback for %d DOIs (%d skipped by prefix %s)", len(still), len(skipped), skip)
+            for d in skipped:
+                emit(d, None, None)  # record as tried so reruns do not retry them
             for j, d in enumerate(still, 1):
                 a = crossref_one(session, d)
                 if a:
