@@ -48,7 +48,7 @@ def _cap_words(text: str, n: int) -> str:
     return " ".join(words[:n])
 
 
-_NAME_TOKEN = re.compile(r"^[A-Z][a-zA-Z'’-]+\.?[\d*†‡§¶,]*$|^[A-Z]\.$|^(and|&)$")
+_NAME_TOKEN = re.compile(r"^[A-Z][a-zA-Z'’-]+\.?[\d*∗†‡§¶,]*$|^[A-Z]\.$|^(and|&)$")
 
 
 def _looks_like_authors(ln: str) -> bool:
@@ -56,8 +56,10 @@ def _looks_like_authors(ln: str) -> bool:
     toks = ln.replace(",", " ").split()
     if not 2 <= len(toks) <= 12:
         return False
-    if re.search(r"\d[\d*†‡§¶]*$", ln.split()[-1]) or re.search(r"[a-zA-Z]\d", ln):
+    if re.search(r"\d[\d*∗†‡§¶]*$", ln.split()[-1]) or re.search(r"[a-zA-Z]\d", ln):
         return True  # trailing affiliation superscript
+    if re.search(r"[*∗†‡§¶]$", toks[-1]) and len(toks) <= 8 and all(_NAME_TOKEN.match(t) for t in toks):
+        return True  # 'Laixi Shi∗' (arXiv-style footnote marker, U+2217 as well as ASCII *)
     lowered = [t for t in toks if t[0].islower() and t not in ("and", "&", "de", "van", "von", "der")]
     has_sep = "," in ln or any(t in ("and", "&") for t in toks) or any(re.match(r"^[A-Z]\.$", t) for t in toks)
     return has_sep and not lowered and all(_NAME_TOKEN.match(t) for t in toks) and len(toks) <= 8 and not ln.endswith(":")
@@ -92,7 +94,7 @@ def guess_title_abstract(text: str) -> tuple[str, str]:
         if len(" ".join(title_lines).split()) >= 25:
             break
     title = " ".join(title_lines).strip()
-    title = re.sub(r"[\*\d†‡§¶]+$", "", title).strip()
+    title = re.sub(r"[\*∗\d†‡§¶]+$", "", title).strip()
 
     # --- abstract ----------------------------------------------------------
     if abs_idx is not None:

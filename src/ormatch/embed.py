@@ -31,6 +31,16 @@ def _l2norm(x: np.ndarray) -> np.ndarray:
     return x / n
 
 
+def _from_pretrained(cls, name: str, **kw):
+    """Load from the local Hugging Face cache without touching the network; download only
+    if the model is not cached yet. Keeps `ormatch suggest` / `verify-offline` fully offline
+    after the first download."""
+    try:
+        return cls.from_pretrained(name, local_files_only=True, **kw)
+    except Exception:  # noqa: BLE001 - not cached (or partial cache): fetch it
+        return cls.from_pretrained(name, **kw)
+
+
 class Embedder:
     """Encode (title, abstract) pairs into dense vectors.
 
@@ -81,10 +91,13 @@ class Embedder:
         from adapters import AutoAdapterModel
         from transformers import AutoTokenizer
 
-        self._tokenizer = AutoTokenizer.from_pretrained("allenai/specter2_base")
+        self._tokenizer = _from_pretrained(AutoTokenizer, "allenai/specter2_base")
         try:
-            model = AutoAdapterModel.from_pretrained("allenai/specter2_base")
-            model.load_adapter("allenai/specter2", source="hf", load_as="proximity", set_active=True)
+            model = _from_pretrained(AutoAdapterModel, "allenai/specter2_base")
+            try:  # cached adapter first, network only if missing
+                model.load_adapter("allenai/specter2", source="hf", load_as="proximity", set_active=True, local_files_only=True)
+            except Exception:  # noqa: BLE001
+                model.load_adapter("allenai/specter2", source="hf", load_as="proximity", set_active=True)
         except ValueError as e:
             # allenai/specter2_base and allenai/specter2 are only published as pickled
             # .bin files; transformers>=4.52 refuses to torch.load those on torch<2.6
@@ -102,8 +115,8 @@ class Embedder:
         import torch  # noqa: F401
         from transformers import AutoModel, AutoTokenizer
 
-        self._tokenizer = AutoTokenizer.from_pretrained("malteos/scincl")
-        model = AutoModel.from_pretrained("malteos/scincl")
+        self._tokenizer = _from_pretrained(AutoTokenizer, "malteos/scincl")
+        model = _from_pretrained(AutoModel, "malteos/scincl")
         model.eval().to(self.device)
         self._model = model
 
