@@ -1,6 +1,6 @@
 .env
 data/raw/
-data/index/
+data/index*/
 data/html/
 *.parquet
 __pycache__/
