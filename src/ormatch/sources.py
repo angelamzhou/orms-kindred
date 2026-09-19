@@ -18,6 +18,19 @@ SOURCES: dict[str, str] = {
     "S142306484": "Journal of Operations Management",
     "S177792750": "Decision Sciences",
     "S27769002": "Operations Research Letters",
+    # applied / computational OR venues (added 2026-09-18; they are core OR, not an add-on)
+    "S169988927": "Journal of the Operational Research Society",
+    "S173256270": "Computers & Operations Research",
+    "S57667410": "Annals of Operations Research",
+    "S4210190151": "Omega",
+    "S184816971": "International Journal of Production Economics",
+    "S65690446": "International Journal of Production Research",
+    "S196821226": "Computers & Industrial Engineering",
+    "S96305778": "Transportation Research Part B: Methodological",
+    "S173966628": "Transportation Research Part E: Logistics and Transportation Review",
+    "S52430896": "Journal of Optimization Theory and Applications",
+    "S897311980": "SIAM Journal on Control and Optimization",
+    "S191798613": "Networks",
 }
 
 # Short aliases for CLI convenience.
@@ -39,30 +52,28 @@ ALIASES: dict[str, str] = {
     "JOM": "S142306484",
     "DS": "S177792750",
     "ORL": "S27769002",
+    "NETWORKS": "S191798613",
+    "SICON": "S897311980",
+    "JOTA": "S52430896",
+    "TRE": "S173966628",
+    "TRB": "S96305778",
+    "CAIE": "S196821226",
+    "IJPR": "S65690446",
+    "IJPE": "S184816971",
+    "OMEGA": "S4210190151",
+    "AOR": "S57667410",
+    "COR": "S173256270",
+    "JORS": "S169988927",
 }
 
 
 # Add-on collections. Each becomes its own self-contained index directory that users can
 # download in addition to the core OR/MS index (see docs and `ormatch suggest --index-dir`).
 # Source IDs are OpenAlex sources. Chosen from what indexed OR papers cite most outside the
-# core venues (300-paper sample, 2026-09): econ/finance ~6% of references, applied OR ~6%,
-# statistics/ML ~2%.
+# core venues (300-paper sample, 2026-09): econ/finance ~6% of references, statistics/ML ~2%.
+# Applied-OR venues (another ~6%) were folded into the core list above.
 COLLECTIONS: dict[str, dict[str, str]] = {
     "core": SOURCES,
-    "applied-or": {
-        "S169988927": "Journal of the Operational Research Society",
-        "S173256270": "Computers & Operations Research",
-        "S57667410": "Annals of Operations Research",
-        "S4210190151": "Omega",
-        "S184816971": "International Journal of Production Economics",
-        "S65690446": "International Journal of Production Research",
-        "S196821226": "Computers & Industrial Engineering",
-        "S96305778": "Transportation Research Part B: Methodological",
-        "S173966628": "Transportation Research Part E: Logistics and Transportation Review",
-        "S52430896": "Journal of Optimization Theory and Applications",
-        "S897311980": "SIAM Journal on Control and Optimization",
-        "S191798613": "Networks",
-    },
     "econ-finance": {
         "S5353659": "The Journal of Finance",
         "S149240962": "Journal of Financial Economics",

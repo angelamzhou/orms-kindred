@@ -68,6 +68,9 @@ with st.sidebar:
                               help="Needs data/editors.csv (author or name, journal, role).")
     seniority_weight = st.slider("Penalty for seniority (log works count above median)", 0.0, 0.1, 0.0, 0.005,
                                  help="Needs data/authors.parquet from scripts/fetch_author_stats.py.")
+    early_career_weight = st.slider("Boost early-career researchers", 0.0, 0.1, 0.0, 0.005,
+                                    help="Bonus for people with few OpenAlex works (PhD students, postdocs); full at 1 work, zero at the cutoff below.")
+    early_career_max_works = st.slider("Early-career cutoff (OpenAlex works)", 5, 40, 15)
     min_or_links = st.slider("Add-on authors: minimum links to OR literature", 0, 10, 1,
                              help="Core-venue papers plus citations to/from core papers. Only applies when add-on collections are searched.")
 
@@ -97,6 +100,7 @@ if uploaded is not None:
             coi_mode="exclude" if coi_mode == "exclude" else "flag",
             editor_weight=editor_weight, seniority_weight=seniority_weight,
             min_or_links=min_or_links, volume_correction=volume_correction,
+            early_career_weight=early_career_weight, early_career_max_works=early_career_max_works,
         )
     except Exception as e:  # show, do not crash
         st.error(f"Failed: {e!r}")

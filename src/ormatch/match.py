@@ -263,6 +263,8 @@ class ReviewerMatcher:
         seniority_weight: float = 0.0,
         min_or_links: int = 0,
         volume_correction: float = 0.0,
+        early_career_weight: float = 0.0,
+        early_career_max_works: int = 15,
     ) -> List[ReviewerCandidate]:
         """Rank authors for one query vector.
 
@@ -340,6 +342,11 @@ class ReviewerMatcher:
             sen = self.author_stats.get(au)
             if sen is not None and seniority_weight and sen_med is not None:
                 score -= seniority_weight * max(0.0, float(np.log1p(sen)) - sen_med)
+            if sen is not None and early_career_weight:
+                # bonus that fades linearly in log(works): full at 1 work, zero at early_career_max_works
+                frac = 1.0 - float(np.log1p(sen)) / float(np.log1p(early_career_max_works))
+                if frac > 0:
+                    score += early_career_weight * frac
             ev = [(self.index.paper_ids[r[i]], float(sims[r[i]])) for i in order[:n_evidence]]
             out.append(
                 ReviewerCandidate(

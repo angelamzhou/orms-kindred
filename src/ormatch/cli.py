@@ -158,7 +158,8 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
                   manuscript_authors: Optional[list[str]] = None, coi_years: Optional[float] = 5.0,
                   coi_same_institution: bool = True, coi_mode: str = "flag",
                   editor_weight: float = 0.0, seniority_weight: float = 0.0,
-                  min_or_links: Optional[int] = None, volume_correction: float = 0.0) -> dict:
+                  min_or_links: Optional[int] = None, volume_correction: float = 0.0,
+                  early_career_weight: float = 0.0, early_career_max_works: int = 15) -> dict:
     """Cheap half: aggregate similarities into reviewer scores with the given weights.
 
     lam          0 = score an author by their single most similar paper; 1 = by the mean of their
@@ -200,6 +201,7 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
         cited_papers=prep["cited_ids"], cite_weight=cite_weight,
         exclude_ids=hard_exclude, editor_weight=editor_weight, seniority_weight=seniority_weight,
         min_or_links=min_or_links, volume_correction=volume_correction,
+        early_career_weight=early_career_weight, early_career_max_works=early_career_max_works,
     )
     titles = prep["titles"]
     reviewers = []
@@ -227,7 +229,8 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
             "params": {"n": n, "lam": lam, "k": k, "half_life": half_life, "cite_weight": cite_weight,
                        "min_papers": min_papers, "coi_years": coi_years, "coi_mode": coi_mode,
                        "editor_weight": editor_weight, "seniority_weight": seniority_weight,
-                       "min_or_links": min_or_links, "volume_correction": volume_correction},
+                       "min_or_links": min_or_links, "volume_correction": volume_correction,
+                       "early_career_weight": early_career_weight, "early_career_max_works": early_career_max_works},
             "reviewers": reviewers}
 
 
@@ -287,6 +290,8 @@ def suggest(
     seniority_weight: float = typer.Option(0.0, "--seniority-weight", help="Penalty per log-unit of works_count above median (needs data/authors.parquet)"),
     min_or_links: Optional[int] = typer.Option(None, "--min-or-links", help="With add-on collections: required links to core OR literature (default 1)"),
     volume_correction: float = typer.Option(0.0, "--volume-correction", min=0.0, max=1.0, help="0..1: remove the chance advantage of prolific authors (surfaces close fits with few papers)"),
+    early_career_weight: float = typer.Option(0.0, "--early-career-weight", help="Bonus for authors with few OpenAlex works (PhD students, postdocs); fades to 0 at --early-career-max-works"),
+    early_career_max_works: int = typer.Option(15, "--early-career-max-works"),
 ):
     """Suggest reviewers for one PDF. Runs entirely offline against the local index."""
     dirs = discover_index_dirs(index_dir[0]) if all_collections else list(index_dir)
@@ -294,7 +299,8 @@ def suggest(
                           cite_weight=cite_weight, lam=lam, k=k, half_life=half_life,
                           manuscript_authors=list(author), coi_years=coi_years, coi_mode=coi,
                           editor_weight=editor_weight, seniority_weight=seniority_weight, min_or_links=min_or_links,
-                          volume_correction=volume_correction)
+                          volume_correction=volume_correction, early_career_weight=early_career_weight,
+                          early_career_max_works=early_career_max_works)
     _print_result(res, json_out)
 
 
