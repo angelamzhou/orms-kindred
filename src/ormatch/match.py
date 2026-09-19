@@ -45,9 +45,12 @@ class ReviewerMatcher:
         institution_id, institution_name (position optional).
     papers : optional DataFrame with openalex_work_id, year (for recency weights).
     lam, k : aggregation parameters.
-    recency_half_life : years; None disables recency weighting. Weight =
-        0.5 ** ((ref_year - year) / half_life) multiplies the similarity, so an
-        8-year-old paper counts 50%.
+    recency_half_life : years; None disables recency weighting. Weight
+        w = 0.5 ** ((ref_year - year) / half_life) shrinks a paper's similarity toward
+        the query's mean similarity over the whole index: sim' = mean + w * (sim - mean).
+        An 8-year-old paper therefore keeps 50% of its *advantage over an average paper*.
+        (Multiplying the raw cosine instead is useless with dense encoders, whose cosines
+        all sit in roughly [0.7, 1]: the weight then outweighs topic entirely.)
     min_papers : drop authors with fewer indexed papers.
     """
 
@@ -127,7 +130,11 @@ class ReviewerMatcher:
                 pos = self.index.position(pid)
                 if pos is not None:
                     sims[pos] = np.nan
-        wsims = sims * self.row_weight
+        if self.recency_half_life:
+            base = float(np.nanmean(sims))
+            wsims = base + (sims - base) * self.row_weight
+        else:
+            wsims = sims
 
         ms_authors = {str(x) for x in (manuscript_author_ids or [])}
         bad_inst = {str(x) for x in (excluded_institution_ids or [])}
