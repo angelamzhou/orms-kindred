@@ -391,15 +391,20 @@ def fetch_index(
 
 
 @app.command()
-def ui(index_dir: Path = typer.Option(DEFAULT_INDEX, "--index-dir"), port: int = typer.Option(8501, "--port")):
+def ui(index_dir: Path = typer.Option(DEFAULT_INDEX, "--index-dir"), port: int = typer.Option(8501, "--port"),
+       watch: bool = typer.Option(True, "--watch/--no-watch", help="Rerun the app automatically when ormatch source files change")):
     """Launch the Streamlit drag-and-drop UI (requires `pip install ormatch[ui]`)."""
     import os
     import subprocess
 
     app_path = Path(__file__).with_name("ui_app.py")
     env = {**os.environ, "ORMATCH_INDEX_DIR": str(index_dir)}
-    subprocess.run([sys.executable, "-m", "streamlit", "run", str(app_path), "--server.port", str(port),
-                    "--browser.gatherUsageStats", "false"], env=env, check=False)
+    cmd = [sys.executable, "-m", "streamlit", "run", str(app_path), "--server.port", str(port),
+           "--browser.gatherUsageStats", "false",
+           "--server.runOnSave", "true" if watch else "false",
+           # watch the package directory itself (editable install), not just the entry script
+           "--server.folderWatchList", str(app_path.parent)]
+    subprocess.run(cmd, env=env, check=False)
 
 
 if __name__ == "__main__":
