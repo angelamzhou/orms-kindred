@@ -1,0 +1,19 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\title{Robust Vehicle Routing under Demand Uncertainty:\\ A Column-and-Constraint Generation Approach}
+\author{Jane Q. Researcher$^{1}$ \and Wei Zhang$^{2}$\\
+$^{1}$School of Operations Research and Information Engineering, Cornell University\\
+$^{2}$Department of Industrial Engineering, Tsinghua University}
+\date{June 2020}
+\begin{document}
+\maketitle
+\begin{abstract}
+We study the capacitated vehicle routing problem with uncertain customer demands modeled through a budgeted uncertainty set. We propose a two-stage robust optimization formulation in which routes are fixed in the first stage and recourse actions (returns to the depot) are decided after demands are revealed. To solve the model exactly we develop a column-and-constraint generation algorithm that alternates between a master problem over a restricted set of routes and a separation problem identifying worst-case demand scenarios. We prove that the separation problem admits a compact mixed-integer reformulation and derive valid inequalities that strengthen the master problem. Computational experiments on benchmark instances with up to 100 customers show that the method outperforms a budgeted-uncertainty branch-and-cut baseline by an order of magnitude in running time while producing solutions whose worst-case cost is within 2\% of the deterministic optimum.
+\end{abstract}
+\noindent\textbf{Keywords:} vehicle routing; robust optimization; column-and-constraint generation; mixed-integer programming
+\section{Introduction}
+The vehicle routing problem (VRP) is one of the most studied problems in combinatorial optimization. In practice, customer demands are rarely known when routes are planned, which motivates robust formulations. This paper contributes a scalable exact method for the two-stage robust VRP.
+\section{Problem Statement}
+Let $G=(V,E)$ be a complete graph with depot $0$ and customers $N=V\setminus\{0\}$ ...
+\end{document}

@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ormatch"
+version = "0.1.0"
+description = "Local, privacy-preserving reviewer matching for OR/MS/OM papers"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.10"
+dependencies = [
+  "numpy",
+  "pandas",
+  "pyarrow",
+  "requests",
+  "python-dotenv",
+  "pypdfium2",
+  "typer",
+  "rich",
+  "scikit-learn",
+  "beautifulsoup4",
+]
+
+[project.optional-dependencies]
+embed = ["torch", "transformers", "adapters"]
+ui = ["streamlit"]
+dev = ["pytest"]
+
+[project.scripts]
+ormatch = "ormatch.cli:app"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+ormatch = ["*.py"]

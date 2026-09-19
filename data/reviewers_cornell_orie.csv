@@ -1,0 +1,4 @@
+dept_id,name,title,profile_url,openalex_author_id,openalex_display_name,matched_institution,works_count,cited_by_count,confidence,note
+cornell_orie,Victoria Averbukh,Director; Cornell Financial Engineering Manhattan Professor of Practice,https://www.duffield.cornell.edu/people/victoria-averbukh/,,,,,,0,error: ProxyError
+cornell_orie,Sid Banerjee,Associate Professor,https://www.duffield.cornell.edu/people/sid-banerjee/,,,,,,0,error: ProxyError
+cornell_orie,Kathryn Caggiano,Professor of Practice Emerita,https://www.duffield.cornell.edu/people/kathryn-elizabeth-caggiano/,,,,,,0,error: ProxyError

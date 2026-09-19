@@ -1,0 +1,8 @@
+{
+ "backend": "tfidf",
+ "dim": 199,
+ "n": 200,
+ "encode_seconds": 0.3,
+ "seconds_per_100": 0.15,
+ "source": "/home/claude/ormatch/tests/fixtures/papers.parquet"
+}
