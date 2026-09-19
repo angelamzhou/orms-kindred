@@ -60,6 +60,11 @@ Scripts live in `scripts/` and use the modules in `src/ormatch/`:
 4. `match.py` aggregates paper-level similarities into author scores (a diminishing-returns sum,
    parameter `lam`) and attaches the top-`k` evidence papers per author; `eval.py` measures
    recall against held-out citation/authorship signals.
+   `suggest` also parses the manuscript's bibliography locally (`pdf.extract_references`),
+   matches entries to indexed papers by DOI or title, and adds `--cite-weight * (1 - 0.5**n)`
+   to authors with `n` cited papers. Leave-one-out on the 2014+ index (n=200, SPECTER2), using
+   each held-out paper's OpenAlex references as the bibliography: MRR 0.20 -> 0.32,
+   recall@10 0.26 -> 0.32, recall@20 0.30 -> 0.40 at the default weight 0.1.
 5. `tar czf ormatch-index-vN.tar.gz -C data index && sha256sum ... > ormatch-index-vN.tar.gz.sha256`
    publishes a new index version.
 
