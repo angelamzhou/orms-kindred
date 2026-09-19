@@ -9,3 +9,4 @@ __pycache__/
 tests/fixtures/_tmp_index/
 .venv/
 data/collections/
+data/editorial_snapshots/
