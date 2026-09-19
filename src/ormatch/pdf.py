@@ -121,3 +121,113 @@ def pdf_to_query(path: str | Path) -> dict:
     text = extract_text(path)
     title, abstract = guess_title_abstract(text)
     return {"title": title, "abstract": abstract, "text": f"{title}. {abstract}".strip()}
+
+
+# --------------------------------------------------------------------------- references
+_DOI_RE = re.compile(r"10\.\d{4,9}/[^\s\"'<>)\]]+", re.IGNORECASE)
+_REFS_HEAD_RE = re.compile(r"^\s*(references|bibliography|literature cited)\s*$", re.IGNORECASE)
+_YEAR_RE = re.compile(r"\(?\b(19|20)\d{2}[a-z]?\b\)?")
+_ENTRY_START_RE = re.compile(r"^\s*(\[\d+\]|\d{1,3}\.\s|[A-Z][A-Za-z'’\-]+,\s)")
+
+
+def normalize_title(t: str) -> str:
+    """Lower-case alphanumerics only; used to match bibliography titles to the index."""
+    return re.sub(r"[^a-z0-9]+", "", (t or "").lower())
+
+
+def extract_references(path: str | Path, max_pages: int = 60) -> list[dict]:
+    """Parse the bibliography of a PDF into entries with a DOI and/or a title guess.
+
+    Fully local: text from pypdfium2, the 'References' heading located from the end of the
+    document, entries split on numbering / 'Surname, I.' starts or blank lines, DOIs pulled by
+    regex, and for the rest a title guess = the sentence following the year.
+    Returns [{'raw','doi','title','year'}]; runs in well under a second for a normal paper.
+    """
+    import pypdfium2 as pdfium
+
+    pdf = pdfium.PdfDocument(str(path))
+    try:
+        n = len(pdf)
+        pages = []
+        for i in range(max(0, n - max_pages), n):
+            page = pdf[i]
+            tp = page.get_textpage()
+            pages.append(tp.get_text_bounded() or "")
+            tp.close()
+            page.close()
+    finally:
+        pdf.close()
+    text = _clean("\n".join(pages))
+    lines = text.split("\n")
+    start = None
+    for i in range(len(lines) - 1, -1, -1):  # last 'References' heading wins
+        if _REFS_HEAD_RE.match(lines[i]):
+            start = i + 1
+            break
+    if start is None:
+        return []
+    body = lines[start:]
+    # Stop at appendix-like headings that follow the bibliography.
+    for j, ln in enumerate(body):
+        if re.match(r"^\s*(appendix|supplementary|online appendix|e-companion)\b", ln, re.I) and j > 5:
+            body = body[:j]
+            break
+    # pypdfium2 emits a blank line after every physical line, so blank lines carry no
+    # information; an entry starts where a line looks like '[n]', 'n.' or 'Surname, I.' and
+    # the text accumulated so far already ends a sentence (period, closing paren, page range).
+    entries, cur = [], []
+    for ln in body:
+        ln = ln.strip()
+        if not ln:
+            continue
+        if cur and _ENTRY_START_RE.match(ln) and re.search(r"[.)\]]$|\d$", cur[-1]):
+            entries.append(" ".join(cur)); cur = []
+        cur.append(ln)
+    if cur:
+        entries.append(" ".join(cur))
+    out = []
+    for raw in entries:
+        raw = re.sub(r"\s+", " ", raw).strip()
+        if len(raw) < 20:
+            continue
+        doi = _DOI_RE.search(raw)
+        doi = doi.group(0).rstrip(".,;").lower() if doi else None
+        ym = _YEAR_RE.search(raw)
+        year = int(ym.group(0).strip("()")[:4]) if ym else None
+        title = None
+        if ym:
+            after = raw[ym.end():].lstrip(" .):")
+            # title = up to the first period followed by a space+capital, or a quote pair
+            q = re.match(r"[“\"](.+?)[”\"]", after)
+            if q:
+                title = q.group(1)
+            else:
+                m = re.match(r"(.+?[a-z0-9\)\?])\.\s+(?=[A-Z])", after)
+                title = m.group(1) if m else after[:200]
+            title = title.strip(" .,")
+        out.append({"raw": raw, "doi": doi, "title": title, "year": year})
+    return out
+
+
+def match_references(refs: list[dict], papers, min_title_chars: int = 25) -> list[str]:
+    """Map parsed bibliography entries to index paper ids by DOI, then by normalized title
+    (exact, then 'index title is a prefix of the entry's title guess', which absorbs trailing
+    venue text). ``papers`` is the papers DataFrame (openalex_work_id, doi, title)."""
+    by_doi = {d.lower(): w for d, w in zip(papers["doi"], papers["openalex_work_id"]) if isinstance(d, str)}
+    norm = [(normalize_title(t), w) for t, w in zip(papers["title"], papers["openalex_work_id"]) if isinstance(t, str)]
+    exact = {n: w for n, w in norm if len(n) >= min_title_chars}
+    long_titles = [(n, w) for n, w in norm if len(n) >= min_title_chars]
+    hits: list[str] = []
+    for r in refs:
+        w = None
+        if r.get("doi"):
+            w = by_doi.get(r["doi"].lower())
+        if w is None and r.get("title"):
+            n = normalize_title(r["title"])
+            if len(n) >= min_title_chars:
+                w = exact.get(n)
+                if w is None:
+                    w = next((wid for t, wid in long_titles if n.startswith(t)), None)
+        if w:
+            hits.append(w)
+    return sorted(set(hits))

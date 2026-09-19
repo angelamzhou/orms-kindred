@@ -31,14 +31,22 @@ def leave_one_out(
     n: int = 50,
     seed: int = 0,
     top_n: int = 20,
+    references: Optional[pd.DataFrame] = None,
+    cite_weight: float = 0.0,
     **matcher_kwargs,
 ) -> Dict:
+    """references: DataFrame(work_id, referenced_work_id) from normalize_works.py; the held-out
+    paper's OpenAlex reference list stands in for a parsed bibliography."""
     matcher = ReviewerMatcher(index, authorships, papers, **matcher_kwargs)
+    refs: Dict[str, list] = {}
+    if references is not None and cite_weight:
+        r = references[references["referenced_work_id"].isin(set(index.paper_ids))]
+        refs = r.groupby("work_id")["referenced_work_id"].apply(list).to_dict()
     rng = np.random.default_rng(seed)
     eligible = [p for p in index.paper_ids if p in matcher.paper_authors]
     sample = rng.choice(eligible, size=min(n, len(eligible)), replace=False)
 
-    rr, r10, r20, used, unreachable = [], [], [], 0, 0
+    rr, r10, r20, used, unreachable, n_with_refs = [], [], [], 0, 0, 0
     for pid in sample:
         truth = set(matcher.paper_authors[pid])
         reachable = {a for a in truth if len(matcher.author_rows[a]) > 1}
@@ -47,7 +55,10 @@ def leave_one_out(
             continue
         used += 1
         q = index.embeddings[index.position(pid)]
-        ranked = matcher.rank(q, top_n=top_n, exclude_papers=[pid], exclude_coauthors=False)
+        cited = [c for c in refs.get(pid, []) if c != pid]
+        ranked = matcher.rank(q, top_n=top_n, exclude_papers=[pid], exclude_coauthors=False,
+                              cited_papers=cited, cite_weight=cite_weight)
+        n_with_refs += bool(cited)
         ids = [c.author_id for c in ranked]
         first = next((i for i, a in enumerate(ids) if a in reachable), None)
         rr.append(1.0 / (first + 1) if first is not None else 0.0)
@@ -63,7 +74,9 @@ def leave_one_out(
         "MRR": float(np.mean(rr)) if rr else float("nan"),
         "recall@10": float(np.mean(r10)) if r10 else float("nan"),
         "recall@20": float(np.mean(r20)) if r20 else float("nan"),
-        "params": {"lam": matcher.lam, "k": matcher.k, "recency_half_life": matcher.recency_half_life},
+        "n_with_in_index_refs": n_with_refs,
+        "params": {"lam": matcher.lam, "k": matcher.k, "recency_half_life": matcher.recency_half_life,
+                   "cite_weight": cite_weight},
     }
 
 
@@ -77,13 +90,16 @@ def main(argv=None):
     ap.add_argument("--lam", type=float, default=0.3)
     ap.add_argument("-k", type=int, default=3)
     ap.add_argument("--half-life", type=float, default=None)
+    ap.add_argument("--references", default="data/references.parquet")
+    ap.add_argument("--cite-weight", type=float, default=0.0, help="citation boost weight (0 = off)")
     args = ap.parse_args(argv)
 
     index = PaperIndex.load(args.index)
     auth = pd.read_parquet(args.authorships)
     papers = pd.read_parquet(args.papers) if os.path.exists(args.papers) else None
+    refs = pd.read_parquet(args.references) if args.cite_weight and os.path.exists(args.references) else None
     res = leave_one_out(index, auth, papers, n=args.n, seed=args.seed, lam=args.lam, k=args.k,
-                        recency_half_life=args.half_life)
+                        recency_half_life=args.half_life, references=refs, cite_weight=args.cite_weight)
     print(json.dumps(res, indent=1))
 
 

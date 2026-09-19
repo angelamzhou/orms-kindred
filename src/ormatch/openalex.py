@@ -36,6 +36,7 @@ WORK_FIELDS = [
     "open_access",
     "best_oa_location",
     "referenced_works_count",
+    "referenced_works",
     "cited_by_count",
 ]
 

@@ -69,9 +69,10 @@ def _apply_abstract_backfill(papers_df: pd.DataFrame, path: Path) -> pd.DataFram
     return papers_df
 
 
-def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
+def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     papers: list[dict] = []
     auths: list[dict] = []
+    refs: list[tuple[str, str]] = []
     n_dropped_nonprimary = 0
     for w in iter_works(raw_dir):
         wid = _short_id(w.get("id"))
@@ -107,6 +108,10 @@ def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
                 "cited_by_count": w.get("cited_by_count"),
             }
         )
+        for r in w.get("referenced_works") or []:
+            rid = _short_id(r)
+            if rid:
+                refs.append((wid, rid))
         for pos, a in enumerate(w.get("authorships") or []):
             author = a.get("author") or {}
             insts = a.get("institutions") or []
@@ -134,7 +139,12 @@ def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     auth_df = pd.DataFrame(auths, columns=["work_id", "author_id", "author_name", "position", "author_position", "institution_id", "institution_name"])
     if len(auth_df):
         auth_df = auth_df[auth_df["work_id"].isin(papers_df["openalex_work_id"])].drop_duplicates(["work_id", "position"], keep="last")
-    return papers_df, auth_df
+    refs_df = pd.DataFrame(refs, columns=["work_id", "referenced_work_id"])
+    if len(refs_df) and len(papers_df):
+        # keep only references that point inside the corpus (that is all the matcher can use)
+        ids = set(papers_df["openalex_work_id"])
+        refs_df = refs_df[refs_df["work_id"].isin(ids) & refs_df["referenced_work_id"].isin(ids)].drop_duplicates()
+    return papers_df, auth_df, refs_df
 
 
 def main() -> int:
@@ -146,8 +156,8 @@ def main() -> int:
 
     raw_dir, out_dir = Path(args.raw_dir), Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
-    papers, auths = normalize(raw_dir)
-    for df, name in ((papers, "papers.parquet"), (auths, "authorships.parquet")):
+    papers, auths, refs = normalize(raw_dir)
+    for df, name in ((papers, "papers.parquet"), (auths, "authorships.parquet"), (refs, "references.parquet")):
         tmp = out_dir / (name + ".tmp")
         df.to_parquet(tmp, index=False)
         os.replace(tmp, out_dir / name)  # atomic: readers never see a half-written file
@@ -157,6 +167,7 @@ def main() -> int:
     has_pdf = papers["oa_pdf_url"].fillna("").ne("").sum() if n else 0
     log.info("papers: %d rows -> %s", n, out_dir / "papers.parquet")
     log.info("authorships: %d rows -> %s", len(auths), out_dir / "authorships.parquet")
+    log.info("in-corpus references: %d rows (%d citing papers) -> %s", len(refs), refs["work_id"].nunique() if len(refs) else 0, out_dir / "references.parquet")
     if n:
         log.info("abstract coverage: %d/%d = %.1f%%", has_abs, n, 100 * has_abs / n)
         log.info("OA pdf/url coverage: %d/%d = %.1f%%", has_pdf, n, 100 * has_pdf / n)

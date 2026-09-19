@@ -34,7 +34,7 @@ def _load_tables(index_dir: Path):
 
 def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | None = None,
                     exclude_authors: set[str] | None = None, index_dir: Path = DEFAULT_INDEX,
-                    backend: Optional[str] = None, k_hits: int = 200) -> dict:
+                    backend: Optional[str] = None, k_hits: int = 200, cite_weight: float = 0.1) -> dict:
     """Full pipeline: PDF -> title/abstract -> embed -> search -> rank reviewers.
 
     ``backend`` defaults to the backend recorded in the index's meta.json so the query is
@@ -43,7 +43,7 @@ def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | Non
     from ormatch.embed import Embedder
     from ormatch.index import PaperIndex
     from ormatch.match import ReviewerMatcher
-    from ormatch.pdf import pdf_to_query
+    from ormatch.pdf import extract_references, match_references, pdf_to_query
 
     q = pdf_to_query(pdf)
     idx = PaperIndex.load(str(index_dir))
@@ -58,11 +58,14 @@ def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | Non
         embedder.load(str(tfidf_path))
     qvec = embedder.encode([q["title"]], [q["abstract"]])[0]
     authorships, papers = _load_tables(index_dir)
+    refs = extract_references(pdf) if cite_weight else []
+    cited_ids = match_references(refs, papers) if refs else []
     matcher = ReviewerMatcher(idx, authorships, papers)
     cands = matcher.rank(
         qvec, top_n=n,
         manuscript_author_ids=exclude_authors or None,
         excluded_institution_ids=exclude_institutions or None,
+        cited_papers=cited_ids, cite_weight=cite_weight,
     )
     titles = {}
     if "openalex_work_id" in papers.columns and "title" in papers.columns:
@@ -75,9 +78,11 @@ def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | Non
             "institution": "; ".join(c.institutions) if c.institutions else None,
             "score": float(c.score),
             "n_papers": c.n_papers,
+            "n_cited": c.n_cited,
             "evidence": [(pid, titles.get(pid, pid), float(s)) for pid, s in c.evidence],
         })
-    return {"pdf": str(pdf), "title": q["title"], "abstract": q["abstract"], "reviewers": reviewers}
+    return {"pdf": str(pdf), "title": q["title"], "abstract": q["abstract"],
+            "n_references": len(refs), "n_references_in_index": len(cited_ids), "reviewers": reviewers}
 
 
 def _print_result(res: dict, as_json: bool) -> None:
@@ -85,14 +90,16 @@ def _print_result(res: dict, as_json: bool) -> None:
         print(json.dumps(res, indent=2, default=str))
         return
     console.print(f"[bold]Title:[/bold] {res['title']}")
-    console.print(f"[bold]Abstract:[/bold] {res['abstract'][:300]}{'...' if len(res['abstract']) > 300 else ''}\n")
+    console.print(f"[bold]Abstract:[/bold] {res['abstract'][:300]}{'...' if len(res['abstract']) > 300 else ''}")
+    console.print(f"[bold]References:[/bold] {res.get('n_references', 0)} parsed, {res.get('n_references_in_index', 0)} matched to indexed papers\n")
     t = Table(title=f"Suggested reviewers ({len(res['reviewers'])})")
-    for col in ("#", "Reviewer", "Institution", "Score", "Evidence (top paper)"):
+    for col in ("#", "Reviewer", "Institution", "Score", "Cited", "Evidence (top paper)"):
         t.add_column(col)
     for i, r in enumerate(res["reviewers"], 1):
         ev = r.get("evidence") or []
         top = f"{ev[0][1][:70]} ({ev[0][2]:.2f})" if ev else ""
-        t.add_row(str(i), str(r.get("author_name")), str(r.get("institution") or ""), f"{r['score']:.3f}", top)
+        t.add_row(str(i), str(r.get("author_name")), str(r.get("institution") or ""), f"{r['score']:.3f}",
+                  str(r.get("n_cited", 0) or ""), top)
     Console().print(t)
 
 
@@ -106,9 +113,10 @@ def suggest(
     json_out: bool = typer.Option(False, "--json", help="Emit JSON on stdout"),
     index_dir: Path = typer.Option(DEFAULT_INDEX, "--index-dir"),
     backend: Optional[str] = typer.Option(None, "--backend", help="specter2 | scincl | tfidf (default: backend recorded in the index)"),
+    cite_weight: float = typer.Option(0.1, "--cite-weight", help="Boost authors of papers the manuscript cites (0 disables bibliography parsing)"),
 ):
     """Suggest reviewers for one PDF. Runs entirely offline against the local index."""
-    res = suggest_for_pdf(pdf, n, set(exclude_institution), set(exclude_author), index_dir, backend)
+    res = suggest_for_pdf(pdf, n, set(exclude_institution), set(exclude_author), index_dir, backend, cite_weight=cite_weight)
     _print_result(res, json_out)
 
 

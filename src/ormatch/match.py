@@ -19,6 +19,7 @@ class ReviewerCandidate:
     n_papers: int
     evidence: List[Tuple[str, float]] = field(default_factory=list)  # top-3 (paper_id, sim)
     institutions: List[str] = field(default_factory=list)
+    n_cited: int = 0  # of this author's indexed papers, how many the manuscript cites
 
     def to_dict(self) -> Dict:
         return {
@@ -28,6 +29,7 @@ class ReviewerCandidate:
             "n_papers": self.n_papers,
             "evidence": [{"paper_id": p, "sim": round(s, 4)} for p, s in self.evidence],
             "institutions": self.institutions,
+            "n_cited": self.n_cited,
         }
 
 
@@ -123,7 +125,16 @@ class ReviewerMatcher:
         excluded_institution_ids: Optional[Iterable[str]] = None,
         exclude_coauthors: bool = True,
         n_evidence: int = 3,
+        cited_papers: Optional[Iterable[str]] = None,
+        cite_weight: float = 0.0,
     ) -> List[ReviewerCandidate]:
+        """Rank authors for one query vector.
+
+        cited_papers : index paper ids that the manuscript cites (from its bibliography).
+            Each author gets + cite_weight * (1 - 0.5 ** n_cited) added to the similarity
+            score, i.e. half the weight for one cited paper, three quarters for two, ...
+            This is how editors find reviewers by hand; it needs no full text on the index side.
+        """
         sims = self.index.similarities(query_vec).astype(np.float32)
         if exclude_papers:
             for pid in exclude_papers:
@@ -143,6 +154,12 @@ class ReviewerMatcher:
             for au in ms_authors:
                 conflicted |= self.coauthors.get(au, set())
 
+        cited_count: Dict[str, int] = defaultdict(int)
+        if cited_papers and cite_weight:
+            for pid in set(map(str, cited_papers)):
+                for au in self.paper_authors.get(pid, ()):
+                    cited_count[au] += 1
+
         out: List[ReviewerCandidate] = []
         for au, rows in self.author_rows.items():
             if au in conflicted:
@@ -157,11 +174,14 @@ class ReviewerMatcher:
             order = np.argsort(-s)
             topk = s[order[: self.k]]
             score = (1 - self.lam) * float(s[order[0]]) + self.lam * float(topk.mean())
+            nc = cited_count.get(au, 0)
+            if nc:
+                score += cite_weight * (1 - 0.5 ** nc)
             ev = [(self.index.paper_ids[r[i]], float(sims[r[i]])) for i in order[:n_evidence]]
             out.append(
                 ReviewerCandidate(
                     au, self.author_name.get(au, au), score, int(len(rows)), ev,
-                    sorted(self.author_inst_names.get(au, set())),
+                    sorted(self.author_inst_names.get(au, set())), nc,
                 )
             )
         out.sort(key=lambda c: -c.score)
