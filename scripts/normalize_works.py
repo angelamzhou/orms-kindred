@@ -48,6 +48,26 @@ def iter_works(raw_dir: Path):
                     log.warning("skipping malformed line in %s", path.name)
 
 
+def _apply_abstract_backfill(papers_df: pd.DataFrame, path: Path) -> pd.DataFrame:
+    """Fill empty abstracts from scripts/backfill_abstracts.py output (Semantic Scholar / Crossref)."""
+    if not path.exists():
+        return papers_df
+    fill: dict[str, str] = {}
+    with path.open(encoding="utf-8") as fh:
+        for line in fh:
+            try:
+                rec = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if rec.get("abstract"):
+                fill[rec["openalex_work_id"]] = rec["abstract"]
+    empty = papers_df["abstract"].fillna("").str.strip().eq("")
+    hit = empty & papers_df["openalex_work_id"].isin(fill)
+    papers_df.loc[hit, "abstract"] = papers_df.loc[hit, "openalex_work_id"].map(fill)
+    log.info("abstract backfill: filled %d of %d empty abstracts from %s", int(hit.sum()), int(empty.sum()), path.name)
+    return papers_df
+
+
 def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     papers: list[dict] = []
     auths: list[dict] = []
@@ -93,6 +113,7 @@ def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     papers_df = pd.DataFrame(papers, columns=["openalex_work_id", "doi", "title", "abstract", "year", "source_id", "venue", "oa_pdf_url", "cited_by_count"])
     if len(papers_df):
         papers_df = papers_df.drop_duplicates("openalex_work_id", keep="last")
+        papers_df = _apply_abstract_backfill(papers_df, raw_dir / "abstracts_backfill.jsonl")
         papers_df["year"] = papers_df["year"].astype("Int64")
         papers_df["cited_by_count"] = papers_df["cited_by_count"].astype("Int64")
     auth_df = pd.DataFrame(auths, columns=["work_id", "author_id", "author_name", "position", "author_position", "institution_id", "institution_name"])
