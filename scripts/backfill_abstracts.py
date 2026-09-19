@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Backfill missing abstracts (mostly Elsevier venues) from Semantic Scholar, then Crossref.
+"""Backfill missing abstracts (mostly Elsevier venues) from Semantic Scholar, Elsevier, Crossref.
 
 Usage:
   python scripts/backfill_abstracts.py [--limit N] [--no-crossref] [--papers data/papers.parquet]
@@ -9,10 +9,16 @@ Graph API in batches of 500 DOIs (set S2_API_KEY in .env for a higher rate limit
 for anything still missing asks Crossref one DOI at a time (skipping Elsevier 10.1016/*, which has none). Results are appended to
 data/raw/abstracts_backfill.jsonl (resumable: DOIs already present are skipped) and
 picked up by scripts/normalize_works.py on its next run.
+
+Elsevier (EJOR, ORL) deposits abstracts neither in OpenAlex nor Crossref. If ELSEVIER_API_KEY
+is set in .env (free key from https://dev.elsevier.com, used from the USC network or with an
+ELSEVIER_INSTTOKEN), the remaining 10.1016/* DOIs are fetched from the ScienceDirect Article
+Retrieval API (view=META_ABS, ~10k requests/week quota).
 """
 from __future__ import annotations
 
 import argparse
+import collections
 import html
 import json
 import logging
@@ -35,6 +41,7 @@ except ImportError:
 log = logging.getLogger("backfill")
 S2_BATCH = "https://api.semanticscholar.org/graph/v1/paper/batch"
 CROSSREF = "https://api.crossref.org/works/"
+ELSEVIER = "https://api.elsevier.com/content/article/doi/"
 OUT = ROOT / "data" / "raw" / "abstracts_backfill.jsonl"
 TAG_RE = re.compile(r"<[^>]+>")
 
@@ -90,6 +97,18 @@ def crossref_one(session, doi: str) -> str | None:
     return _clean((r.json().get("message") or {}).get("abstract"))
 
 
+def elsevier_one(session, doi: str, key: str, insttoken: str | None) -> str | None:
+    headers = {"X-ELS-APIKey": key, "Accept": "application/json"}
+    if insttoken:
+        headers["X-ELS-Insttoken"] = insttoken
+    r = _get_with_retry(session, "GET", ELSEVIER + requests.utils.quote(doi, safe=""), tries=3,
+                        params={"view": "META_ABS"}, headers=headers)
+    if r is None:
+        return None
+    core = ((r.json().get("full-text-retrieval-response") or {}).get("coredata") or {})
+    return _clean(core.get("dc:description"))
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--papers", default=str(ROOT / "data" / "papers.parquet"))
@@ -104,17 +123,26 @@ def main() -> int:
 
     papers = pd.read_parquet(args.papers)
     missing = papers[papers["abstract"].fillna("").str.strip().eq("") & papers["doi"].notna()]
-    done: dict[str, str | None] = {}
+    found: dict[str, str] = {}
+    tried: dict[str, set] = collections.defaultdict(set)  # doi -> sources that were asked
     if OUT.exists():
         for line in OUT.open(encoding="utf-8"):
             rec = json.loads(line)
-            done[rec["doi"]] = rec.get("abstract")  # abstract None == Crossref tried and failed
-    todo = missing[~missing["doi"].isin(done)]
+            tried[rec["doi"]].add(rec.get("source") or "crossref")  # legacy null records = Crossref miss
+            if rec.get("abstract"):
+                found[rec["doi"]] = rec["abstract"]
+    missing = missing[~missing["doi"].isin(found)]
+    todo = missing[~missing["doi"].isin(tried)]  # never asked anywhere yet -> S2 first
     if args.limit:
         todo = todo.head(args.limit)
-    log.info("%d papers lack an abstract; %d have a DOI; %d already tried; %d to do",
-             papers["abstract"].fillna("").str.strip().eq("").sum(), len(missing), len(done), len(todo))
-    if todo.empty:
+    els_key, els_tok = os.environ.get("ELSEVIER_API_KEY"), os.environ.get("ELSEVIER_INSTTOKEN")
+    els_todo = [d for d in missing["doi"] if d.startswith("10.1016/") and "elsevier" not in tried[d]] if els_key else []
+    if args.limit:
+        els_todo = els_todo[: args.limit]
+    log.info("%d papers lack an abstract; %d have a DOI and no backfilled abstract; %d untried (S2 first); %d Elsevier DOIs for the Elsevier API (%s)",
+             papers["abstract"].fillna("").str.strip().eq("").sum(), len(missing), len(todo), len(els_todo),
+             "key set" if els_key else "no ELSEVIER_API_KEY")
+    if todo.empty and not els_todo:
         return 0
 
     session = requests.Session()
@@ -123,12 +151,12 @@ def main() -> int:
     if s2_key:
         session.headers["x-api-key"] = s2_key
 
-    id_by_doi = dict(zip(todo["doi"], todo["openalex_work_id"]))
-    found_s2 = found_cr = 0
+    id_by_doi = dict(zip(missing["doi"], missing["openalex_work_id"]))
+    found_s2 = found_cr = found_els = 0
     OUT.parent.mkdir(parents=True, exist_ok=True)
     with OUT.open("a", encoding="utf-8") as fh:
         def emit(doi, abstract, source):
-            fh.write(json.dumps({"openalex_work_id": id_by_doi[doi], "doi": doi, "abstract": abstract, "source": source}, ensure_ascii=False) + "\n")
+            fh.write(json.dumps({"openalex_work_id": id_by_doi[doi], "doi": doi, "abstract": abstract, "source": source if abstract else (source or None)}, ensure_ascii=False) + "\n")
             fh.flush()
 
         dois = todo["doi"].tolist()
@@ -163,7 +191,19 @@ def main() -> int:
         # With --no-crossref the S2 misses are deliberately not recorded, so a later run
         # with Crossref enabled will still try them.
 
-    log.info("done: S2 %d, Crossref %d, still missing %d of %d", found_s2, found_cr, len(todo) - found_s2 - found_cr, len(todo))
+        if els_todo:
+            log.info("Elsevier Article Retrieval (META_ABS) for %d DOIs", len(els_todo))
+            for j, d in enumerate(els_todo, 1):
+                a = elsevier_one(session, d, els_key, els_tok)
+                if a:
+                    found_els += 1
+                emit(d, a, "elsevier")
+                if j % 200 == 0:
+                    log.info("elsevier %d/%d: %d found", j, len(els_todo), found_els)
+                time.sleep(args.crossref_sleep)
+
+    log.info("done: S2 %d, Crossref %d, Elsevier %d; %d DOIs still lack an abstract",
+             found_s2, found_cr, found_els, len(missing) - found_s2 - found_cr - found_els)
     log.info("rerun scripts/normalize_works.py to merge %s into papers.parquet", OUT)
     return 0
 
