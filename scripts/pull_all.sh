@@ -19,6 +19,12 @@ for S in $SOURCES; do
   done
   [ "$ok" = 1 ] || FAILED="$FAILED $S"
 done
+# Works that list the journal only as a non-primary location (e.g. RePEc/repository record as
+# primary). Small (~400 total); normalize keeps only those with a DOI.
+for S in $SOURCES; do
+  echo "### $S non-primary $(date -u +%FT%TZ)"
+  python3 scripts/pull_journal_works.py --source "$S" --from-year "$FROM_YEAR" --sleep 0.15 --non-primary 2>&1 | grep -v -E 'INFO page [0-9]+:'
+done
 echo "### pull finished. failed:${FAILED:- none}"
 python3 scripts/normalize_works.py
 [ -z "$FAILED" ]

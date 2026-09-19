@@ -47,20 +47,30 @@ def main() -> int:
     ap.add_argument("--max-pages", type=int, default=None, help="stop after N pages (for testing)")
     ap.add_argument("--restart", action="store_true", help="ignore saved state and overwrite output")
     ap.add_argument("--sleep", type=float, default=0.1, help="pause between pages (s)")
+    ap.add_argument("--non-primary", action="store_true",
+                    help="pull works that list the source only as a non-primary location (locations.source.id "
+                         "but not primary_location.source.id); output/state get a _nonprimary suffix and the "
+                         "'locations' field is included so normalize can attribute the venue")
     args = ap.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     log = logging.getLogger("pull")
 
     source = resolve_source(args.source)
-    out = Path(args.out) if args.out else ROOT / "data" / "raw" / f"works_{source}.jsonl"
+    suffix = "_nonprimary" if args.non_primary else ""
+    out = Path(args.out) if args.out else ROOT / "data" / "raw" / f"works_{source}{suffix}.jsonl"
     out.parent.mkdir(parents=True, exist_ok=True)
-    state_path = out.parent / f"state_{source}.json"
+    state_path = out.parent / f"state_{source}{suffix}.json"
 
     year_filter = f"publication_year:>{args.from_year - 1}"
     if args.to_year:
         year_filter = f"publication_year:{args.from_year}-{args.to_year}"
-    flt = f"primary_location.source.id:{source},{year_filter}"
+    if args.non_primary:
+        flt = f"locations.source.id:{source},primary_location.source.id:!{source},{year_filter}"
+        fields = WORK_FIELDS + ["locations"]
+    else:
+        flt = f"primary_location.source.id:{source},{year_filter}"
+        fields = WORK_FIELDS
 
     state = {} if args.restart else load_state(state_path)
     if args.restart:
@@ -90,7 +100,7 @@ def main() -> int:
     pages_this_run = 0
     t0 = time.time()
     with out.open("a", encoding="utf-8") as fh:
-        for results, next_cursor in client.works(flt, select=WORK_FIELDS, cursor=cursor):
+        for results, next_cursor in client.works(flt, select=fields, cursor=cursor):
             for w in results:
                 fh.write(json.dumps(w, ensure_ascii=False) + "\n")
             fh.flush()

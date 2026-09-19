@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 
@@ -18,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from ormatch.openalex import reconstruct_abstract  # noqa: E402
-from ormatch.sources import source_name  # noqa: E402
+from ormatch.sources import SOURCES, source_name  # noqa: E402
 
 log = logging.getLogger("normalize")
 
@@ -71,6 +72,7 @@ def _apply_abstract_backfill(papers_df: pd.DataFrame, path: Path) -> pd.DataFram
 def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
     papers: list[dict] = []
     auths: list[dict] = []
+    n_dropped_nonprimary = 0
     for w in iter_works(raw_dir):
         wid = _short_id(w.get("id"))
         if not wid:
@@ -78,6 +80,17 @@ def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
         loc = w.get("primary_location") or {}
         src = loc.get("source") or {}
         sid = _short_id(src.get("id"))
+        if sid not in SOURCES:
+            # Pulled with --non-primary: the journal is one of the other locations. Attribute the
+            # venue to it, and require a DOI (most non-primary hits are RePEc/repository records
+            # without one, and those are not journal papers).
+            journal_loc = next((l for l in (w.get("locations") or [])
+                                if _short_id(((l or {}).get("source") or {}).get("id")) in SOURCES), None)
+            if journal_loc is None or not w.get("doi"):
+                n_dropped_nonprimary += 1
+                continue
+            src = journal_loc["source"]
+            sid = _short_id(src.get("id"))
         oa = w.get("open_access") or {}
         best = w.get("best_oa_location") or {}
         pdf_url = best.get("pdf_url") or oa.get("oa_url") or None
@@ -110,6 +123,8 @@ def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame]:
                 }
             )
 
+    if n_dropped_nonprimary:
+        log.info("dropped %d non-primary works without a DOI or a listed journal location", n_dropped_nonprimary)
     papers_df = pd.DataFrame(papers, columns=["openalex_work_id", "doi", "title", "abstract", "year", "source_id", "venue", "oa_pdf_url", "cited_by_count"])
     if len(papers_df):
         papers_df = papers_df.drop_duplicates("openalex_work_id", keep="last")
@@ -132,8 +147,10 @@ def main() -> int:
     raw_dir, out_dir = Path(args.raw_dir), Path(args.out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     papers, auths = normalize(raw_dir)
-    papers.to_parquet(out_dir / "papers.parquet", index=False)
-    auths.to_parquet(out_dir / "authorships.parquet", index=False)
+    for df, name in ((papers, "papers.parquet"), (auths, "authorships.parquet")):
+        tmp = out_dir / (name + ".tmp")
+        df.to_parquet(tmp, index=False)
+        os.replace(tmp, out_dir / name)  # atomic: readers never see a half-written file
 
     n = len(papers)
     has_abs = papers["abstract"].fillna("").str.strip().ne("").sum() if n else 0
