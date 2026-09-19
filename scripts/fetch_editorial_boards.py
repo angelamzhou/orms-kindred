@@ -58,7 +58,9 @@ ROLE_RE = re.compile(r"^(editor[- ]in[- ]chief|co[- ]?editors?(?:[- ]in[- ]chief
 NAME_RE = re.compile(r"^(?:[A-Z][\w'’\-\.]+\s+){1,3}[A-Z][\w'’\-]+(?:,\s*(?:Jr|Sr|II|III))?\.?$")
 STOP_RE = re.compile(r"university|institute|school|college|department|business|technology|@|http|www\.|\d{4}|\bof\b|"
                      r"editor|board|journal|informs|elsevier|wiley|springer|siam|copyright|sign in|subscribe|search|"
-                     r"menu|home|about|help|cookies|privacy|terms|access|login", re.I)
+                     r"menu|home|about|help|cookies|privacy|terms|access|login|issues?|current|available|"
+                     r"indigenous|american|eastern|asian|african|hispanic|latino|white|black|pacific|native|"
+                     r"prefer not|other|unknown|volume|article|special|call for|submit|author|reviewer", re.I)
 
 
 def get(session, url, tries=5, **kw):

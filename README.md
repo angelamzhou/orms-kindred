@@ -62,7 +62,7 @@ citation boost at 0.1, baseline MRR 0.317 / recall@10 0.324):
 |---|---|---|---|
 | `--volume-correction 0..1` | subtracts the expected best-of-n cosine of n random papers, so prolific authors stop winning on volume ("usual suspects") | nothing | 0.5 -> MRR 0.263; 1.0 -> 0.220 |
 | `--seniority-weight w` | penalty per log-unit of OpenAlex works_count above the median author | `data/authors.parquet` from `scripts/fetch_author_stats.py` | 0.01 -> MRR 0.292; 0.03 -> 0.242 |
-| `--editor-weight w` | penalty per current editorial role | `data/editors.csv` (author_id or name, journal, role); publisher board pages block scripts, so this file is maintained by hand or via a browser | not measured |
+| `--editor-weight w` | penalty per editorial role: 1 per current role, 0.5 per past role | `data/editors.csv` from `scripts/fetch_editorial_boards.py`, which reads yearly Internet Archive snapshots of 15 journals' board pages (publisher sites block scripts) | not measured |
 | `--min-or-links n` | with add-on collections, drop authors with fewer links to the core OR literature (core papers + citations to/from core); default 1 | references.parquet | n/a |
 
 The leave-one-out metric rewards finding a paper's *actual* authors, who are disproportionately prolific, so every knob that de-emphasises volume or seniority lowers it. That is expected: these are preferences about who should review, not accuracy tuning.
@@ -78,7 +78,7 @@ The manuscript authors themselves are always removed.
 
 ### Add-on collections
 
-The core index covers 17 OR/MS venues, but only ~29% of the references in those papers point back into them. Add-on
+The core index covers 29 OR/MS venues (73,643 papers from 2014; abstract coverage 62.5% after the Semantic Scholar backfill, the gap being Elsevier titles). Only ~29% of the references in the original 17-venue sample pointed back into those venues. Add-on
 collections (`src/ormatch/sources.py: COLLECTIONS`: `applied-or`, `econ-finance`, `stats-ml`, `algorithms`) are built as
 self-contained directories with `scripts/build_collection.sh NAME` -> `data/index_NAME/` (embeddings plus their own
 parquet tables) and can be distributed and downloaded separately. Query several at once with repeated `--index-dir`
@@ -114,7 +114,8 @@ Scripts live in `scripts/` and use the modules in `src/ormatch/`:
    matches entries to indexed papers by DOI or title, and adds `--cite-weight * (1 - 0.5**n)`
    to authors with `n` cited papers. Leave-one-out on the 2014+ index (n=200, SPECTER2), using
    each held-out paper's OpenAlex references as the bibliography: MRR 0.20 -> 0.32,
-   recall@10 0.26 -> 0.32, recall@20 0.30 -> 0.40 at the default weight 0.1.
+   recall@10 0.26 -> 0.32, recall@20 0.30 -> 0.40 at the default weight 0.1 (17-venue index;
+   on the 29-venue, 73,643-paper index: MRR 0.324, recall@10 0.327, recall@20 0.388).
 5. `tar czf ormatch-index-vN.tar.gz -C data index && sha256sum ... > ormatch-index-vN.tar.gz.sha256`
    publishes a new index version.
 

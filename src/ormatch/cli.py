@@ -84,10 +84,16 @@ def _load_side_tables(index_dir: Path) -> tuple[dict, dict, list]:
     editors: dict = {}
     p = root / "editors.csv"
     if p.exists():
+        import datetime
+        this_year = datetime.date.today().year
         for r in csv.DictReader(open(p, encoding="utf-8")):
             key = (r.get("author_id") or "").strip() or ("name:" + (r.get("name") or "").strip())
-            if key.strip(":"):
-                editors[key] = editors.get(key, 0) + 1
+            if not key.strip(":"):
+                continue
+            # a role seen in the last two snapshots counts fully; a past role counts half
+            # (the "held many editorial positions" proxy)
+            last = int(r["last_year"]) if (r.get("last_year") or "").isdigit() else this_year
+            editors[key] = editors.get(key, 0) + (1.0 if last >= this_year - 1 else 0.5)
     stats: dict = {}
     p = root / "authors.parquet"
     if p.exists():
