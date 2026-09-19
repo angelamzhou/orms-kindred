@@ -29,6 +29,7 @@ def main(argv=None):
     ap.add_argument("--device", default="auto", help="cpu | cuda | auto (cuda if available)")
     ap.add_argument("--no-fallback", action="store_true", help="fail instead of falling back specter2 -> scincl")
     ap.add_argument("--limit", type=int, default=None, help="only embed first N papers (debug)")
+    ap.add_argument("--collection", default="core", help="name recorded in meta.json (core, applied-or, ...)")
     args = ap.parse_args(argv)
 
     papers = pd.read_parquet(args.papers)
@@ -64,7 +65,7 @@ def main(argv=None):
     per100 = 100 * t_enc / max(1, len(ids))
     print(f"encoded {len(ids)} in {t_enc:.1f}s ({per100:.1f}s / 100 papers), dim={X.shape[1]}", flush=True)
 
-    meta = {"backend": emb.backend, "dim": int(X.shape[1]), "n": len(ids),
+    meta = {"backend": emb.backend, "dim": int(X.shape[1]), "n": len(ids), "collection": args.collection,
             "encode_seconds": round(t_enc, 2), "seconds_per_100": round(per100, 2),
             "source": os.path.abspath(args.papers)}
     idx = build_index(X, ids, meta)

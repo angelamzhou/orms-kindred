@@ -85,5 +85,29 @@ class PaperIndex:
         return PaperIndex(self.embeddings[keep], [self.paper_ids[i] for i in keep], dict(self.meta))
 
 
+def concat_indexes(indexes: Sequence["PaperIndex"]) -> "PaperIndex":
+    """Stack several indexes built with the same backend/dim; duplicate paper ids keep the
+    first occurrence. Used to query the core index plus any add-on collections at once."""
+    if not indexes:
+        raise ValueError("no indexes")
+    backends = {i.meta.get("backend") for i in indexes}
+    if len(backends) > 1:
+        raise ValueError(f"indexes were built with different backends: {backends}")
+    dims = {i.embeddings.shape[1] for i in indexes}
+    if len(dims) > 1:
+        raise ValueError(f"indexes have different dims: {dims}")
+    seen: set = set()
+    embs, ids = [], []
+    for ix in indexes:
+        keep = [j for j, pid in enumerate(ix.paper_ids) if pid not in seen]
+        seen.update(ix.paper_ids[j] for j in keep)
+        embs.append(ix.embeddings[keep])
+        ids.extend(ix.paper_ids[j] for j in keep)
+    meta = dict(indexes[0].meta)
+    meta["n"] = len(ids)
+    meta["collections"] = [i.meta.get("collection") or i.meta.get("name") or "?" for i in indexes]
+    return PaperIndex(np.concatenate(embs, axis=0), ids, meta)
+
+
 def build_index(embeddings: np.ndarray, paper_ids: Sequence[str], meta: Optional[Dict] = None) -> PaperIndex:
     return PaperIndex(np.asarray(embeddings, dtype=np.float32), list(paper_ids), meta or {})

@@ -19,7 +19,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from ormatch.openalex import reconstruct_abstract  # noqa: E402
-from ormatch.sources import SOURCES, source_name  # noqa: E402
+from ormatch.sources import ALL_SOURCES as SOURCES, source_name  # noqa: E402
 
 log = logging.getLogger("normalize")
 
@@ -141,9 +141,9 @@ def normalize(raw_dir: Path) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         auth_df = auth_df[auth_df["work_id"].isin(papers_df["openalex_work_id"])].drop_duplicates(["work_id", "position"], keep="last")
     refs_df = pd.DataFrame(refs, columns=["work_id", "referenced_work_id"])
     if len(refs_df) and len(papers_df):
-        # keep only references that point inside the corpus (that is all the matcher can use)
-        ids = set(papers_df["openalex_work_id"])
-        refs_df = refs_df[refs_df["work_id"].isin(ids) & refs_df["referenced_work_id"].isin(ids)].drop_duplicates()
+        # keep every outgoing reference of a corpus paper (not only in-corpus ones): links to
+        # papers in *other* collections are what ties an add-on author to the OR literature
+        refs_df = refs_df[refs_df["work_id"].isin(set(papers_df["openalex_work_id"]))].drop_duplicates()
     return papers_df, auth_df, refs_df
 
 
@@ -167,7 +167,7 @@ def main() -> int:
     has_pdf = papers["oa_pdf_url"].fillna("").ne("").sum() if n else 0
     log.info("papers: %d rows -> %s", n, out_dir / "papers.parquet")
     log.info("authorships: %d rows -> %s", len(auths), out_dir / "authorships.parquet")
-    log.info("in-corpus references: %d rows (%d citing papers) -> %s", len(refs), refs["work_id"].nunique() if len(refs) else 0, out_dir / "references.parquet")
+    log.info("references: %d rows (%d citing papers) -> %s", len(refs), refs["work_id"].nunique() if len(refs) else 0, out_dir / "references.parquet")
     if n:
         log.info("abstract coverage: %d/%d = %.1f%%", has_abs, n, 100 * has_abs / n)
         log.info("OA pdf/url coverage: %d/%d = %.1f%%", has_pdf, n, 100 * has_pdf / n)

@@ -5,10 +5,34 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from typing import Dict, Iterable, List, Optional, Sequence, Set, Tuple
 
+import re
+import unicodedata
+
 import numpy as np
 import pandas as pd
 
 from .index import PaperIndex
+
+
+def normalize_name(name: str) -> str:
+    """'J. Q. Public-Smith' / 'Public, Jane' -> 'jane public smith'-ish key: ascii, lowercase,
+    initials kept as single letters, no punctuation, tokens sorted so order does not matter."""
+    n = unicodedata.normalize("NFKD", name or "").encode("ascii", "ignore").decode()
+    n = re.sub(r"[^a-zA-Z ]", " ", n.replace(",", " ")).lower()
+    toks = [t for t in n.split() if t]
+    return " ".join(sorted(toks))
+
+
+def name_key_loose(name: str) -> str:
+    """surname + first initial, for matching 'J. Smith' against 'Jane Smith'."""
+    toks = normalize_name(name).split()
+    if not toks:
+        return ""
+    # after sorting we cannot tell the surname; use the longest token as surname proxy plus
+    # the initials of the others
+    surname = max(toks, key=len)
+    initials = "".join(sorted(t[0] for t in toks if t != surname))
+    return f"{surname}:{initials}"
 
 
 @dataclass
@@ -20,6 +44,9 @@ class ReviewerCandidate:
     evidence: List[Tuple[str, float]] = field(default_factory=list)  # top-3 (paper_id, sim)
     institutions: List[str] = field(default_factory=list)
     n_cited: int = 0  # of this author's indexed papers, how many the manuscript cites
+    n_editor_roles: int = 0  # current editorial positions known from data/editors.csv
+    seniority: Optional[float] = None  # works_count from data/authors.parquet, if loaded
+    or_links: Optional[int] = None  # core-venue papers + citation links to core (add-on authors)
 
     def to_dict(self) -> Dict:
         return {
@@ -30,6 +57,9 @@ class ReviewerCandidate:
             "evidence": [{"paper_id": p, "sim": round(s, 4)} for p, s in self.evidence],
             "institutions": self.institutions,
             "n_cited": self.n_cited,
+            "n_editor_roles": self.n_editor_roles,
+            "seniority": self.seniority,
+            "or_links": self.or_links,
         }
 
 
@@ -87,9 +117,23 @@ class ReviewerMatcher:
         self.coauthors: Dict[str, Set[str]] = defaultdict(set)
         self.paper_authors: Dict[str, Set[str]] = defaultdict(set)
 
+        self.paper_year: Dict[str, float] = {}
+        if papers is not None and "year" in papers.columns:
+            py = papers[["openalex_work_id", "year"]].dropna()
+            self.paper_year = dict(zip(py["openalex_work_id"].astype(str), py["year"].astype(float)))
+        self.name_index: Dict[str, Set[str]] = defaultdict(set)   # normalized full name -> ids
+        self.loose_index: Dict[str, Set[str]] = defaultdict(set)  # surname:initials -> ids
+        self.editor_roles: Dict[str, int] = {}
+        self.author_stats: Dict[str, float] = {}
+        self.or_links: Dict[str, int] = {}
         for r in a.itertuples(index=False):
             self.paper_authors[r.work_id].add(r.author_id)
-            self.author_name.setdefault(r.author_id, getattr(r, "author_name", r.author_id))
+            if r.author_id not in self.author_name:
+                nm = getattr(r, "author_name", None)
+                nm = nm if isinstance(nm, str) and nm else r.author_id
+                self.author_name[r.author_id] = nm
+                self.name_index[normalize_name(nm)].add(r.author_id)
+                self.loose_index[name_key_loose(nm)].add(r.author_id)
             inst = getattr(r, "institution_id", None)
             if isinstance(inst, str) and inst:
                 self.author_inst[r.author_id].add(inst)
@@ -120,6 +164,88 @@ class ReviewerMatcher:
                 if y is not None:
                     self.row_weight[i] = 0.5 ** (max(0.0, ref - y) / half_life)
 
+    # ------------------------------------------------------------------ COI helpers
+    def resolve_authors(self, names_or_ids: Iterable[str]) -> Dict[str, List[str]]:
+        """Map manuscript author names (or OpenAlex ids) to author ids in the index.
+        Exact normalized-name match first; falls back to surname + initials."""
+        out: Dict[str, List[str]] = {}
+        for q in names_or_ids:
+            q = (q or "").strip()
+            if not q:
+                continue
+            if re.fullmatch(r"A\d{4,}", q):
+                out[q] = [q]
+                continue
+            ids = sorted(self.name_index.get(normalize_name(q), set()))
+            if not ids:
+                ids = sorted(self.loose_index.get(name_key_loose(q), set()))
+            out[q] = ids
+        return out
+
+    def conflicts_for(self, author_ids: Iterable[str], coauthor_years: Optional[float] = None,
+                      same_institution: bool = True, extra_pairs: Optional[Iterable[Tuple[str, str]]] = None,
+                      ref_year: Optional[float] = None) -> Dict[str, str]:
+        """Conflicted reviewer ids -> reason. Co-authors (optionally only on papers from the last
+        `coauthor_years` years), same current institution, and any extra name pairs
+        (e.g. advisor/advisee from data/coi/genealogy.csv) whose either side is a manuscript author."""
+        ids = {str(x) for x in author_ids}
+        out: Dict[str, str] = {}
+        ref = ref_year or (max(self.paper_year.values()) if self.paper_year else None)
+        for au in ids:
+            out[au] = "manuscript author"
+            for pid in (self.index.paper_ids[i] for i in self.author_rows.get(au, [])):
+                if coauthor_years and ref is not None:
+                    y = self.paper_year.get(pid)
+                    if y is not None and ref - y > coauthor_years:
+                        continue
+                for co in self.paper_authors.get(pid, ()):
+                    if co not in ids:
+                        out.setdefault(co, f"co-author of {self.author_name.get(au, au)}")
+            if same_institution:
+                insts = self.author_inst.get(au, set())
+                if insts:
+                    for other, oi in self.author_inst.items():
+                        if other not in ids and oi & insts:
+                            out.setdefault(other, f"same institution as {self.author_name.get(au, au)}")
+        if extra_pairs:
+            names = {normalize_name(self.author_name.get(au, "")) for au in ids}
+            for a_name, b_name in extra_pairs:
+                na, nb = normalize_name(a_name), normalize_name(b_name)
+                if na in names or nb in names:
+                    other = b_name if na in names else a_name
+                    for oid in self.resolve_authors([other]).get(other, []):
+                        if oid not in ids:
+                            out.setdefault(oid, f"genealogy link with {a_name if nb in names else b_name}")
+        return out
+
+    def set_editor_roles(self, roles: Dict[str, int]) -> None:
+        self.editor_roles = dict(roles)
+
+    def set_author_stats(self, stats: Dict[str, float]) -> None:
+        """author_id -> works_count (or any seniority proxy); larger = more senior."""
+        self.author_stats = dict(stats)
+
+    def compute_or_links(self, core_paper_ids: Set[str], references: Optional[pd.DataFrame]) -> None:
+        """For every author: number of their papers in the core collection, plus their papers
+        citing core papers, plus core papers citing theirs. Authors with 0 are outsiders."""
+        cited_core: Dict[str, int] = defaultdict(int)   # paper -> n core papers it cites
+        cited_by_core: Dict[str, int] = defaultdict(int)  # paper -> n core papers citing it
+        if references is not None and len(references):
+            r = references
+            r1 = r[r["referenced_work_id"].isin(core_paper_ids)]
+            for w, c in r1.groupby("work_id").size().items():
+                cited_core[str(w)] = int(c)
+            r2 = r[r["work_id"].isin(core_paper_ids)]
+            for w, c in r2.groupby("referenced_work_id").size().items():
+                cited_by_core[str(w)] = int(c)
+        self.or_links = {}
+        for au, rows in self.author_rows.items():
+            n = 0
+            for i in rows:
+                pid = self.index.paper_ids[i]
+                n += (pid in core_paper_ids) + min(cited_core.get(pid, 0), 3) + min(cited_by_core.get(pid, 0), 3)
+            self.or_links[au] = int(n)
+
     # ------------------------------------------------------------------ API
     def rank(
         self,
@@ -132,6 +258,11 @@ class ReviewerMatcher:
         n_evidence: int = 3,
         cited_papers: Optional[Iterable[str]] = None,
         cite_weight: float = 0.0,
+        exclude_ids: Optional[Iterable[str]] = None,
+        editor_weight: float = 0.0,
+        seniority_weight: float = 0.0,
+        min_or_links: int = 0,
+        volume_correction: float = 0.0,
     ) -> List[ReviewerCandidate]:
         """Rank authors for one query vector.
 
@@ -154,10 +285,27 @@ class ReviewerMatcher:
 
         ms_authors = {str(x) for x in (manuscript_author_ids or [])}
         bad_inst = {str(x) for x in (excluded_institution_ids or [])}
-        conflicted: Set[str] = set(ms_authors)
+        conflicted: Set[str] = set(ms_authors) | {str(x) for x in (exclude_ids or [])}
         if exclude_coauthors:
             for au in ms_authors:
                 conflicted |= self.coauthors.get(au, set())
+        # "usual suspects" correction: an author with n indexed papers gets n draws at a high
+        # cosine, so the expected best-of-n for *random* papers rises with n. Subtract
+        # volume_correction * (E[max of n] - mean), estimated from this query's own similarity
+        # distribution (normal approximation), so a 2-paper author with one very close paper can
+        # outrank a 40-paper author whose best paper is only moderately close.
+        exp_gain = None
+        if volume_correction:
+            finite = sims[np.isfinite(sims)]
+            mu, sd = float(np.mean(finite)), float(np.std(finite)) + 1e-9
+            from scipy.stats import norm as _norm
+            ns = np.arange(1, 2001)
+            exp_gain = sd * _norm.ppf(ns / (ns + 1.0))  # E[max of n] - mu, n = 1..2000
+            exp_gain -= exp_gain[0]  # a single paper is the reference point (no penalty)
+        # seniority penalty: log works_count relative to the median author, in cosine units
+        sen_med = None
+        if seniority_weight and self.author_stats:
+            sen_med = float(np.median(np.log1p(list(self.author_stats.values()))))
 
         cited_count: Dict[str, int] = defaultdict(int)
         if cited_papers and cite_weight:
@@ -171,6 +319,8 @@ class ReviewerMatcher:
                 continue
             if bad_inst and (self.author_inst.get(au, set()) & bad_inst):
                 continue
+            if min_or_links and self.or_links and self.or_links.get(au, 0) < min_or_links:
+                continue
             s = wsims[rows]
             ok = ~np.isnan(s)
             if ok.sum() < self.min_papers or ok.sum() == 0:
@@ -182,11 +332,20 @@ class ReviewerMatcher:
             nc = cited_count.get(au, 0)
             if nc:
                 score += cite_weight * (1 - 0.5 ** nc)
+            if exp_gain is not None:
+                score -= volume_correction * float(exp_gain[min(int(ok.sum()), len(exp_gain)) - 1])
+            ne = self.editor_roles.get(au, 0)
+            if ne and editor_weight:
+                score -= editor_weight * ne
+            sen = self.author_stats.get(au)
+            if sen is not None and seniority_weight and sen_med is not None:
+                score -= seniority_weight * max(0.0, float(np.log1p(sen)) - sen_med)
             ev = [(self.index.paper_ids[r[i]], float(sims[r[i]])) for i in order[:n_evidence]]
             out.append(
                 ReviewerCandidate(
                     au, self.author_name.get(au, au), score, int(len(rows)), ev,
-                    sorted(self.author_inst_names.get(au, set())), nc,
+                    sorted(self.author_inst_names.get(au, set())), nc, ne,
+                    self.author_stats.get(au), self.or_links.get(au) if self.or_links else None,
                 )
             )
         out.sort(key=lambda c: -c.score)
