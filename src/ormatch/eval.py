@@ -34,11 +34,15 @@ def leave_one_out(
     references: Optional[pd.DataFrame] = None,
     cite_weight: float = 0.0,
     volume_correction: float = 0.0,
+    seniority_weight: float = 0.0,
+    author_stats: Optional[pd.DataFrame] = None,
     **matcher_kwargs,
 ) -> Dict:
     """references: DataFrame(work_id, referenced_work_id) from normalize_works.py; the held-out
     paper's OpenAlex reference list stands in for a parsed bibliography."""
     matcher = ReviewerMatcher(index, authorships, papers, **matcher_kwargs)
+    if author_stats is not None and seniority_weight:
+        matcher.set_author_stats(dict(zip(author_stats["author_id"].astype(str), author_stats["works_count"].astype(float))))
     refs: Dict[str, list] = {}
     if references is not None and cite_weight:
         r = references[references["referenced_work_id"].isin(set(index.paper_ids))]
@@ -58,7 +62,8 @@ def leave_one_out(
         q = index.embeddings[index.position(pid)]
         cited = [c for c in refs.get(pid, []) if c != pid]
         ranked = matcher.rank(q, top_n=top_n, exclude_papers=[pid], exclude_coauthors=False,
-                              cited_papers=cited, cite_weight=cite_weight, volume_correction=volume_correction)
+                              cited_papers=cited, cite_weight=cite_weight, volume_correction=volume_correction,
+                              seniority_weight=seniority_weight)
         n_with_refs += bool(cited)
         ids = [c.author_id for c in ranked]
         first = next((i for i, a in enumerate(ids) if a in reachable), None)
@@ -94,6 +99,8 @@ def main(argv=None):
     ap.add_argument("--references", default="data/references.parquet")
     ap.add_argument("--cite-weight", type=float, default=0.0, help="citation boost weight (0 = off)")
     ap.add_argument("--volume-correction", type=float, default=0.0, help="0..1 chance-corrected max (usual-suspects correction)")
+    ap.add_argument("--seniority-weight", type=float, default=0.0)
+    ap.add_argument("--authors", default="data/authors.parquet")
     args = ap.parse_args(argv)
 
     index = PaperIndex.load(args.index)
@@ -102,7 +109,8 @@ def main(argv=None):
     refs = pd.read_parquet(args.references) if args.cite_weight and os.path.exists(args.references) else None
     res = leave_one_out(index, auth, papers, n=args.n, seed=args.seed, lam=args.lam, k=args.k,
                         recency_half_life=args.half_life, references=refs, cite_weight=args.cite_weight,
-                        volume_correction=args.volume_correction)
+                        volume_correction=args.volume_correction, seniority_weight=args.seniority_weight,
+                        author_stats=pd.read_parquet(args.authors) if args.seniority_weight and os.path.exists(args.authors) else None)
     print(json.dumps(res, indent=1))
 
 

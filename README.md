@@ -55,6 +55,43 @@ ormatch fetch-index https://example.org/ormatch-index-v1.tar.gz   # downloads in
 
 Signals are combined linearly, as TPMS/CMT and OpenReview (SPECTER 0.8 / MFR 0.2) do; none of the published systems learn these weights without elicited reviewer scores, so they are exposed rather than fixed.
 
+Further knobs (all off by default, all in the CLI and the UI sidebar; leave-one-out cost measured with the
+citation boost at 0.1, baseline MRR 0.317 / recall@10 0.324):
+
+| knob | what it does | needs | LOO cost |
+|---|---|---|---|
+| `--volume-correction 0..1` | subtracts the expected best-of-n cosine of n random papers, so prolific authors stop winning on volume ("usual suspects") | nothing | 0.5 -> MRR 0.263; 1.0 -> 0.220 |
+| `--seniority-weight w` | penalty per log-unit of OpenAlex works_count above the median author | `data/authors.parquet` from `scripts/fetch_author_stats.py` | 0.01 -> MRR 0.292; 0.03 -> 0.242 |
+| `--editor-weight w` | penalty per current editorial role | `data/editors.csv` (author_id or name, journal, role); publisher board pages block scripts, so this file is maintained by hand or via a browser | not measured |
+| `--min-or-links n` | with add-on collections, drop authors with fewer links to the core OR literature (core papers + citations to/from core); default 1 | references.parquet | n/a |
+
+The leave-one-out metric rewards finding a paper's *actual* authors, who are disproportionately prolific, so every knob that de-emphasises volume or seniority lowers it. That is expected: these are preferences about who should review, not accuracy tuning.
+
+### Conflicts of interest
+
+`ormatch suggest PAPER.pdf --author "Jane Doe" --author A5012345678 ...` resolves the manuscript's authors against the
+index (exact normalised name, then surname + initials; ambiguous names are reported) and flags, with the evidence in a
+`COI?` column: their co-authors on papers from the last `--coi-years` (default 5), people at the same institution, and
+advisor/student pairs from `data/coi/genealogy.csv` (fill it by hand or with `scripts/fetch_genealogy.py NAME ...`, which
+queries the Mathematics Genealogy Project). Flags are hints for a human to follow up; `--coi exclude` drops them instead.
+The manuscript authors themselves are always removed.
+
+### Add-on collections
+
+The core index covers 17 OR/MS venues, but only ~29% of the references in those papers point back into them. Add-on
+collections (`src/ormatch/sources.py: COLLECTIONS`: `applied-or`, `econ-finance`, `stats-ml`, `algorithms`) are built as
+self-contained directories with `scripts/build_collection.sh NAME` -> `data/index_NAME/` (embeddings plus their own
+parquet tables) and can be distributed and downloaded separately. Query several at once with repeated `--index-dir`
+or `--all-collections`; the UI lists every collection it finds. Authors who appear only in add-ons must have at least
+`--min-or-links` links to the core literature, so the pool widens to people connected to OR rather than to arbitrary outsiders.
+
+### Departments
+
+`data/departments.csv` lists 167 OR/IE/OM departments (US, Canada, UK, continental Europe, Israel, Turkey, China, Hong
+Kong, Singapore, Korea, Japan, India, Australia, Latin America) with roster URLs and OpenAlex institution IDs
+(`scripts/fill_openalex_ids.py`, `scripts/scrape_rosters.py`, `scripts/resolve_authors.py`). Rosters identify who holds
+a faculty position where; many university sites block scripts, so expect failures and use `--html-dir` with saved pages.
+
 Title/abstract extraction (`ormatch.pdf`) is heuristic: the title is the leading lines before
 "Abstract" (stopping at author-looking lines), the abstract is the text between "Abstract" and
 "Introduction"/"1."/"Keywords" capped at 400 words, falling back to the first 300 words.

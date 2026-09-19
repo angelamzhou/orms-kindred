@@ -60,3 +60,109 @@ hkust_ieda,Hong Kong University of Science and Technology,Industrial Engineering
 nus_isem,National University of Singapore,Industrial Systems Engineering and Management,SG,OR_IE,https://cde.nus.edu.sg/isem/people/faculty/,I165932596
 kaist_ie,KAIST,Industrial and Systems Engineering,KR,OR_IE,https://ie.kaist.ac.kr/en/faculty,I157485424
 melbourne_or,University of Melbourne,School of Mathematics and Statistics (Operations Research),AU,OR_IE,https://ms.unimelb.edu.au/research/operations-research/people,I165779595
+tamu_isen,Texas A&M University,Wm Michael Barnes '64 Department of Industrial and Systems Engineering,US,OR_IE,https://engineering.tamu.edu/industrial/people/faculty.html,I91045830
+osu_ise,Ohio State University,Integrated Systems Engineering,US,OR_IE,https://ise.osu.edu/people,I52357470
+ufl_ise,University of Florida,Industrial and Systems Engineering,US,OR_IE,https://www.ise.ufl.edu/people/faculty/,I33213144
+rutgers_ise,Rutgers University,Industrial and Systems Engineering,US,OR_IE,https://ise.rutgers.edu/faculty,I102322142
+northeastern_mie,Northeastern University,Mechanical and Industrial Engineering,US,OR_IE,https://mie.northeastern.edu/people/,I12912129
+pitt_ie,University of Pittsburgh,Industrial Engineering,US,OR_IE,https://www.engineering.pitt.edu/departments/industrial/people/faculty/,I170201317
+clemson_ie,Clemson University,Industrial Engineering,US,OR_IE,https://www.clemson.edu/cecas/departments/ie/people/faculty.html,I8078737
+okstate_iem,Oklahoma State University,Industrial Engineering and Management,US,OR_IE,https://ceat.okstate.edu/iem/people/faculty.html,I115475287
+uic_mie,University of Illinois Chicago,Mechanical and Industrial Engineering,US,OR_IE,https://mie.uic.edu/people/faculty/,I39422238
+buffalo_ise,University at Buffalo,Industrial and Systems Engineering,US,OR_IE,https://engineering.buffalo.edu/industrial-systems/people/faculty-directory.html,I63190737
+usf_imse,University of South Florida,Industrial and Management Systems Engineering,US,OR_IE,https://www.usf.edu/engineering/imse/people/faculty.aspx,I2613432
+iastate_imse,Iowa State University,Industrial and Manufacturing Systems Engineering,US,OR_IE,https://www.imse.iastate.edu/directory/faculty/,I173911158
+auburn_ise,Auburn University,Industrial and Systems Engineering,US,OR_IE,https://eng.auburn.edu/insy/faculty-staff/,I82497590
+arkansas_ie,University of Arkansas,Industrial Engineering,US,OR_IE,https://industrial-engineering.uark.edu/people/faculty.php,I79620101
+jhu_ams,Johns Hopkins University,Applied Mathematics and Statistics,US,OR_IE,https://engineering.jhu.edu/ams/faculty/,I145311948
+rice_cmor,Rice University,Computational Applied Mathematics and Operations Research,US,OR_IE,https://cmor.rice.edu/people/faculty,I74775410
+umass_mie,University of Massachusetts Amherst,Mechanical and Industrial Engineering,US,OR_IE,https://mie.umass.edu/faculty,I24603500
+uw_ise,University of Washington,Industrial and Systems Engineering,US,OR_IE,https://ise.washington.edu/people/faculty,I201448701
+utdallas_om,University of Texas at Dallas,"Jindal School of Management, Operations Management",US,OM,https://jindal.utdallas.edu/faculty/operations-management/,I162577319
+questrom_otm,Boston University,"Questrom School of Business, Operations and Technology Management",US,OM,https://www.bu.edu/questrom/faculty-research/faculty-directory/?department=Operations+%26+Technology+Management,I111088046
+merage_om,University of California Irvine,"Merage School, Operations and Decision Technologies",US,OM,https://merage.uci.edu/faculty-research/faculty-directory.html?area=Operations%20and%20Decision%20Technologies,I204250578
+kelley_odt,Indiana University,"Kelley School, Operations and Decision Technologies",US,OM,https://kelley.iu.edu/faculty-research/departments/operations-decision-technologies/faculty.html,I55769427
+msu_scm,Michigan State University,"Broad College, Supply Chain Management",US,OM,https://broad.msu.edu/supply-chain-management/faculty/,I87216513
+scheller_om,Georgia Institute of Technology,"Scheller College, Operations Management",US,OM,https://www.scheller.gatech.edu/directory/faculty/index.html?area=operations-management,I130701444
+goizueta_isom,Emory University,"Goizueta Business School, Information Systems and Operations Management",US,OM,https://goizueta.emory.edu/faculty/isom,I150468666
+owen_om,Vanderbilt University,"Owen Graduate School, Operations Management",US,OM,https://business.vanderbilt.edu/faculty-research/operations-management/,I200719446
+olin_scom,Washington University in St. Louis,"Olin Business School, Supply Chain, Operations and Technology",US,OM,"https://olin.wustl.edu/faculty-and-research/faculty/index.php?area=Supply%20Chain,%20Operations%20and%20Technology",I204465549
+mendoza_itao,University of Notre Dame,"Mendoza College, IT, Analytics and Operations",US,OM,"https://mendoza.nd.edu/faculty-and-research/faculty-directory/?department=IT,%20Analytics,%20and%20Operations",I107639228
+smeal_scis,Pennsylvania State University,"Smeal College, Supply Chain and Information Systems",US,OM,https://www.smeal.psu.edu/directory/faculty?department=Supply%20Chain%20%26%20Information%20Systems,I130769515
+eller_mis,University of Arizona,"Eller College, Management Information Systems / Systems and Industrial Engineering",US,OR_IE,https://sie.engineering.arizona.edu/faculty-staff/faculty,I138006243
+hec_montreal_lsco,HEC Montréal,Logistics and Operations Management (GERAD/CIRRELT),CA,OM,https://www.hec.ca/en/profs/index.html?department=logistics-operations-management,I108192572
+polymtl_magi,Polytechnique Montréal,Mathematics and Industrial Engineering,CA,OR_IE,https://www.polymtl.ca/expertises/en/department/mathematics-and-industrial-engineering,I45683168
+ivey_ms,Western University,"Ivey Business School, Management Science",CA,OM,https://www.ivey.uwo.ca/faculty/directory/?discipline=Management%20Science,I125749732
+smith_queens_ms,Queen's University,"Smith School of Business, Management Analytics",CA,OM,https://smith.queensu.ca/faculty_and_research/faculty_list.php,I204722609
+alberta_ou,University of Alberta,"Alberta School of Business, Operations and Information Systems",CA,OM,https://www.ualberta.ca/business/about/departments/aois/index.html,I154425047
+said_ops,University of Oxford,"Saïd Business School, Operations Management",GB,OM,https://www.sbs.ox.ac.uk/about-us/people?type=faculty,I40120149
+judge_ops,University of Cambridge,"Judge Business School, Operations and Technology Management",GB,OM,https://www.jbs.cam.ac.uk/faculty-research/subject-groups/operations-technology-management/,I241749
+imperial_ao,Imperial College London,"Business School, Analytics and Operations",GB,OM,https://www.imperial.ac.uk/business-school/faculty-research/academic-areas/analytics-operations/,I47508984
+strathclyde_ms,University of Strathclyde,Management Science,GB,OR_IE,https://www.strath.ac.uk/business/managementscience/ourstaff/,I181647926
+southampton_cormsis,University of Southampton,CORMSIS / Mathematical Sciences OR,GB,OR_IE,https://www.southampton.ac.uk/research/institutes-centres/cormsis,I43439940
+kent_msor,University of Kent,"Kent Business School, Management Science",GB,OR_IE,https://www.kent.ac.uk/kent-business-school/people,I20581793
+cardiff_or,Cardiff University,"School of Mathematics, Operational Research",GB,OR_IE,https://www.cardiff.ac.uk/mathematics/research/operational-research,I79510175
+tue_opac,Eindhoven University of Technology,"Operations, Planning, Accounting and Control",NL,OM,https://www.tue.nl/en/research/research-groups/operations-planning-accounting-and-control,I83019370
+erasmus_ei,Erasmus University Rotterdam,Econometric Institute,NL,OR_IE,https://www.eur.nl/en/ese/department-econometrics/people,I913958620
+groningen_ops,University of Groningen,"Faculty of Economics and Business, Operations",NL,OM,https://www.rug.nl/feb/organization/departments/operations/staff,I169381384
+twente_iebis,University of Twente,Industrial Engineering and Business Information Systems,NL,OR_IE,https://www.utwente.nl/en/bms/iebis/staff/,I94624287
+vu_or,Vrije Universiteit Amsterdam,Operations Analytics,NL,OR_IE,https://research.vu.nl/en/organisations/operations-analytics/persons/,I865915315
+tum_lsm,Technical University of Munich,Logistics and Supply Chain Management,DE,OM,https://www.mgt.tum.de/faculty-research/academic-departments/operations-supply-chain-management,I62916508
+mannheim_ops,University of Mannheim,"Business School, Operations Management",DE,OM,https://www.bwl.uni-mannheim.de/en/research/areas/operations-management/,I177802217
+cologne_scm,University of Cologne,Supply Chain Management,DE,OM,https://www.scm.uni-koeln.de/en/team,I180923762
+rwth_or,RWTH Aachen University,Operations Research,DE,OR_IE,https://www.or.rwth-aachen.de/cms/OR/Der-Lehrstuhl/~ozdyv/Team/,I887968799
+kaiserslautern_opt,RPTU Kaiserslautern-Landau,Optimization,DE,OR_IE,https://opt.math.rptu.de/en/people/,I4387152675
+wu_vienna_ims,Vienna University of Economics and Business,Information Systems and Operations Management,AT,OM,https://www.wu.ac.at/en/isom/faculty,I102248843
+hec_lausanne_ops,University of Lausanne,"HEC Lausanne, Operations",CH,OM,https://www.unil.ch/hec/en/home/menuinst/faculte/departements/operations.html,I97565354
+stgallen_ols,University of St. Gallen,Institute of Supply Chain Management / Operations Research,CH,OM,https://iscm.unisg.ch/en/team,I4210145378
+polimi_or,Politecnico di Milano,Operations Research (DEIB),IT,OR_IE,https://www.deib.polimi.it/eng/research-lines/details/60,I93860229
+sapienza_diag,Sapienza University of Rome,"Computer, Control and Management Engineering (DIAG)",IT,OR_IE,https://www.diag.uniroma1.it/en/people,I861853513
+cbs_om,Copenhagen Business School,Operations Management,DK,OM,https://www.cbs.dk/en/research/departments-and-centres/department-of-operations-management/staff,I180519160
+dtu_ms,Technical University of Denmark,"DTU Management, Management Science",DK,OR_IE,https://www.man.dtu.dk/english/research/management-science,I96673099
+kth_opt,KTH Royal Institute of Technology,Optimization and Systems Theory,SE,OR_IE,https://www.kth.se/math/optimization-and-systems-theory,I86987016
+chalmers_or,Chalmers University of Technology,"Mathematical Sciences, Optimization",SE,OR_IE,https://www.chalmers.se/en/departments/mv/research/optimization/,I66862912
+nhh_bus,NHH Norwegian School of Economics,Business and Management Science,NO,OR_IE,https://www.nhh.no/en/departments/business-and-management-science/,
+aalto_ms,Aalto University,Systems Analysis Laboratory / Management Science,FI,OR_IE,https://sal.aalto.fi/en/people/,I9927081
+iese_pom,IESE Business School,"Production, Technology and Operations Management",ES,OM,https://www.iese.edu/faculty-research/faculty/?department=production-technology-and-operations-management,I4405253577
+upc_eio,Universitat Politècnica de Catalunya,Statistics and Operations Research,ES,OR_IE,https://eio.upc.edu/en/people,I9617848
+ist_ceg,Instituto Superior Técnico,Engineering and Management (CEG-IST),PT,OR_IE,https://ceg-ist.tecnico.ulisboa.pt/people/,I4387152517
+centralesupelec_lgi,CentraleSupélec,Laboratoire Génie Industriel,FR,OR_IE,https://lgi.centralesupelec.fr/en/members/,I4210107720
+essec_om,ESSEC Business School,"Information Systems, Decision Sciences and Statistics / Operations Management",FR,OM,https://faculty.essec.edu/en/department/operations-management/,I124261006
+polytechnique_cmap,École Polytechnique,"CMAP, Optimisation",FR,OR_IE,https://cmap.ip-paris.fr/annuaire,I5124864
+gscop,Grenoble INP,G-SCOP,FR,OR_IE,https://g-scop.grenoble-inp.fr/en/laboratory/members,I106785703
+uclouvain_core,Université catholique de Louvain,CORE / LIDAM Operations Research,BE,OR_IE,https://uclouvain.be/en/research-institutes/lidam/core/members.html,I95674353
+ghent_or,Ghent University,Business Informatics and Operations Management,BE,OM,https://www.ugent.be/eb/bio/en/staff,I32597200
+technion_iem,Technion – Israel Institute of Technology,Data and Decision Sciences (IE&M),IL,OR_IE,https://ie.technion.ac.il/en/faculty-members/,I174306211
+tau_ie,Tel Aviv University,Industrial Engineering,IL,OR_IE,https://en-engineering.tau.ac.il/industrial-engineering/faculty,I16391192
+bgu_iem,Ben-Gurion University of the Negev,Industrial Engineering and Management,IL,OR_IE,https://in.bgu.ac.il/en/engn/iem/Pages/Faculty.aspx,I124227911
+bilkent_ie,Bilkent University,Industrial Engineering,TR,OR_IE,https://w3.bilkent.edu.tr/bilkent/academic/industrial-engineering/faculty/,I168864056
+koc_ie,Koç University,Industrial Engineering,TR,OR_IE,https://ie.ku.edu.tr/en/people/faculty/,I1351752
+metu_ie,Middle East Technical University,Industrial Engineering,TR,OR_IE,https://ie.metu.edu.tr/en/faculty,I201799495
+bogazici_ie,Boğaziçi University,Industrial Engineering,TR,OR_IE,https://ie.bogazici.edu.tr/people/faculty,I4405392
+sabanci_ie,Sabancı University,Industrial Engineering,TR,OR_IE,https://fens.sabanciuniv.edu/en/faculty-members?program=ie,I134235054
+pku_gsm_ms,Peking University,"Guanghua School of Management, Management Science and Information Systems",CN,OM,https://en.gsm.pku.edu.cn/faculty/index.htm,I20231570
+fudan_ms,Fudan University,"School of Management, Management Science",CN,OM,https://www.fdsm.fudan.edu.cn/en/faculty/faculty.aspx?dept=ms,I24943067
+sjtu_antai_om,Shanghai Jiao Tong University,"Antai College, Operations Management",CN,OM,https://en.acem.sjtu.edu.cn/faculty/index.html,I183067930
+cuhk_seem,Chinese University of Hong Kong,Systems Engineering and Engineering Management,HK,OR_IE,https://www.se.cuhk.edu.hk/people/academic-staff/,I177725633
+cuhk_dse,Chinese University of Hong Kong,"Business School, Decision Sciences and Managerial Economics",HK,OM,https://www.bschool.cuhk.edu.hk/faculty/?dept=dse,I177725633
+hkust_isom,Hong Kong University of Science and Technology,"Information Systems, Business Statistics and Operations Management",HK,OM,https://isom.hkust.edu.hk/faculty-and-staff/faculty,I200769079
+hku_iim,University of Hong Kong,"Business School, Innovation and Information Management",HK,OM,https://www.hkubs.hku.hk/people/faculty/?area=iim,I889458895
+cityu_ms,City University of Hong Kong,Management Sciences,HK,OM,https://www.cb.cityu.edu.hk/ms/people/academic-staff,I168719708
+polyu_lms,Hong Kong Polytechnic University,Logistics and Maritime Studies,HK,OM,https://www.polyu.edu.hk/lms/people/academic-staff/,I14243506
+nus_dao,National University of Singapore,"NUS Business School, Analytics and Operations",SG,OM,https://bizfaculty.nus.edu.sg/faculty/?dept=analytics-operations,I165932596
+ntu_itom,Nanyang Technological University,"Nanyang Business School, Information Technology and Operations Management",SG,OM,https://www.ntu.edu.sg/business/about-us/our-people/faculty-directory?division=ITOM,I172675005
+snu_ie,Seoul National University,Industrial Engineering,KR,OR_IE,https://ie.snu.ac.kr/en/faculty,I139264467
+postech_ime,POSTECH,Industrial and Management Engineering,KR,OR_IE,https://ime.postech.ac.kr/en/faculty/,I123900574
+utokyo_mi,University of Tokyo,Mathematical Informatics,JP,OR_IE,https://www.i.u-tokyo.ac.jp/edu/course/mi/faculty_e.shtml,I74801974
+iitb_ieor,Indian Institute of Technology Bombay,Industrial Engineering and Operations Research,IN,OR_IE,https://www.ieor.iitb.ac.in/people/faculty,I162827531
+iima_pqm,Indian Institute of Management Ahmedabad,Production and Quantitative Methods,IN,OM,https://www.iima.ac.in/faculty-research/areas-and-groups/production-and-quantitative-methods,I150870154
+iimb_dsa,Indian Institute of Management Bangalore,Decision Sciences,IN,OM,https://www.iimb.ac.in/faculty-research/areas/decision-sciences,I44430492
+isb_om,Indian School of Business,Operations Management,IN,OM,https://www.isb.edu/en/research-thought-leadership/faculty/areas/operations-management.html,I122328836
+monash_ebs,Monash University,Econometrics and Business Statistics / Operations Research,AU,OR_IE,https://www.monash.edu/business/econometrics-and-business-statistics/our-people,I56590836
+unsw_ops,University of New South Wales,"UNSW Business School, Information Systems and Technology Management / Operations",AU,OM,https://www.unsw.edu.au/business/our-schools/information-systems-technology-management/our-people,I31746571
+uchile_ii,Universidad de Chile,Industrial Engineering (ISCI),CL,OR_IE,https://www.dii.uchile.cl/academicos/,I162148367
+puc_chile_ii,Pontificia Universidad Católica de Chile,Industrial and Systems Engineering,CL,OR_IE,https://www.ing.uc.cl/industrial-y-de-sistemas/academicos/,I162148367
+uniandes_ii,Universidad de los Andes,Industrial Engineering,CO,OR_IE,https://industrial.uniandes.edu.co/es/profesores,I162096671
+pucrio_ie,Pontifical Catholic University of Rio de Janeiro,Industrial Engineering,BR,OR_IE,https://www.ind.puc-rio.br/en/faculty/,I2699952
+usp_pro,University of São Paulo,Production Engineering (Poli-USP),BR,OR_IE,https://www.pro.poli.usp.br/docentes/,I17974374
+itam_ie,Instituto Tecnológico Autónomo de México,Industrial and Operations Engineering,MX,OR_IE,https://ingenieria.itam.mx/es/profesores,I187481652
