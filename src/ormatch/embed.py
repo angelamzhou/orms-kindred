@@ -94,10 +94,15 @@ class Embedder:
         self._tokenizer = _from_pretrained(AutoTokenizer, "allenai/specter2_base")
         try:
             model = _from_pretrained(AutoAdapterModel, "allenai/specter2_base")
-            try:  # cached adapter first, network only if missing
-                model.load_adapter("allenai/specter2", source="hf", load_as="proximity", set_active=True, local_files_only=True)
-            except Exception:  # noqa: BLE001
-                model.load_adapter("allenai/specter2", source="hf", load_as="proximity", set_active=True)
+            # adapters' load_adapter(source="hf") always contacts the hub, so resolve the cached
+            # snapshot ourselves (no network) and hand it a local path; download only if absent.
+            try:
+                from huggingface_hub import snapshot_download
+                adapter_path = snapshot_download("allenai/specter2", local_files_only=True)
+            except Exception:  # noqa: BLE001 - not cached yet
+                adapter_path = "allenai/specter2"
+            model.load_adapter(adapter_path, source="hf" if adapter_path == "allenai/specter2" else None,
+                               load_as="proximity", set_active=True)
         except ValueError as e:
             # allenai/specter2_base and allenai/specter2 are only published as pickled
             # .bin files; transformers>=4.52 refuses to torch.load those on torch<2.6
@@ -137,8 +142,9 @@ class Embedder:
         sep = self.sep_token
         out = []
         for t, a in zip(titles, abstracts):
-            t = (t or "").strip()
-            a = (a or "").strip()
+            # pandas stores missing text as None or NaN (a float); treat both as empty
+            t = t.strip() if isinstance(t, str) else ""
+            a = a.strip() if isinstance(a, str) else ""
             out.append(t + sep + a if a else t)
         return out
 

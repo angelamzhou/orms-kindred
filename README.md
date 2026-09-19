@@ -24,6 +24,10 @@ match. Conflicts can be excluded by institution or author.
 ```bash
 pip install -e .              # core: PDF parsing, TF-IDF backend, CLI
 pip install -e ".[embed]"     # + torch/transformers/adapters for SPECTER2 / SciNCL
+                              #   SPECTER2 needs torch>=2.6 (its weights are pickled .bin files that
+                              #   transformers refuses to load on older torch); SciNCL works on any torch.
+                              #   In an environment pinned to an older torch, use a venv:
+                              #   python -m venv .venv && .venv/bin/pip install -e ".[embed]" "torch>=2.6"
 pip install -e ".[ui]"        # + streamlit drag-and-drop UI
 ormatch fetch-index https://example.org/ormatch-index-v1.tar.gz   # downloads into data/index
 ```
