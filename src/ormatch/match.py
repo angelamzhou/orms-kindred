@@ -104,16 +104,21 @@ class ReviewerMatcher:
                 self.coauthors[au].update(auths - {au})
         self.author_rows = {au: np.array(sorted(set(p)), dtype=np.int64) for au, p in rows.items()}
 
-        # recency weights per index row
-        self.row_weight = np.ones(len(index), dtype=np.float32)
-        if recency_half_life and papers is not None and "year" in papers.columns:
+        self.ref_year = ref_year
+        self.set_recency(recency_half_life, papers)
+
+    def set_recency(self, half_life: Optional[float], papers: Optional[pd.DataFrame]) -> None:
+        """(Re)compute per-row recency weights; cheap, so the UI can flip it live."""
+        self.recency_half_life = half_life
+        self.row_weight = np.ones(len(self.index), dtype=np.float32)
+        if half_life and papers is not None and "year" in papers.columns:
             p = papers[["openalex_work_id", "year"]].dropna()
             years = dict(zip(p["openalex_work_id"].astype(str), p["year"].astype(float)))
-            ref = float(ref_year) if ref_year else max(years.values(), default=0)
-            for i, pid in enumerate(index.paper_ids):
+            ref = float(self.ref_year) if self.ref_year else max(years.values(), default=0)
+            for i, pid in enumerate(self.index.paper_ids):
                 y = years.get(pid)
                 if y is not None:
-                    self.row_weight[i] = 0.5 ** (max(0.0, ref - y) / recency_half_life)
+                    self.row_weight[i] = 0.5 ** (max(0.0, ref - y) / half_life)
 
     # ------------------------------------------------------------------ API
     def rank(

@@ -36,11 +36,24 @@ ormatch fetch-index https://example.org/ormatch-index-v1.tar.gz   # downloads in
 
 | Command | What it does |
 |---|---|
-| `ormatch suggest PAPER.pdf [--n 20] [--exclude-institution I123]... [--exclude-author A456]... [--backend specter2\|scincl\|tfidf] [--index-dir data/index] [--json]` | Rank reviewers for one PDF; prints a table (or JSON) with per-reviewer evidence papers. |
+| `ormatch suggest PAPER.pdf [--n 20] [--exclude-institution I123]... [--exclude-author A456]... [--backend specter2\|scincl\|tfidf] [--index-dir data/index] [--json] [--cite-weight 0.1] [--lam 0.3] [--k 3] [--half-life YEARS]` | Rank reviewers for one PDF; prints a table (or JSON) with per-reviewer evidence papers and the weights used. |
 | `ormatch batch DIR [--out results.jsonl]` | Run `suggest` on every PDF in a directory, one JSON object per line. |
 | `ormatch verify-offline PAPER.pdf` | Same as `suggest`, but with `socket.socket` monkeypatched to raise; exits non-zero if anything tries to reach the network. |
 | `ormatch fetch-index URL [--sha256 HEX]` | Download the public index tarball, verify its SHA-256 (from `--sha256` or `URL.sha256`), unpack into `--index-dir`. |
-| `ormatch ui` | Launch the Streamlit app (`src/ormatch/ui_app.py`): drop a PDF, get a reviewer table with expandable evidence. |
+| `ormatch ui` | Launch the Streamlit app (`src/ormatch/ui_app.py`): drop a PDF, get a reviewer table with expandable evidence. Sidebar sliders change the weights below and re-rank instantly (the PDF is embedded once and cached). |
+
+### Ranking weights
+
+`score(author) = (1 - lam) * max_i sim_i + lam * mean(top-k sim_i) + cite_weight * (1 - 0.5^n_cited)`
+
+| weight | default | meaning | where it comes from |
+|---|---|---|---|
+| `lam` | 0.3 | 0 = an author's single most similar paper; 1 = mean of their top-`k`. | Max vs. mean pooling is the standard design choice (OpenReview `max_score`/`average_score`; TPMS concatenates or averages). Stelmakh et al. find max pooling best for SPECTER2; our leave-one-out agrees (lam 0 edges out 0.3). |
+| `k` | 3 | papers per author in the mean | ACL's matcher uses the top 3 cosines weighted 1, 1/2, 1/3. |
+| `cite_weight` | 0.1 | bonus for authors of papers the manuscript cites, saturating in `n_cited` | Our addition; the reference list as a reviewer signal goes back to Rodriguez & Bollen (2008). The saturating form is a design choice; 0.1 is where leave-one-out MRR plateaus (0.20 -> 0.32). |
+| `half_life` | off | years until an old paper keeps half its advantage over an average paper | Product preference for active reviewers; costs accuracy in leave-one-out. |
+
+Signals are combined linearly, as TPMS/CMT and OpenReview (SPECTER 0.8 / MFR 0.2) do; none of the published systems learn these weights without elicited reviewer scores, so they are exposed rather than fixed.
 
 Title/abstract extraction (`ormatch.pdf`) is heuristic: the title is the leading lines before
 "Abstract" (stopping at author-looking lines), the abstract is the text between "Abstract" and

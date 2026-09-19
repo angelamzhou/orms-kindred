@@ -32,17 +32,13 @@ def _load_tables(index_dir: Path):
     return pd.read_parquet(_find("authorships")), pd.read_parquet(_find("papers"))
 
 
-def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | None = None,
-                    exclude_authors: set[str] | None = None, index_dir: Path = DEFAULT_INDEX,
-                    backend: Optional[str] = None, k_hits: int = 200, cite_weight: float = 0.1) -> dict:
-    """Full pipeline: PDF -> title/abstract -> embed -> search -> rank reviewers.
-
-    ``backend`` defaults to the backend recorded in the index's meta.json so the query is
-    embedded with the same model as the index (mixing models gives meaningless scores).
-    """
+def prepare_query(pdf: Path, index_dir: Path = DEFAULT_INDEX, backend: Optional[str] = None,
+                  parse_references: bool = True) -> dict:
+    """Expensive, parameter-free half of the pipeline: PDF -> title/abstract -> embedding, plus the
+    parsed bibliography matched to indexed papers. The result can be re-ranked many times with
+    different weights (see rank_prepared) without touching the PDF or the model again."""
     from ormatch.embed import Embedder
     from ormatch.index import PaperIndex
-    from ormatch.match import ReviewerMatcher
     from ormatch.pdf import extract_references, match_references, pdf_to_query
 
     q = pdf_to_query(pdf)
@@ -58,18 +54,43 @@ def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | Non
         embedder.load(str(tfidf_path))
     qvec = embedder.encode([q["title"]], [q["abstract"]])[0]
     authorships, papers = _load_tables(index_dir)
-    refs = extract_references(pdf) if cite_weight else []
+    refs = extract_references(pdf) if parse_references else []
     cited_ids = match_references(refs, papers) if refs else []
+    titles = dict(zip(papers["openalex_work_id"].astype(str), papers["title"].astype(str))) if "title" in papers.columns else {}
+    from ormatch.match import ReviewerMatcher
+
+    # Built once; rank_prepared only flips its cheap parameters, so re-ranking is ~instant.
     matcher = ReviewerMatcher(idx, authorships, papers)
+    return {"pdf": str(pdf), "title": q["title"], "abstract": q["abstract"], "qvec": qvec, "index": idx,
+            "authorships": authorships, "papers": papers, "titles": titles, "references": refs,
+            "cited_ids": cited_ids, "backend": embedder.backend, "matcher": matcher}
+
+
+def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None = None,
+                  exclude_authors: set[str] | None = None, exclude_coauthors: bool = True,
+                  lam: float = 0.3, k: int = 3, half_life: Optional[float] = None,
+                  cite_weight: float = 0.1, min_papers: int = 1) -> dict:
+    """Cheap half: aggregate similarities into reviewer scores with the given weights.
+
+    lam          0 = score an author by their single most similar paper; 1 = by the mean of their
+                 top-k papers. In between mixes the two (OpenReview/TPMS-style pooling choices).
+    k            how many of an author's papers enter the mean.
+    half_life    years; shrinks older papers' advantage over an average paper by half every
+                 half_life years (None = off). Prefers active reviewers at some cost in accuracy.
+    cite_weight  bonus for authors of papers the manuscript cites: cite_weight * (1 - 0.5**n).
+    min_papers   drop authors with fewer indexed papers.
+    """
+    matcher = prep["matcher"]
+    matcher.lam, matcher.k, matcher.min_papers = lam, k, min_papers
+    matcher.set_recency(half_life, prep["papers"])
     cands = matcher.rank(
-        qvec, top_n=n,
+        prep["qvec"], top_n=n,
         manuscript_author_ids=exclude_authors or None,
         excluded_institution_ids=exclude_institutions or None,
-        cited_papers=cited_ids, cite_weight=cite_weight,
+        exclude_coauthors=exclude_coauthors,
+        cited_papers=prep["cited_ids"], cite_weight=cite_weight,
     )
-    titles = {}
-    if "openalex_work_id" in papers.columns and "title" in papers.columns:
-        titles = dict(zip(papers["openalex_work_id"].astype(str), papers["title"].astype(str)))
+    titles = prep["titles"]
     reviewers = []
     for c in cands:
         reviewers.append({
@@ -81,8 +102,22 @@ def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | Non
             "n_cited": c.n_cited,
             "evidence": [(pid, titles.get(pid, pid), float(s)) for pid, s in c.evidence],
         })
-    return {"pdf": str(pdf), "title": q["title"], "abstract": q["abstract"],
-            "n_references": len(refs), "n_references_in_index": len(cited_ids), "reviewers": reviewers}
+    return {"pdf": prep["pdf"], "title": prep["title"], "abstract": prep["abstract"], "backend": prep["backend"],
+            "n_references": len(prep["references"]), "n_references_in_index": len(prep["cited_ids"]),
+            "cited_papers": [(pid, titles.get(pid, pid)) for pid in prep["cited_ids"]],
+            "params": {"n": n, "lam": lam, "k": k, "half_life": half_life, "cite_weight": cite_weight,
+                       "min_papers": min_papers, "exclude_coauthors": exclude_coauthors},
+            "reviewers": reviewers}
+
+
+def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | None = None,
+                    exclude_authors: set[str] | None = None, index_dir: Path = DEFAULT_INDEX,
+                    backend: Optional[str] = None, k_hits: int = 200, cite_weight: float = 0.1,
+                    lam: float = 0.3, k: int = 3, half_life: Optional[float] = None) -> dict:
+    """Full pipeline: PDF -> title/abstract -> embed -> search -> rank reviewers (prepare + rank)."""
+    prep = prepare_query(pdf, index_dir, backend, parse_references=bool(cite_weight))
+    return rank_prepared(prep, n, exclude_institutions, exclude_authors, lam=lam, k=k,
+                         half_life=half_life, cite_weight=cite_weight)
 
 
 def _print_result(res: dict, as_json: bool) -> None:
@@ -114,9 +149,13 @@ def suggest(
     index_dir: Path = typer.Option(DEFAULT_INDEX, "--index-dir"),
     backend: Optional[str] = typer.Option(None, "--backend", help="specter2 | scincl | tfidf (default: backend recorded in the index)"),
     cite_weight: float = typer.Option(0.1, "--cite-weight", help="Boost authors of papers the manuscript cites (0 disables bibliography parsing)"),
+    lam: float = typer.Option(0.3, "--lam", min=0.0, max=1.0, help="0 = best single paper, 1 = mean of top-k papers"),
+    k: int = typer.Option(3, "--k", min=1, help="Papers per author entering the mean"),
+    half_life: Optional[float] = typer.Option(None, "--half-life", help="Recency half-life in years (off by default)"),
 ):
     """Suggest reviewers for one PDF. Runs entirely offline against the local index."""
-    res = suggest_for_pdf(pdf, n, set(exclude_institution), set(exclude_author), index_dir, backend, cite_weight=cite_weight)
+    res = suggest_for_pdf(pdf, n, set(exclude_institution), set(exclude_author), index_dir, backend,
+                          cite_weight=cite_weight, lam=lam, k=k, half_life=half_life)
     _print_result(res, json_out)
 
 
