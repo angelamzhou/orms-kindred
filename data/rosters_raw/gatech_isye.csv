@@ -1,101 +1,145 @@
 dept_id,name,title,profile_url,source
-gatech_isye,Christos Alexopoulos,Professor; Associate Chair for Graduate Studies,https://www.isye.gatech.edu/users/christos-alexopoulos,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Jane Ammons,Professor Emerita,https://www.isye.gatech.edu/users/jane-ammons,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Sigrun Andradottir,Professor,https://www.isye.gatech.edu/users/sigrun-andradottir,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Turgay Ayer,Professor; Virginia C. and Joseph C. Mello Chair,https://www.isye.gatech.edu/users/turgay-ayer,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Hayriye Ayhan,Professor,https://www.isye.gatech.edu/users/hayriye-ayhan,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Moïse Blanchard,Assistant Professor,https://www.isye.gatech.edu/users/moise-blanchard,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Constance Crozier,Assistant Professor,https://www.isye.gatech.edu/users/constance-crozier,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Mathieu Dahan,Associate Professor,https://www.isye.gatech.edu/users/mathieu-dahan,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Arthur Delarue,Affiliate Assistant Professor,https://www.isye.gatech.edu/users/arthur-delarue,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Shijie Deng,Associate Professor,https://www.isye.gatech.edu/users/shijie-deng,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Santanu Dey,Professor; Anderson-Interface Chair,https://www.isye.gatech.edu/users/santanu-dey,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Souvik Dhara,Assistant Professor,https://www.isye.gatech.edu/users/souvik-dhara,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Yu Ding,Professor; Anderson-Interface Chair,https://www.isye.gatech.edu/users/yu-ding,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Charles Easley,Professor of the Practice,https://www.isye.gatech.edu/users/charles-easley,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Alan Erera,Professor; Senior Associate Chair,https://www.isye.gatech.edu/users/alan-erera,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Augustine Esogbue,Professor Emeritus,https://www.isye.gatech.edu/users/augustine-esogbue,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Gian-Gabriel Garcia,Affiliate Assistant Professor,https://www.isye.gatech.edu/users/gian-gabriel-garcia,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Nagi Gebraeel,Professor; Coca-Cola Foundation Chair,https://www.isye.gatech.edu/users/nagi-gebraeel,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,David Goldsman,Coca-Cola Foundation Professor,https://www.isye.gatech.edu/users/david-goldsman,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Oktay Günlük,Gary C. Butler Family Professor,https://www.isye.gatech.edu/users/oktay-gunluk,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Swati Gupta,Affiliate Assistant Professor,https://www.isye.gatech.edu/users/swati-gupta,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Steven Hackman,Associate Professor Emeritus,https://www.isye.gatech.edu/users/steven-hackman,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Xiaoming Huo,Professor; A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/xiaoming-huo,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Devansh Jalota,Assistant Professor,https://www.isye.gatech.edu/users/devansh-jalota,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,John Jarvis,Professor (Retired),https://www.isye.gatech.edu/users/john-jarvis,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Roshan Joseph,Professor; A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/roshan-joseph,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Jovan Julien,Assistant Professor,https://www.isye.gatech.edu/users/jovan-julien,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Pinar Keskinocak,Professor; School Chair,https://www.isye.gatech.edu/users/pinar-keskinocak,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Seong-Hee Kim,Professor,https://www.isye.gatech.edu/users/seong-hee-kim,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Anton Kleywegt,Associate Professor,https://www.isye.gatech.edu/users/anton-kleywegt,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Guanghui Lan,Professor; A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/guanghui-lan,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,I-Hsiang Lee,Lecturer,https://www.isye.gatech.edu/users/i-hsiang-lee,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Jiachen Li,Assistant Professor,https://www.isye.gatech.edu/users/jiachen-li,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Ying (Laura) Li,Senior Lecturer,https://www.isye.gatech.edu/users/ying-li,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Jing Li,Professor; Virginia C. and Joseph C. Mello Chair,https://www.isye.gatech.edu/users/jing-li,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Xiao Liu,David M. McKenney Family Associate Professor,https://www.isye.gatech.edu/users/xiao-liu,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,JC Lu,Professor,https://www.isye.gatech.edu/users/jc-lu,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Calum MacRury,Assistant Professor,https://www.isye.gatech.edu/users/calum-macrury,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Siva Theja Maguluri,Associate Professor,https://www.isye.gatech.edu/users/siva-theja-maguluri,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Leon McGinnis,Professor Emeritus,https://www.isye.gatech.edu/users/leon-mcginnis,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Kuldeep S. Meel,Adjunct Associate Professor,https://www.isye.gatech.edu/users/kuldeep-s-meel,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Yajun Mei,Affiliate Professor,https://www.isye.gatech.edu/users/yajun-mei,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Johannes Milz,Assistant Professor,https://www.isye.gatech.edu/users/johannes-milz,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Mohsen Moghaddam,Gary C. Butler Family Associate Professor,https://www.isye.gatech.edu/users/mohsen-moghaddam,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Renato Monteiro,Professor; Coca-Cola Foundation Chair,https://www.isye.gatech.edu/users/renato-monteiro,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Benoit Montreuil,Professor; Coca-Cola Material Handling & Distribution Chair,https://www.isye.gatech.edu/users/benoit-montreuil,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Kaitlyn Moug,Lecturer,https://www.isye.gatech.edu/users/kaitlyn-moug,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Debankur Mukherjee,Associate Professor,https://www.isye.gatech.edu/users/debankur-mukherjee,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Vidya Muthukumar,Assistant Professor,https://www.isye.gatech.edu/users/vidya-muthukumar,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Sen Na,Assistant Professor,https://www.isye.gatech.edu/users/sen-na,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Dima Nazzal,Associate Chair for Academic Administration; Director of Professional Practice,https://www.isye.gatech.edu/users/dima-nazzal,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,George Nemhauser,Professor Emeritus,https://www.isye.gatech.edu/users/george-nemhauser,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Arkadi Nemirovski,Professor; John P. Hunter Jr. Chair,https://www.isye.gatech.edu/users/arkadi-nemirovski,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Dmitrii Ostrovskii,Assistant Professor,https://www.isye.gatech.edu/users/dmitrii-ostrovskii,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Ashwin Pananjady,Assistant Professor,https://www.isye.gatech.edu/users/ashwin-pananjady,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,R. Gary Parker,Professor Emeritus,https://www.isye.gatech.edu/users/r-gary-parker,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Kamran Paynabar,Professor; Fouts Family Chair,https://www.isye.gatech.edu/users/kamran-paynabar,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Srinivas Peeta,Professor; Frederick R. Dickerson Chair,https://www.isye.gatech.edu/users/srinivas-peeta,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Sofia Perez-Guzman,Adjunct Assistant Professor,https://www.isye.gatech.edu/users/sofia-perez-guzman,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Alan Porter,Professor Emeritus,https://www.isye.gatech.edu/users/alan-porter,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Donald Ratliff,Regents' Professor Emeritus,https://www.isye.gatech.edu/users/donald-ratliff,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Spyros Reveliotis,Professor,https://www.isye.gatech.edu/users/spyros-reveliotis,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Edwin Romeijn,Professor; Jill Stewart Archer Family Chair,https://www.isye.gatech.edu/users/edwin-romeijn,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,William Rouse,Professor Emeritus,https://www.isye.gatech.edu/users/william-rouse,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Nikolaos Sahinidis,Professor; Gary C. Butler Family Chair,https://www.isye.gatech.edu/users/nikolaos-sahinidis,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Martin Savelsbergh,Adjunct Professor,https://www.isye.gatech.edu/users/martin-savelsbergh,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Katya Scheinberg,Professor; Coca-Cola Foundation Chair,https://www.isye.gatech.edu/users/katya-scheinberg,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Nicoleta Serban,Professor,https://www.isye.gatech.edu/users/nicoleta-serban,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Richard Serfozo,Professor Emeritus,https://www.isye.gatech.edu/users/richard-serfozo,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Alexander Shapiro,Professor; A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/alexander-shapiro,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Jianjun Shi,Professor; Carolyn J. Stewart Chair,https://www.isye.gatech.edu/users/jianjun-shi,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Mohit Singh,Coca-Cola Foundation Professor,https://www.isye.gatech.edu/users/mohit-singh,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Saurabh Sinha,Professor; Wallace H. Coulter Distinguished Chair,https://www.isye.gatech.edu/users/saurabh-sinha,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Joel Sokol,Professor; Terrell and Pierre Sovey Chair,https://www.isye.gatech.edu/users/joel-sokol,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Eunhye Song,Associate Professor,https://www.isye.gatech.edu/users/eunhye-song,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Lauren Steimle,Assistant Professor,https://www.isye.gatech.edu/users/lauren-steimle,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Andy Sun,Affiliate Associate Professor,https://www.isye.gatech.edu/users/andy-sun,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Valerie Thomas,Professor; Anderson-Interface Chair of Natural Systems,https://www.isye.gatech.edu/users/valerie-thomas,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Gamze Tokol-Goldsman,Senior Lecturer,https://www.isye.gatech.edu/users/gamze-tokol-goldsman,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Alejandro Toriello,UPS Professor of Logistics,https://www.isye.gatech.edu/users/alejandro-toriello,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Craig Tovey,Professor,https://www.isye.gatech.edu/users/craig-tovey,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Pascal Van Hentenryck,Professor; A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/pascal-van-hentenryck,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,John Vande Vate,Professor Emeritus,https://www.isye.gatech.edu/users/john-vande-vate,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Santosh Vempala,Adjunct Professor,https://www.isye.gatech.edu/users/santosh-vempala,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Ben Wang,Professor Emeritus,https://www.isye.gatech.edu/users/ben-wang,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,He Wang,Affiliate Associate Professor,https://www.isye.gatech.edu/users/he-wang,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Shixin Wang,Assistant Professor,https://www.isye.gatech.edu/users/shixin-wang,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Chelsea White,Professor; Schneider National Chair,https://www.isye.gatech.edu/users/chelsea-white,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Damon Williams,Senior Lecturer,https://www.isye.gatech.edu/users/damon-williams,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Jeff Wu,Professor Emeritus,https://www.isye.gatech.edu/users/jeff-wu,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Xiaochen Xian,Assistant Professor,https://www.isye.gatech.edu/users/xiaochen-xian,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Yao Xie,Professor; Coca-Cola Foundation Chair,https://www.isye.gatech.edu/users/yao-xie,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Lei Xu,Adjunct Assistant Professor,https://www.isye.gatech.edu/users/lei-xu,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Shihao Yang,Assistant Professor,https://www.isye.gatech.edu/users/shihao-yang,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Parisa Yousefi Zowj,Lecturer,https://www.isye.gatech.edu/users/parisa-yousefi-zowj,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Chuck Zhang,Professor; Eugene C. Gwaltney Jr. Chair,https://www.isye.gatech.edu/users/chuck-zhang,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Tuo Zhao,Associate Professor,https://www.isye.gatech.edu/users/tuo-zhao,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Chen Zhou,Associate Professor,https://www.isye.gatech.edu/users/chen-zhou,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Enlu Zhou,Fouts Family Professor,https://www.isye.gatech.edu/users/enlu-zhou,webfetch:https://www.isye.gatech.edu/people/faculty
-gatech_isye,Juba Ziani,Assistant Professor,https://www.isye.gatech.edu/users/juba-ziani,webfetch:https://www.isye.gatech.edu/people/faculty
+gatech_isye,Christos Alexopoulos,Associate Chair for Graduate Studies,https://www.isye.gatech.edu/users/christos-alexopoulos,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Jane Ammons,Professor Emerita,https://www.isye.gatech.edu/users/jane-ammons,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Sigrun Andradottir,Professor,https://www.isye.gatech.edu/users/sigrun-andradottir,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Turgay Ayer,Virginia C. and Joseph C. Mello Chair,https://www.isye.gatech.edu/users/turgay-ayer,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Hayriye Ayhan,Gary C. Butler Family Faculty Fellow,https://www.isye.gatech.edu/users/hayriye-ayhan,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Ali Vatankhah Barenji,Visiting Senior Research Scientist,https://www.isye.gatech.edu/users/ali-vatankhah-barenji,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Frédérick Bénaben,Visiting Professor,https://www.isye.gatech.edu/users/frederick-benaben,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Frederick Benaben,Visiting Professor,https://www.isye.gatech.edu/users/frederick-benaben,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Mohammad N. Bisheh,Part-Time Lecturer,https://www.isye.gatech.edu/users/mohammad-bisheh,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Mohammad Bisheh,Part-Time Lecturer,https://www.isye.gatech.edu/users/mohammad-bisheh,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Brandy Blake,Director of Professional and Technical Communication,https://www.isye.gatech.edu/users/brandy-blake,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Moïse Blanchard,Tennenbaum Early Career Professor,https://www.isye.gatech.edu/users/moise-blanchard,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Douglas Bodner,Part-Time Lecturer,https://www.isye.gatech.edu/users/douglas-bodner,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Constance Crozier,Georgia Power Foundation Early Career Professor,https://www.isye.gatech.edu/users/constance-crozier,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Mathieu Dahan,Associate Professor,https://www.isye.gatech.edu/users/mathieu-dahan,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Yongzheng Dai,Postdoctoral Fellow,https://www.isye.gatech.edu/users/yongzheng-dai,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Arthur Delarue,Affiliate Assistant Professor,https://www.isye.gatech.edu/users/arthur-delarue,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Dr. Shijie Deng,Associate Professor,https://www.isye.gatech.edu/users/shijie-deng,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Shijie Deng,Associate Professor,https://www.isye.gatech.edu/users/shijie-deng,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Santanu Dey,Director of Doctoral Recruiting and Admissions,https://www.isye.gatech.edu/users/santanu-dey,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Souvik Dhara,Tennenbaum Early Career Professor,https://www.isye.gatech.edu/users/souvik-dhara,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Yu Ding,Anderson-Interface Chair,https://www.isye.gatech.edu/users/yu-ding,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Charles Easley,Professor of the Practice,https://www.isye.gatech.edu/users/charles-easley,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Alan Erera,Senior Associate Chair,https://www.isye.gatech.edu/users/alan-erera,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Augustine Esogbue,Professor Emeritus,https://www.isye.gatech.edu/users/augustine-esogbue,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Chris Gaffney,Managing Director of SCL,https://www.isye.gatech.edu/users/chris-gaffney,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Gian-Gabriel Garcia,Affiliate Assistant Professor,https://www.isye.gatech.edu/users/gian-gabriel-garcia,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Nagi Gebraeel,Coca-Cola Foundation Chair,https://www.isye.gatech.edu/users/nagi-gebraeel,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Dave Goldsman,Director of Master's Recruiting and Admissions,https://www.isye.gatech.edu/users/david-goldsman,https://www.isye.gatech.edu/people/faculty
+gatech_isye,David Goldsman,Director of Master's Recruiting and Admissions,https://www.isye.gatech.edu/users/david-goldsman,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Oktay Günlük,Gary C. Butler Family Professor,https://www.isye.gatech.edu/users/oktay-gunluk,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Swati Gupta,Affiliate Assistant Professor,https://www.isye.gatech.edu/users/swati-gupta,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Pantea Habibi,Postdoctoral Fellow,https://www.isye.gatech.edu/users/pantea-habibi,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Steven Hackman,Associate Professor Emeritus,https://www.isye.gatech.edu/users/steven-hackman,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Yige Hong,Ronald J. and Carol T. Beerman Postdoctoral Fellow,https://www.isye.gatech.edu/users/yige-hong,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Xiaoming Huo,A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/xiaoming-huo,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Katundu Imasiku,Postdoctoral Fellow,https://www.isye.gatech.edu/users/katundu-imasiku,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Devansh Jalota,Jerry and Harriet Thuesen Early Career Professor,https://www.isye.gatech.edu/users/devansh-jalota,https://www.isye.gatech.edu/people/faculty
+gatech_isye,John Jarvis,Professor (Retired),https://www.isye.gatech.edu/users/john-jarvis,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Yao Ji,H. Milton Stewart Postdoctoral Fellow,https://www.isye.gatech.edu/users/yao-ji,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Ronald L. Johnson,Adjunct Professor of the Practice,https://www.isye.gatech.edu/users/ronald-johnson,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Ronald Johnson,Adjunct Professor of the Practice,https://www.isye.gatech.edu/users/ronald-johnson,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Roshan Joseph,A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/roshan-joseph,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Jovan Julien,Georgia Power Foundation Faculty Fellow,https://www.isye.gatech.edu/users/jovan-julien,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Taegyu Kang,Postdoctoral Fellow,https://www.isye.gatech.edu/users/taegyu-kang,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Patrick Kastner,Adjunct Assistant Professor,https://www.isye.gatech.edu/users/patrick-kastner,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Pinar Keskinocak,H. Milton and Carolyn J. Stewart School Chair,https://www.isye.gatech.edu/users/pinar-keskinocak,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Tuba Ketenci,Director of Educational Outreach,https://www.isye.gatech.edu/users/tuba-ketenci,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Seong-Hee Kim,Professor,https://www.isye.gatech.edu/users/seong-hee-kim,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Anton Kleywegt,Associate Professor,https://www.isye.gatech.edu/users/anton-kleywegt,https://www.isye.gatech.edu/people/faculty
+gatech_isye,George Lan,A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/guanghui-lan,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Guanghui Lan,A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/guanghui-lan,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Matthieu Lauras,Adjunct Professor,https://www.isye.gatech.edu/users/matthieu-lauras,https://www.isye.gatech.edu/people/faculty
+gatech_isye,I-Hsiang Lee,Lecturer,https://www.isye.gatech.edu/users/i-hsiang-lee,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Ying Li,Senior Lecturer,https://www.isye.gatech.edu/users/ying-li,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Jing Li,Associate Chair for Faculty Development and Research,https://www.isye.gatech.edu/users/jing-li,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Wenting Li,Senior Research Scientist,https://www.isye.gatech.edu/users/wenting-li,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Jiachen Li,Coca-Cola Foundation Early Career Professor,https://www.isye.gatech.edu/users/jiachen-li,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Xiao Liu,David M. McKenney Family Associate Professor,https://www.isye.gatech.edu/users/xiao-liu,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Velma K. Lopez,Director of Educational Innovation,https://www.isye.gatech.edu/users/velma-k-lopez,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Guillermo Lopez Velarde,Part Time Lecturer,https://www.isye.gatech.edu/users/guillermo-lopez-velarde,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Jon Lowe,Director of Student Services,https://www.isye.gatech.edu/users/jon-lowe,https://www.isye.gatech.edu/people/faculty
+gatech_isye,JC LU,Professor,https://www.isye.gatech.edu/users/jc-lu,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Calum MacRury,Tennenbaum Early Career Professor,https://www.isye.gatech.edu/users/calum-macrury,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Siva Theja Maguluri,Fouts Family Early Career Professor,https://www.isye.gatech.edu/users/siva-theja-maguluri,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Joshua McDonald,Part Time Lecturer,https://www.isye.gatech.edu/users/joshua-mcdonald,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Leon McGinnis,Professor Emeritus,https://www.isye.gatech.edu/users/leon-mcginnis,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Kuldeep Meel,Adjunct Associate Professor,https://www.isye.gatech.edu/users/kuldeep-s-meel,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Kuldeep S. Meel,Adjunct Associate Professor,https://www.isye.gatech.edu/users/kuldeep-s-meel,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Yajun Mei,Affiliate Professor,https://www.isye.gatech.edu/users/yajun-mei,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Johannes Milz,Ronald J. and Carol T. Beerman Early Career Professor,https://www.isye.gatech.edu/users/johannes-milz,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Mohsen Moghaddam,Gary C. Butler Family Associate Professor,https://www.isye.gatech.edu/users/mohsen-moghaddam,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Renato Monteiro,Coca-Cola Foundation Chair,https://www.isye.gatech.edu/users/renato-monteiro,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Benoit Montreuil,Coca-Cola Material Handling & Distribution Chair,https://www.isye.gatech.edu/users/benoit-montreuil,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Kaitlyn Moug,Lecturer,https://www.isye.gatech.edu/users/kaitlyn-moug,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Debankur Mukherjee,Leo and Louise Benatar Early Career Professor,https://www.isye.gatech.edu/users/debankur-mukherjee,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Vidya Muthukumar,Harold R. and Mary Anne Nash Early Career Professor,https://www.isye.gatech.edu/users/vidya-muthukumar,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Nicoly Y. Myles,"Director of the Center for Academics, Success, and Engagement (CASE)",https://www.isye.gatech.edu/users/nicoly-myles,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Nicoly Myles,"Director of the Center for Academics, Success, and Engagement (CASE)",https://www.isye.gatech.edu/users/nicoly-myles,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Sen Na,Assistant Professor,https://www.isye.gatech.edu/users/sen-na,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Dima Nazzal,Associate Chair for Academic Administration,https://www.isye.gatech.edu/users/dima-nazzal,https://www.isye.gatech.edu/people/faculty
+gatech_isye,George Nemhauser,Professor Emeritus,https://www.isye.gatech.edu/users/george-nemhauser,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Arkadi Nemirovski,"John P. Hunter, Jr. Chair",https://www.isye.gatech.edu/users/arkadi-nemirovski,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Dmitrii Ostrovskii,Assistant Professor,https://www.isye.gatech.edu/users/dmitrii-ostrovskii,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Ashwin Pananjady,Gerald D. McInvale Early Career Professor,https://www.isye.gatech.edu/users/ashwin-pananjady,https://www.isye.gatech.edu/people/faculty
+gatech_isye,R. Gary Parker,Professor Emeritus,https://www.isye.gatech.edu/users/r-gary-parker,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Kamran Paynabar,"Associate Chair for Innovation, Leadership, and Entrepreneurship",https://www.isye.gatech.edu/users/kamran-paynabar,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Srinivas Peeta,Frederick R. Dickerson Chair,https://www.isye.gatech.edu/users/srinivas-peeta,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Sofia Perez-Guzman,Adjunct Assistant Professor,https://www.isye.gatech.edu/users/sofia-perez-guzman,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Alan Porter,Professor Emeritus,https://www.isye.gatech.edu/users/alan-porter,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Arthi Rao,Associate Director for Center Health and Humanitarian Systems,https://www.isye.gatech.edu/users/arthi-rao,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Donald Ratliff,Regents' Professor Emeritus,https://www.isye.gatech.edu/users/donald-ratliff,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Nicole Redder,Part Time Lecturer,https://www.isye.gatech.edu/users/nicole-redder,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Spiridon Reveliotis,Professor,https://www.isye.gatech.edu/users/spyros-reveliotis,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Spyros Reveliotis,Professor,https://www.isye.gatech.edu/users/spyros-reveliotis,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Edwin Romeijn,Jill Stewart Archer Family Chair,https://www.isye.gatech.edu/users/edwin-romeijn,https://www.isye.gatech.edu/people/faculty
+gatech_isye,William Rouse,Professor Emeritus,https://www.isye.gatech.edu/users/william-rouse,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Nick Sahinidis,Gary C. Butler Family Chair,https://www.isye.gatech.edu/users/nikolaos-sahinidis,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Nikolaos Sahinidis,Gary C. Butler Family Chair,https://www.isye.gatech.edu/users/nikolaos-sahinidis,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Flavio Sanson Fogliatto,Part-Time Lecturer,https://www.isye.gatech.edu/users/flavio-sanson-fogliatto,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Tejas Santanam,Part-time Lecturer,https://www.isye.gatech.edu/users/tejas-santanam,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Martin Savelsbergh,Adjunct Professor,https://www.isye.gatech.edu/users/martin-savelsbergh,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Katya Scheinberg,Coca-Cola Foundation Chair,https://www.isye.gatech.edu/users/katya-scheinberg,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Nicoleta Serban,Professor,https://www.isye.gatech.edu/users/nicoleta-serban,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Richard Serfozo,Professor Emeritus,https://www.isye.gatech.edu/users/richard-serfozo,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Alexander Shapiro,A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/alexander-shapiro,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Gunter Sharp,Associate Professor (Retired),https://www.isye.gatech.edu/users/gunter-sharp,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Jianjun Shi,Carolyn J. Stewart Chair,https://www.isye.gatech.edu/users/jianjun-shi,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Mohit Singh,Coca-Cola Foundation Professor,https://www.isye.gatech.edu/users/mohit-singh,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Saurabh Sinha,Wallace H. Coulter Distinguished Chair,https://www.isye.gatech.edu/users/saurabh-sinha,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Joel Sokol,Director of the interdisciplinary Master of Science in Analytics,https://www.isye.gatech.edu/users/joel-sokol,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Eunhye Song,Coca-Cola Foundation Early Career Professor,https://www.isye.gatech.edu/users/eunhye-song,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Lauren Steimle,Harold R. and Mary Anne Nash Early Career Professor,https://www.isye.gatech.edu/users/lauren-steimle,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Andy Sun,Affliate Associate Professor,https://www.isye.gatech.edu/users/andy-sun,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Valerie Thomas,Anderson-Interface Chair of Natural Systems,https://www.isye.gatech.edu/users/valerie-thomas,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Gerald Thuesen,Professor (Retired),https://www.isye.gatech.edu/users/gerald-thuesen,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Gamze Tokol-Goldsman,Senior Lecturer,https://www.isye.gatech.edu/users/gamze-tokol-goldsman,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Alejandro Toriello,UPS Professor of Logistics,https://www.isye.gatech.edu/users/alejandro-toriello,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Craig Tovey,Professor,https://www.isye.gatech.edu/users/craig-tovey,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Moe Trebuchon,Part-Time Lecturer,https://www.isye.gatech.edu/users/maurice-trebuchon,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Maurice Trebuchon,Part-Time Lecturer,https://www.isye.gatech.edu/users/maurice-trebuchon,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Pascal Van Hentenryck,A. Russell Chandler III Chair,https://www.isye.gatech.edu/users/pascal-van-hentenryck,https://www.isye.gatech.edu/people/faculty
+gatech_isye,John Vande Vate,Professor Emeritus,https://www.isye.gatech.edu/users/john-vande-vate,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Santosh Vempala,Adjunct Professor,https://www.isye.gatech.edu/users/santosh-vempala,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Irina Wang,Postdoctoral Fellow,https://www.isye.gatech.edu/users/irina-wang,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Ben Wang,Professor Emeritus,https://www.isye.gatech.edu/users/ben-wang,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Jiaqi Wang,Postdoctoral Fellow,https://www.isye.gatech.edu/users/jiaqi-wang,https://www.isye.gatech.edu/people/faculty
+gatech_isye,He Wang,Affiliate Associate Professor,https://www.isye.gatech.edu/users/he-wang,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Shixin Wang,Tennenbaum Early Career Professor,https://www.isye.gatech.edu/users/shixin-wang,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Chelsea White,Schneider National Chair in Transportation and Logistics,https://www.isye.gatech.edu/users/chelsea-white,https://www.isye.gatech.edu/people/faculty
+gatech_isye,"Damon P. Williams, Ph.D.",Associate Dean for Outreach and Engagement,https://www.isye.gatech.edu/users/damon-williams,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Damon Williams,Associate Dean for Outreach and Engagement,https://www.isye.gatech.edu/users/damon-williams,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Jeff Wu,Professor Emeritus,https://www.isye.gatech.edu/users/jeff-wu,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Xiaochen Xian,Assistant Professor,https://www.isye.gatech.edu/users/xiaochen-xian,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Yao Xie,Coca-Cola Foundation Chair,https://www.isye.gatech.edu/users/yao-xie,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Lei Xu,Adjunct Assistant Professor,https://www.isye.gatech.edu/users/lei-xu,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Shihao Yang,Harold E. Smalley Early Career Professor,https://www.isye.gatech.edu/users/shihao-yang,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Parisa Yousefi Zowj,Lecturer,https://www.isye.gatech.edu/users/parisa-yousefi-zowj,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Chuck Zhang,"Eugene C. Gwaltney, Jr. Chair",https://www.isye.gatech.edu/users/chuck-zhang,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Tuo Zhao,Associate Professor,https://www.isye.gatech.edu/users/tuo-zhao,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Enlu Zhou,Fouts Family Professor,https://www.isye.gatech.edu/users/enlu-zhou,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Chen Zhou,Associate Chair for Undergraduate Studies,https://www.isye.gatech.edu/users/chen-zhou,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Linglingzhi Zhu,Postdoctoral Fellow,https://www.isye.gatech.edu/users/linglingzhi-zhu,https://www.isye.gatech.edu/people/faculty
+gatech_isye,Juba Ziani,Assistant Professor,https://www.isye.gatech.edu/users/juba-ziani,https://www.isye.gatech.edu/people/faculty

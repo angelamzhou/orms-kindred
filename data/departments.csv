@@ -1,62 +1,62 @@
 dept_id,institution,unit_name,country,type,roster_url,openalex_institution_id
-mit_orc,Massachusetts Institute of Technology,Operations Research Center,US,OR_IE,https://orc.mit.edu/people/faculty/,
-cornell_orie,Cornell University,Operations Research and Information Engineering,US,OR_IE,https://www.duffield.cornell.edu/orie/faculty-staff/,
-columbia_ieor,Columbia University,Industrial Engineering and Operations Research,US,OR_IE,https://ieor.columbia.edu/people/ieor-faculty,
-gatech_isye,Georgia Institute of Technology,H. Milton Stewart School of Industrial and Systems Engineering,US,OR_IE,https://www.isye.gatech.edu/people/faculty,
-berkeley_ieor,University of California Berkeley,Industrial Engineering and Operations Research,US,OR_IE,https://ieor.berkeley.edu/people/faculty/,
-stanford_msande,Stanford University,Management Science and Engineering,US,OR_IE,https://msande.stanford.edu/people/faculty,
-northwestern_iems,Northwestern University,Industrial Engineering and Management Sciences,US,OR_IE,https://www.mccormick.northwestern.edu/industrial/people/faculty/,
-michigan_ioe,University of Michigan,Industrial and Operations Engineering,US,OR_IE,https://ioe.engin.umich.edu/people/faculty/,
-princeton_orfe,Princeton University,Operations Research and Financial Engineering,US,OR_IE,https://orfe.princeton.edu/people/faculty,
-wisconsin_isye,University of Wisconsin-Madison,Industrial and Systems Engineering,US,OR_IE,https://engineering.wisc.edu/departments/industrial-systems-engineering/people/,
-usc_ise,University of Southern California,Daniel J. Epstein Department of Industrial and Systems Engineering,US,OR_IE,https://ise.usc.edu/people/faculty/,
-purdue_ie,Purdue University,School of Industrial Engineering,US,OR_IE,https://engineering.purdue.edu/IE/people/faculty,
-pennstate_ime,Pennsylvania State University,Harold and Inge Marcus Department of Industrial and Manufacturing Engineering,US,OR_IE,https://www.ime.psu.edu/department/directory.aspx,
-lehigh_ise,Lehigh University,Industrial and Systems Engineering,US,OR_IE,https://engineering.lehigh.edu/ise/faculty,
-uiuc_ise,University of Illinois Urbana-Champaign,Industrial and Enterprise Systems Engineering,US,OR_IE,https://ise.illinois.edu/directory/faculty,
-utaustin_orie,University of Texas at Austin,Operations Research and Industrial Engineering,US,OR_IE,https://www.me.utexas.edu/people/faculty-directory,
-minnesota_isye,University of Minnesota,Industrial and Systems Engineering,US,OR_IE,https://cse.umn.edu/isye/faculty,
-ncstate_ise,North Carolina State University,Edward P. Fitts Department of Industrial and Systems Engineering,US,OR_IE,https://www.ise.ncsu.edu/people/faculty/,
-vt_ise,Virginia Tech,Grado Department of Industrial and Systems Engineering,US,OR_IE,https://ise.vt.edu/people/faculty.html,
-asu_ie,Arizona State University,Industrial Engineering (School of Computing and Augmented Intelligence),US,OR_IE,https://scai.engineering.asu.edu/faculty/,
-wharton_oid,University of Pennsylvania,Wharton Operations Information and Decisions,US,business_OM,https://oid.wharton.upenn.edu/faculty/faculty-list/,
-kellogg_ops,Northwestern University,Kellogg Operations,US,business_OM,https://www.kellogg.northwestern.edu/faculty/academics/operations.aspx,
-booth_om,University of Chicago,Booth Operations Management,US,business_OM,https://www.chicagobooth.edu/faculty/directory?areas=operations-management,
-stern_ioms,New York University,Stern Technology Operations and Statistics (IOMS),US,business_OM,https://www.stern.nyu.edu/faculty-research/technology-operations-statistics/faculty,
-sloan_om,Massachusetts Institute of Technology,Sloan Operations Management,US,business_OM,https://mitsloan.mit.edu/faculty/academic-groups/operations-management/faculty,
-hbs_tom,Harvard University,HBS Technology and Operations Management,US,business_OM,https://www.hbs.edu/faculty/units/tom/Pages/default.aspx,
-fuqua_dso,Duke University,Fuqua Decision Sciences and Operations Management,US,business_OM,https://www.fuqua.duke.edu/faculty-research/faculty?area=decision-sciences,
-ross_to,University of Michigan,Ross Technology and Operations,US,business_OM,https://michiganross.umich.edu/faculty-research/faculty?department=Technology%20and%20Operations,
-unc_kf_ops,University of North Carolina at Chapel Hill,Kenan-Flagler Operations,US,business_OM,https://www.kenan-flagler.unc.edu/faculty/directory/?area=operations,
-marshall_dso,University of Southern California,Marshall Data Sciences and Operations,US,business_OM,https://www.marshall.usc.edu/departments/data-sciences-and-operations/faculty,
-anderson_dotm,University of California Los Angeles,Anderson Decisions Operations and Technology Management,US,business_OM,https://www.anderson.ucla.edu/faculty-and-research/decisions-operations-and-technology-management/faculty,
-haas_oitm,University of California Berkeley,Haas Operations and IT Management,US,business_OM,https://haas.berkeley.edu/faculty/academic-groups/operations-and-information-technology-management/,
-gsb_oit,Stanford University,GSB Operations Information and Technology,US,business_OM,https://www.gsb.stanford.edu/faculty-research/faculty/academic-areas/operations-information-technology,
-johnson_om,Cornell University,Johnson Operations Technology and Information Management,US,business_OM,https://www.johnson.cornell.edu/faculty-research/faculty/?area=operations-technology-and-information-management,
-tepper_om,Carnegie Mellon University,Tepper Operations Management,US,business_OM,https://www.cmu.edu/tepper/faculty-and-research/faculty-by-area/operations-management.html,
-darden_tom,University of Virginia,Darden Technology and Operations Management,US,business_OM,https://www.darden.virginia.edu/faculty-research/directory?area=technology-operations-management,
-mccombs_irom,University of Texas at Austin,McCombs Information Risk and Operations Management,US,business_OM,https://www.mccombs.utexas.edu/faculty-and-research/departments/irom/faculty/,
-foster_om,University of Washington,Foster Operations Management,US,business_OM,https://foster.uw.edu/faculty-research/academic-departments/information-systems-operations-management/,
-smith_doit,University of Maryland College Park,Smith Decision Operations and Information Technologies,US,business_OM,https://www.rhsmith.umd.edu/faculty-research/academic-departments/decision-operations-information-technologies,
-rotman_om,University of Toronto,Rotman Operations Management and Statistics,CA,business_OM,https://www.rotman.utoronto.ca/FacultyAndResearch/AcademicAreas/OperationsManagement,
-sauder_oplog,University of British Columbia,Sauder Operations and Logistics,CA,business_OM,https://www.sauder.ubc.ca/about-ubc-sauder/divisions/operations-and-logistics,
-desautels_om,McGill University,Desautels Operations Management,CA,business_OM,https://www.mcgill.ca/desautels/faculty/areas/operations-management,
-toronto_mie,University of Toronto,Mechanical and Industrial Engineering,CA,OR_IE,https://www.mie.utoronto.ca/faculty_staff/faculty/,
-waterloo_msci,University of Waterloo,Management Science and Engineering,CA,OR_IE,https://uwaterloo.ca/management-science-engineering/people-profiles,
-lse_msci,London School of Economics,Management Science Group (Department of Management),GB,other,https://www.lse.ac.uk/management/people/faculty,
-lancaster_msci,Lancaster University,Management Science,GB,OR_IE,https://www.lancaster.ac.uk/lums/people/management-science/,
-warwick_orms,University of Warwick,Operational Research and Management Sciences (WBS),GB,other,https://www.wbs.ac.uk/about/person/?group=Operations,
-edinburgh_or,University of Edinburgh,School of Mathematics Operational Research and Optimization,GB,OR_IE,https://www.maths.ed.ac.uk/school-of-mathematics/research/oo/people,
-erasmus_rsm_tom,Erasmus University Rotterdam,RSM Technology and Operations Management,NL,business_OM,https://www.rsm.nl/people/department/technology-and-operations-management/,
-tilburg_om,Tilburg University,Econometrics and Operations Research,NL,OR_IE,https://www.tilburguniversity.edu/about/schools/economics-and-management/organization/departments/econometrics-operations-research,
-kuleuven_or,KU Leuven,Research Centre for Operations Research and Statistics (ORSTAT),BE,OR_IE,https://feb.kuleuven.be/research/operations-research-and-statistics/orstat/members,
-epfl_or,EPFL,Operations Research (College of Management of Technology),CH,OR_IE,https://www.epfl.ch/schools/cdm/people/,
-ethz_or,ETH Zurich,Institute for Operations Research,CH,OR_IE,https://ifor.math.ethz.ch/people.html,
-insead_tom,INSEAD,Technology and Operations Management,FR,business_OM,https://www.insead.edu/faculty-research/academic-areas/technology-operations-management,
-lbs_mso,London Business School,Management Science and Operations,GB,business_OM,https://www.london.edu/faculty-and-research/subject-areas/management-science-and-operations,
-bocconi_or,Bocconi University,Decision Sciences,IT,other,https://www.unibocconi.eu/en/faculty-research/departments/decision-sciences/faculty,
-tsinghua_ie,Tsinghua University,Industrial Engineering,CN,OR_IE,https://www.ie.tsinghua.edu.cn/en/Faculty.htm,
-hkust_ieda,Hong Kong University of Science and Technology,Industrial Engineering and Decision Analytics,HK,OR_IE,https://ieda.ust.hk/eng/people/faculty,
-nus_isem,National University of Singapore,Industrial Systems Engineering and Management,SG,OR_IE,https://cde.nus.edu.sg/isem/people/faculty/,
-kaist_ie,KAIST,Industrial and Systems Engineering,KR,OR_IE,https://ie.kaist.ac.kr/en/faculty,
-melbourne_or,University of Melbourne,School of Mathematics and Statistics (Operations Research),AU,OR_IE,https://ms.unimelb.edu.au/research/operations-research/people,
+mit_orc,Massachusetts Institute of Technology,Operations Research Center,US,OR_IE,https://orc.mit.edu/people/faculty/,I63966007
+cornell_orie,Cornell University,Operations Research and Information Engineering,US,OR_IE,https://www.duffield.cornell.edu/orie/faculty-staff/,I205783295
+columbia_ieor,Columbia University,Industrial Engineering and Operations Research,US,OR_IE,https://ieor.columbia.edu/people/ieor-faculty,I78577930
+gatech_isye,Georgia Institute of Technology,H. Milton Stewart School of Industrial and Systems Engineering,US,OR_IE,https://www.isye.gatech.edu/people/faculty,I130701444
+berkeley_ieor,University of California Berkeley,Industrial Engineering and Operations Research,US,OR_IE,https://ieor.berkeley.edu/people/faculty/,I95457486
+stanford_msande,Stanford University,Management Science and Engineering,US,OR_IE,https://msande.stanford.edu/people/faculty,I97018004
+northwestern_iems,Northwestern University,Industrial Engineering and Management Sciences,US,OR_IE,https://www.mccormick.northwestern.edu/industrial/people/faculty/,I111979921
+michigan_ioe,University of Michigan,Industrial and Operations Engineering,US,OR_IE,https://ioe.engin.umich.edu/people/faculty/,I27837315
+princeton_orfe,Princeton University,Operations Research and Financial Engineering,US,OR_IE,https://orfe.princeton.edu/people/faculty,I20089843
+wisconsin_isye,University of Wisconsin-Madison,Industrial and Systems Engineering,US,OR_IE,https://engineering.wisc.edu/departments/industrial-systems-engineering/people/,I135310074
+usc_ise,University of Southern California,Daniel J. Epstein Department of Industrial and Systems Engineering,US,OR_IE,https://ise.usc.edu/people/faculty/,I1174212
+purdue_ie,Purdue University,School of Industrial Engineering,US,OR_IE,https://engineering.purdue.edu/IE/people/faculty,I219193219
+pennstate_ime,Pennsylvania State University,Harold and Inge Marcus Department of Industrial and Manufacturing Engineering,US,OR_IE,https://www.ime.psu.edu/department/directory.aspx,I130769515
+lehigh_ise,Lehigh University,Industrial and Systems Engineering,US,OR_IE,https://engineering.lehigh.edu/ise/faculty,I186143895
+uiuc_ise,University of Illinois Urbana-Champaign,Industrial and Enterprise Systems Engineering,US,OR_IE,https://ise.illinois.edu/directory/faculty,I157725225
+utaustin_orie,University of Texas at Austin,Operations Research and Industrial Engineering,US,OR_IE,https://www.me.utexas.edu/people/faculty-directory,I86519309
+minnesota_isye,University of Minnesota,Industrial and Systems Engineering,US,OR_IE,https://cse.umn.edu/isye/faculty,I130238516
+ncstate_ise,North Carolina State University,Edward P. Fitts Department of Industrial and Systems Engineering,US,OR_IE,https://www.ise.ncsu.edu/people/faculty/,I137902535
+vt_ise,Virginia Tech,Grado Department of Industrial and Systems Engineering,US,OR_IE,https://ise.vt.edu/people/faculty.html,I859038795
+asu_ie,Arizona State University,Industrial Engineering (School of Computing and Augmented Intelligence),US,OR_IE,https://scai.engineering.asu.edu/faculty/,I55732556
+wharton_oid,University of Pennsylvania,Wharton Operations Information and Decisions,US,business_OM,https://oid.wharton.upenn.edu/faculty/faculty-list/,I79576946
+kellogg_ops,Northwestern University,Kellogg Operations,US,business_OM,https://www.kellogg.northwestern.edu/faculty/academics/operations.aspx,I111979921
+booth_om,University of Chicago,Booth Operations Management,US,business_OM,https://www.chicagobooth.edu/faculty/directory?areas=operations-management,I40347166
+stern_ioms,New York University,Stern Technology Operations and Statistics (IOMS),US,business_OM,https://www.stern.nyu.edu/faculty-research/technology-operations-statistics/faculty,I57206974
+sloan_om,Massachusetts Institute of Technology,Sloan Operations Management,US,business_OM,https://mitsloan.mit.edu/faculty/academic-groups/operations-management/faculty,I63966007
+hbs_tom,Harvard University,HBS Technology and Operations Management,US,business_OM,https://www.hbs.edu/faculty/units/tom/Pages/default.aspx,I136199984
+fuqua_dso,Duke University,Fuqua Decision Sciences and Operations Management,US,business_OM,https://www.fuqua.duke.edu/faculty-research/faculty?area=decision-sciences,I170897317
+ross_to,University of Michigan,Ross Technology and Operations,US,business_OM,https://michiganross.umich.edu/faculty-research/faculty?department=Technology%20and%20Operations,I27837315
+unc_kf_ops,University of North Carolina at Chapel Hill,Kenan-Flagler Operations,US,business_OM,https://www.kenan-flagler.unc.edu/faculty/directory/?area=operations,I114027177
+marshall_dso,University of Southern California,Marshall Data Sciences and Operations,US,business_OM,https://www.marshall.usc.edu/departments/data-sciences-and-operations/faculty,I1174212
+anderson_dotm,University of California Los Angeles,Anderson Decisions Operations and Technology Management,US,business_OM,https://www.anderson.ucla.edu/faculty-and-research/decisions-operations-and-technology-management/faculty,I161318765
+haas_oitm,University of California Berkeley,Haas Operations and IT Management,US,business_OM,https://haas.berkeley.edu/faculty/academic-groups/operations-and-information-technology-management/,I95457486
+gsb_oit,Stanford University,GSB Operations Information and Technology,US,business_OM,https://www.gsb.stanford.edu/faculty-research/faculty/academic-areas/operations-information-technology,I97018004
+johnson_om,Cornell University,Johnson Operations Technology and Information Management,US,business_OM,https://www.johnson.cornell.edu/faculty-research/faculty/?area=operations-technology-and-information-management,I205783295
+tepper_om,Carnegie Mellon University,Tepper Operations Management,US,business_OM,https://www.cmu.edu/tepper/faculty-and-research/faculty-by-area/operations-management.html,I74973139
+darden_tom,University of Virginia,Darden Technology and Operations Management,US,business_OM,https://www.darden.virginia.edu/faculty-research/directory?area=technology-operations-management,I51556381
+mccombs_irom,University of Texas at Austin,McCombs Information Risk and Operations Management,US,business_OM,https://www.mccombs.utexas.edu/faculty-and-research/departments/irom/faculty/,I86519309
+foster_om,University of Washington,Foster Operations Management,US,business_OM,https://foster.uw.edu/faculty-research/academic-departments/information-systems-operations-management/,I201448701
+smith_doit,University of Maryland College Park,Smith Decision Operations and Information Technologies,US,business_OM,https://www.rhsmith.umd.edu/faculty-research/academic-departments/decision-operations-information-technologies,I66946132
+rotman_om,University of Toronto,Rotman Operations Management and Statistics,CA,business_OM,https://www.rotman.utoronto.ca/FacultyAndResearch/AcademicAreas/OperationsManagement,I185261750
+sauder_oplog,University of British Columbia,Sauder Operations and Logistics,CA,business_OM,https://www.sauder.ubc.ca/about-ubc-sauder/divisions/operations-and-logistics,I141945490
+desautels_om,McGill University,Desautels Operations Management,CA,business_OM,https://www.mcgill.ca/desautels/faculty/areas/operations-management,I5023651
+toronto_mie,University of Toronto,Mechanical and Industrial Engineering,CA,OR_IE,https://www.mie.utoronto.ca/faculty_staff/faculty/,I185261750
+waterloo_msci,University of Waterloo,Management Science and Engineering,CA,OR_IE,https://uwaterloo.ca/management-science-engineering/people-profiles,I151746483
+lse_msci,London School of Economics,Management Science Group (Department of Management),GB,other,https://www.lse.ac.uk/management/people/faculty,I909854389
+lancaster_msci,Lancaster University,Management Science,GB,OR_IE,https://www.lancaster.ac.uk/lums/people/management-science/,I67415387
+warwick_orms,University of Warwick,Operational Research and Management Sciences (WBS),GB,other,https://www.wbs.ac.uk/about/person/?group=Operations,I39555362
+edinburgh_or,University of Edinburgh,School of Mathematics Operational Research and Optimization,GB,OR_IE,https://www.maths.ed.ac.uk/school-of-mathematics/research/oo/people,I98677209
+erasmus_rsm_tom,Erasmus University Rotterdam,RSM Technology and Operations Management,NL,business_OM,https://www.rsm.nl/people/department/technology-and-operations-management/,I913958620
+tilburg_om,Tilburg University,Econometrics and Operations Research,NL,OR_IE,https://www.tilburguniversity.edu/about/schools/economics-and-management/organization/departments/econometrics-operations-research,I193700539
+kuleuven_or,KU Leuven,Research Centre for Operations Research and Statistics (ORSTAT),BE,OR_IE,https://feb.kuleuven.be/research/operations-research-and-statistics/orstat/members,I99464096
+epfl_or,EPFL,Operations Research (College of Management of Technology),CH,OR_IE,https://www.epfl.ch/schools/cdm/people/,I5124864
+ethz_or,ETH Zurich,Institute for Operations Research,CH,OR_IE,https://ifor.math.ethz.ch/people.html,I35440088
+insead_tom,INSEAD,Technology and Operations Management,FR,business_OM,https://www.insead.edu/faculty-research/academic-areas/technology-operations-management,I102272798
+lbs_mso,London Business School,Management Science and Operations,GB,business_OM,https://www.london.edu/faculty-and-research/subject-areas/management-science-and-operations,I61544103
+bocconi_or,Bocconi University,Decision Sciences,IT,other,https://www.unibocconi.eu/en/faculty-research/departments/decision-sciences/faculty,I71209653
+tsinghua_ie,Tsinghua University,Industrial Engineering,CN,OR_IE,https://www.ie.tsinghua.edu.cn/en/Faculty.htm,I99065089
+hkust_ieda,Hong Kong University of Science and Technology,Industrial Engineering and Decision Analytics,HK,OR_IE,https://ieda.ust.hk/eng/people/faculty,I200769079
+nus_isem,National University of Singapore,Industrial Systems Engineering and Management,SG,OR_IE,https://cde.nus.edu.sg/isem/people/faculty/,I165932596
+kaist_ie,KAIST,Industrial and Systems Engineering,KR,OR_IE,https://ie.kaist.ac.kr/en/faculty,I157485424
+melbourne_or,University of Melbourne,School of Mathematics and Statistics (Operations Research),AU,OR_IE,https://ms.unimelb.edu.au/research/operations-research/people,I165779595

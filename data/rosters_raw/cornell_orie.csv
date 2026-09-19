@@ -1,78 +1,79 @@
 dept_id,name,title,profile_url,source
-cornell_orie,Victoria Averbukh,Director; Cornell Financial Engineering Manhattan Professor of Practice,https://www.duffield.cornell.edu/people/victoria-averbukh/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Sid Banerjee,Associate Professor,https://www.duffield.cornell.edu/people/sid-banerjee/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Kathryn Caggiano,Professor of Practice Emerita,https://www.duffield.cornell.edu/people/kathryn-elizabeth-caggiano/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Marie Chazal,Lecturer,https://www.duffield.cornell.edu/people/marie-chazal/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Jim Dai,Leon C. Welch Professor of Engineering,https://www.duffield.cornell.edu/people/jim-dai/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Brenda Dietrich,Geoffrion Family Professor of Practice,https://www.duffield.cornell.edu/people/brenda-lynn-dietrich/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Nikita Doikov,Assistant Professor,https://www.duffield.cornell.edu/people/nikita-doikov/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Raaz Dwivedi,Assistant Professor,https://www.duffield.cornell.edu/people/raaz-dwivedi/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Omar El Housni,Assistant Professor,https://www.duffield.cornell.edu/people/omar-el-housni/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Peter Frazier,Eleanor and Howard Morgan Professor of Engineering,https://www.duffield.cornell.edu/people/peter-frazier/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Kyra Gan,Assistant Professor,https://www.duffield.cornell.edu/people/kyra-gan/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Nikhil Garg,Assistant Professor,https://www.duffield.cornell.edu/people/nikhil-garg/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Eric Lewis Gentsch,Director; M.Eng. Program Professor of Practice,https://www.duffield.cornell.edu/people/eric-lewis-gentsch/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,David Alan Goldberg,Associate Professor,https://www.duffield.cornell.edu/people/david-alan-goldberg/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Paul Gölz,Assistant Professor,https://www.duffield.cornell.edu/people/paul-golz/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Shane G. Henderson,Charles W. Lake Jr. Professor in Productivity,https://www.duffield.cornell.edu/people/shane-g-henderson/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Robert A. Jarrow,Ronald P. & Susan E. Lynch Professor of Investment Management,https://www.duffield.cornell.edu/people/robert-a-jarrow/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Nathan Kallus,Associate Professor,https://www.duffield.cornell.edu/people/nathan-kallus/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Adrian Lewis,Samuel B. Eckert Professor of Engineering,https://www.duffield.cornell.edu/people/adrian-s-lewis/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Mark Lewis,Maxwell M. Upson Professor of Engineering,https://www.duffield.cornell.edu/people/mark-e-lewis/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Andrea Lodi,Andrew H. and Ann R. Tisch Professor,https://www.duffield.cornell.edu/people/andrea-lodi/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Marcos López de Prado,Visiting Professor,https://www.duffield.cornell.edu/people/marcos-lopez-de-prado/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Andreea Minca,Professor,https://www.duffield.cornell.edu/people/andreea-c-minca/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Reese Pathak,Visiting Assistant Professor,https://www.duffield.cornell.edu/people/reese-pathak/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Jamol J. Pender,Associate Director Graduate Studies; Associate Professor,https://www.duffield.cornell.edu/people/jamol-j-pender/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,David Ruppert,Andrew Schultz Jr. Professor in Industrial Engineering Emeritus,https://www.duffield.cornell.edu/people/david-ruppert/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Shoham Sabach,Associate Professor,https://www.duffield.cornell.edu/people/shoham-sabach/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Gennady Samorodnitsky,Associate Director Undergraduate Studies; Charles W. Lake Jr. Professor,https://www.duffield.cornell.edu/people/gennady-samorodnitsky/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Frans Schalekamp,Teaching Professor,https://www.duffield.cornell.edu/people/frans-schalekamp/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Ziv Scully,Assistant Professor,https://www.duffield.cornell.edu/people/ziv-scully/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Soroosh Shafiee,Assistant Professor,https://www.duffield.cornell.edu/people/soroosh-shafiee/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,David B. Shmoys,Laibe/Acheson Professor of Business Management and Leadership Studies,https://www.duffield.cornell.edu/people/david-b-shmoys/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Sasha Stoikov,Senior Research Associate,https://www.duffield.cornell.edu/people/sasha-f-stoikov/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Éva Tardos,Jacob Gould Schurman Professor; Professor of Computer Science,https://www.cs.cornell.edu/~eva/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Huseyin Topaloglu,Associate Dean for Education at Cornell Tech; Eleanor and Howard Morgan Professor,https://www.duffield.cornell.edu/people/huseyin-topaloglu/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Martin Wells,Charles A. Alexander Professor of Statistical Sciences,https://stat.cornell.edu/people/faculty/martin-wells,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,David P. Williamson,Director of the School; Class of 1912 Professor of Engineering,https://www.duffield.cornell.edu/people/david-p-williamson/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Johannes Wissel,Professor of Practice,https://www.duffield.cornell.edu/people/johannes-wissel/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Yuchen Wu,Assistant Professor,https://www.duffield.cornell.edu/people/yuchen-wu/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Linwei Xin,Associate Professor,https://www.duffield.cornell.edu/people/linwei-xin/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Christina Lee Yu,Associate Professor,https://www.duffield.cornell.edu/people/christina-lee-yu/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Jayadev Acharya,Associate Professor,https://www.duffield.cornell.edu/people/jayadev-acharya/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Arielle Anderer,Assistant Professor,https://business.cornell.edu/faculty-research/faculty/aea68/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Sumanta Basu,Associate Professor,https://stat.cornell.edu/people/faculty/sumanta-basu,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Eilyan Bitar,Associate Professor,https://www.duffield.cornell.edu/people/eilyan-bitar/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,James Booth,Professor,https://stat.cornell.edu/people/faculty/james-booth,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Jelena Bradic,Professor,https://bowers.cornell.edu/people/jelena-bradic-0,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Moon Duchin,Professor,https://cam.cornell.edu/people/moon-duchin/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Ziv Goldfeld,Associate Professor,https://www.duffield.cornell.edu/people/ziv-goldfeld/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Jon Kleinberg,Tisch University Professor,https://www.cs.cornell.edu/home/kleinber/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Robert Kleinberg,"Professor,",,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Jacob Mays,Assistant Professor,https://www.duffield.cornell.edu/people/jacob-mays/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,David S. Matteson,Associate Professor,https://stat.cornell.edu/people/faculty/david-s-matteson,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Meng Qi,Assistant Professor,https://business.cornell.edu/faculty-research/faculty/mq56/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Samitha Samaranayake,Associate Professor,https://www.duffield.cornell.edu/people/samitha-samaranayake/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Karthik Sridharan,Associate Professor,https://www.cs.cornell.edu/%7Esridharan/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Alexander Vladimirsky,Professor,https://math.cornell.edu/alexander-vladimirsky,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Fengqi You,Roxanne E. and Michael J. Zak Professor; Chair of Ph.D. Studies,https://www.duffield.cornell.edu/people/fengqi-you/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Ruihao Zhu,Assistant Professor,https://business.cornell.edu/faculty-research/faculty/rz383/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Lou Billera,Professor Emeritus,https://math.cornell.edu/louis-billera,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Robert Bland,Professor Emeritus,https://www.duffield.cornell.edu/people/robert-gary-bland/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Mark Eisner,Senior Lecturer Emeritus,https://www.duffield.cornell.edu/people/mark-eisner/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Peter Jackson,Professor Emeritus,https://www.duffield.cornell.edu/people/peter-jackson/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,John Anthony Muckstadt,Acheson/Laibe Professor Emeritus,https://www.duffield.cornell.edu/people/john-anthony-muckstadt/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,James Renegar,Class of 1912 Professor Emeritus,https://www.duffield.cornell.edu/people/james-renegar/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Sidney Resnick,Lee Teng-Hui Professor Emeritus,https://www.duffield.cornell.edu/people/sidney-ira-resnick/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Robin Roundy,Professor Emeritus,https://www.duffield.cornell.edu/people/robin-roundy/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Christine Ann Shoemaker,Joseph P. Ripley Professor of Engineering Emerita,https://www.duffield.cornell.edu/people/christine-ann-shoemaker/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Michael Jeremy Todd,Leon C. Welch Professor Emeritus,https://www.duffield.cornell.edu/people/michael-jeremy-todd/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Leslie Earl Trotter,Professor Emeritus,https://www.duffield.cornell.edu/people/leslie-earl-trotter/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Bruce William Turnbull,Professor Emeritus,https://www.duffield.cornell.edu/people/bruce-william-turnbull/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Andrew Chin,Visiting Lecturer,https://www.duffield.cornell.edu/people/andrew-chin/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Sam Ganzfried,Maxwell Fellow,https://www.duffield.cornell.edu/people/sam-ganzfried/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Ira Globus-Harris,Assistant Research Professor,https://www.duffield.cornell.edu/people/ira-globus-harris/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Giuseppe Nuti,Visiting Professor,https://www.duffield.cornell.edu/people/giuseppe-nuti/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Alexander Terenin,Assistant Research Professor,https://www.duffield.cornell.edu/people/alexander-terenin/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
-cornell_orie,Kathryn Zhao,Visiting Lecturer,https://www.duffield.cornell.edu/people/kathryn-zhao/,webfetch:https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Victoria Averbukh,"Director, Cornell Financial Engineering Manhattan",https://www.duffield.cornell.edu/people/victoria-averbukh/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Sid Banerjee,Associate Professor,https://www.duffield.cornell.edu/people/sid-banerjee/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Kathryn Caggiano,Professor of Practice Emerita,https://www.duffield.cornell.edu/people/kathryn-elizabeth-caggiano/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Marie Chazal,Lecturer,https://www.duffield.cornell.edu/people/marie-chazal/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Jim Dai,Leon C. Welch Professor of Engineering,https://www.duffield.cornell.edu/people/jim-dai/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Brenda Dietrich,Geoffrion Family Professor of Practice,https://www.duffield.cornell.edu/people/brenda-lynn-dietrich/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Nikita Doikov,Assistant Professor,https://www.duffield.cornell.edu/people/nikita-doikov/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Omar El Housni,Assistant Professor,https://www.duffield.cornell.edu/people/omar-el-housni/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Peter Frazier,Eleanor and Howard Morgan Professor of Engineering,https://www.duffield.cornell.edu/people/peter-frazier/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Kyra Gan,Assistant Professor,https://www.duffield.cornell.edu/people/kyra-gan/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Nikhil Garg,Assistant Professor,https://www.duffield.cornell.edu/people/nikhil-garg/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Eric Lewis Gentsch,"Director, M.Eng. Program",https://www.duffield.cornell.edu/people/eric-lewis-gentsch/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,David Alan Goldberg,Associate Professor,https://www.duffield.cornell.edu/people/david-alan-goldberg/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Paul Gölz,Assistant Professor,https://www.duffield.cornell.edu/people/paul-golz/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Shane G. Henderson,"Charles W. Lake, Jr. Professor in Productivity",https://www.duffield.cornell.edu/people/shane-g-henderson/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Robert A. Jarrow,Ronald P. & Susan E. Lynch Professor of Investment Management,https://www.duffield.cornell.edu/people/robert-a-jarrow/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Nathan Kallus,Associate Professor,https://www.duffield.cornell.edu/people/nathan-kallus/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Adrian Lewis,Samuel B. Eckert Professor of Engineering,https://www.duffield.cornell.edu/people/adrian-s-lewis/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Mark Lewis,Maxwell M. Upson Professor of Engineering,https://www.duffield.cornell.edu/people/mark-e-lewis/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Andrea Lodi,Andrew H. and Ann R. Tisch Professor,https://www.duffield.cornell.edu/people/andrea-lodi/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Andreea Minca,Professor,https://www.duffield.cornell.edu/people/andreea-c-minca/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Reese Pathak,Visiting Assistant Professor,https://www.duffield.cornell.edu/people/reese-pathak/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Jamol J. Pender,"Associate Director, Graduate Studies",https://www.duffield.cornell.edu/people/jamol-j-pender/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,David Ruppert,Andrew Schultz Jr. Professor in Industrial Engineering Emeritus,https://www.duffield.cornell.edu/people/david-ruppert/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Shoham Sabach,Associate Professor,https://www.duffield.cornell.edu/people/shoham-sabach/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Gennady Samorodnitsky,"Associate Director, Undergraduate Studies",https://www.duffield.cornell.edu/people/gennady-samorodnitsky/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Frans Schalekamp,Teaching Professor,https://www.duffield.cornell.edu/people/frans-schalekamp/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Ziv Scully,Assistant Professor,https://www.duffield.cornell.edu/people/ziv-scully/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Soroosh Shafiee,Assistant Professor,https://www.duffield.cornell.edu/people/soroosh-shafiee/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,David B. Shmoys,Laibe/Acheson Professor of Business Management and Leadership Studies,https://www.duffield.cornell.edu/people/david-b-shmoys/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Huseyin Topaloglu,Associate Dean for Education at Cornell Tech,https://www.duffield.cornell.edu/people/huseyin-topaloglu/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Martin Wells,Charles A. Alexander Professor of Statistical Sciences,https://stat.cornell.edu/people/faculty/martin-wells,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,David Williamson,Director of the School of Operations Research and Information Engineering,https://www.duffield.cornell.edu/people/david-p-williamson/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Johannes Wissel,Professor of Practice,https://www.duffield.cornell.edu/people/johannes-wissel/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Yuchen Wu,Assistant Professor,https://www.duffield.cornell.edu/people/yuchen-wu/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Linwei Xin,Associate Professor,https://www.duffield.cornell.edu/people/linwei-xin/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Christina Lee Yu,Associate Professor,https://www.duffield.cornell.edu/people/christina-lee-yu/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Jayadev Acharya,Associate Professor,https://www.duffield.cornell.edu/people/jayadev-acharya/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Arielle Anderer,Assistant Professor,https://business.cornell.edu/faculty-research/faculty/aea68/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Sumanta Basu,Associate Professor,https://stat.cornell.edu/people/faculty/sumanta-basu,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,David S. Bindel,Professor,https://www.cs.cornell.edu/~bindel/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Eilyan Bitar,Associate Professor,https://www.duffield.cornell.edu/people/eilyan-bitar/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,James Booth,Professor,https://stat.cornell.edu/people/faculty/james-booth,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Jelena Bradic,Professor,https://bowers.cornell.edu/people/jelena-bradic-0,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Moon Duchin,Professor,https://cam.cornell.edu/people/moon-duchin/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Ziv Goldfeld,Associate Professor,https://www.duffield.cornell.edu/people/ziv-goldfeld/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Jon Kleinberg,Tisch University Professor,https://www.cs.cornell.edu/home/kleinber/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Robert Kleinberg,Professor,http://rdk@cs.cornell.edu ,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Jacob Mays,Assistant Professor,https://www.duffield.cornell.edu/people/jacob-mays/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,David S. Matteson,Associate Professor,https://stat.cornell.edu/people/faculty/david-s-matteson,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Meng Qi,Assistant Professor,https://business.cornell.edu/faculty-research/faculty/mq56/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Samitha Samaranayake,Associate Professor,https://www.duffield.cornell.edu/people/samitha-samaranayake/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Karthik Sridharan,Associate Professor,https://www.cs.cornell.edu/%7Esridharan/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Alexander Vladimirsky,Professor,https://math.cornell.edu/alexander-vladimirsky,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Fengqi You,Roxanne E. and Michael J. Zak Professor in Energy Systems Engineering,https://www.duffield.cornell.edu/people/fengqi-you/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Ruihao Zhu,Assistant Professor,https://business.cornell.edu/faculty-research/faculty/rz383/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Lou Billera,Professor Emeritus,https://math.cornell.edu/louis-billera,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Robert Bland,Professor Emeritus,https://www.duffield.cornell.edu/people/robert-gary-bland/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Mark Eisner,Senior Lecturer Emeritus,https://www.duffield.cornell.edu/people/mark-eisner/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Peter Jackson,Professor Emeritus,https://www.duffield.cornell.edu/people/peter-jackson/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,John Anthony Muckstadt,Acheson/Laibe Professor of Business Management and Leadership,https://www.duffield.cornell.edu/people/john-anthony-muckstadt/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,James Renegar,Class of 1912 Professor of Engineering Emeritus,https://www.duffield.cornell.edu/people/james-renegar/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Sidney Resnick,Lee Teng-Hui Professor in Engineering Emeritus,https://www.duffield.cornell.edu/people/sidney-ira-resnick/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Robin Roundy,Professor Emeritus,https://www.duffield.cornell.edu/people/robin-roundy/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Christine Ann Shoemaker,Joseph P. Ripley Professor of Engineering Emerita,https://www.duffield.cornell.edu/people/christine-ann-shoemaker/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Michael Jeremy Todd,Leon C. Welch Professor Emeritus,https://www.duffield.cornell.edu/people/michael-jeremy-todd/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Leslie Earl Trotter,Professor Emeritus,https://www.duffield.cornell.edu/people/leslie-earl-trotter/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Bruce Turnbull,Professor Emeritus,https://www.duffield.cornell.edu/people/bruce-william-turnbull/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Andrew Chin,"Visiting Lecturer, Cornell Financial Engineering Manhattan",https://www.duffield.cornell.edu/people/andrew-chin/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Sam Ganzfried,Maxwell Fellow,https://www.duffield.cornell.edu/people/sam-ganzfried/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Ira Globus-Harris,Assistant Research Professor,https://www.duffield.cornell.edu/people/ira-globus-harris/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Giuseppe Nuti,"Visiting Professor, Cornell Financial Engineering Manhattan",https://www.duffield.cornell.edu/people/giuseppe-nuti/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Alexander Terenin,Assistant Research Professor at the Center for Data Science for Enterprise and Society,https://www.duffield.cornell.edu/people/alexander-terenin/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Kathryn Zhao,"Visiting Lecturer, Cornell Financial Engineering Manhattan",https://www.duffield.cornell.edu/people/kathryn-zhao/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Nancianne Esposito,Associate Director of Career Development at CFEM,https://www.duffield.cornell.edu/people/nancianne-esposito/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Henry Lam,Director’s Assistant,https://www.duffield.cornell.edu/people/henry-lam/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Leslie M. Sadler,"Director of Administration, Operations Research and Information Engineering",https://www.duffield.cornell.edu/people/leslie-m-sadler/,https://www.duffield.cornell.edu/orie/faculty-staff/
+cornell_orie,Quick Links,Schools and Departments Undergraduate Majors and Minors Faculty and Staff Directory,,https://www.duffield.cornell.edu/orie/faculty-staff/

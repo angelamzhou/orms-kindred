@@ -1,60 +1,50 @@
 dept_id,name,title,profile_url,source
-wharton_oid,Gad Allon,UPS Professor; Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/gadallon,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Hamsa Bastani,Associate Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/hamsab,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Gérard Cachon,Fred R. Sullivan Professor; Department Chair,https://oid.wharton.upenn.edu/profile/cachon,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Angela Duckworth,Rosa Lee and Egbert Chang Professor,https://oid.wharton.upenn.edu/profile/duckwort,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Santiago Gallino,Associate Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/sgallino,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Noah Gans,Anheuser-Busch Professor of Management Science,https://oid.wharton.upenn.edu/profile/gans,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Patrick T Harker,Rowan Distinguished Professor,https://oid.wharton.upenn.edu/profile/harker,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Lorin M. Hitt,Zhang Jindong Professor,https://oid.wharton.upenn.edu/profile/lhitt,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Kartik Hosanagar,John C. Hower Professor,https://oid.wharton.upenn.edu/profile/kartikh,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Steven O. Kimbrough,Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/sok,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Dean Knox,Assistant Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/dcknox,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Katherine L. Milkman,James G. Dinan Endowed Professor,https://oid.wharton.upenn.edu/profile/kmilkman,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Serguei Netessine,Dhirubhai Ambani Professor of Innovation and Entrepreneurship,https://oid.wharton.upenn.edu/profile/netessin,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Daniel Rock,Assistant Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/rockdi,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Erik Santoro,Assistant Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/santoroe,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Sergei Savin,Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/savin,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Maurice Schweitzer,Cecilia Yen Koo Professor,https://oid.wharton.upenn.edu/profile/schweitz,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Neha Sharma,Assistant Professor,https://oid.wharton.upenn.edu/profile/nehash,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Joseph Simmons,Dorothy Silberberg Professor of Applied Statistics,https://oid.wharton.upenn.edu/profile/jsimmo,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Gal Smitizsky,Assistant Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/gsmitizs,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Hummy Song,Associate Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/hummy,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Xuanming Su,Murrel J. Ades Professor,https://oid.wharton.upenn.edu/profile/xuanming,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Alp Sungu,Assistant Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/alpsungu,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Prasanna (Sonny) Tambe,Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/tambe,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Christian Terwiesch,Andrew M. Heller Professor,https://oid.wharton.upenn.edu/profile/terwiesc,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Karl Ulrich,CIBC Endowed Professor,https://oid.wharton.upenn.edu/profile/ulrich,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Senthil Veeraraghavan,Panasonic Professor of Manufacturing and Logistics,https://oid.wharton.upenn.edu/profile/senthilv,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Duncan Watts,Stevens University Professor,https://oid.wharton.upenn.edu/profile/djwatts,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Lynn Wu,Associate Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/wulynn,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Sophie Yu,Assistant Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/hysophie,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,David A. Asch,Professor of Medicine; John Morgan Professor,https://oid.wharton.upenn.edu/profile/asch,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Emily Falk,Professor of Marketing; Professor of Operations Information and Decisions,https://oid.wharton.upenn.edu/profile/_whrtn74,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Michael Kearns,Professor of Computer and Information Science,http://www.seas.upenn.edu/directory/profile.php?ID=46,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Lyle Ungar,Professor of Computer and Information Science,https://oid.wharton.upenn.edu/profile/ungar,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Clay Burns,Lecturer,https://oid.wharton.upenn.edu/profile/clayburn,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Ziv Katalan,Adjunct Professor,https://oid.wharton.upenn.edu/profile/katalan,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Edwin Keh,Lecturer,https://oid.wharton.upenn.edu/profile/edwinkeh,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Shirit Kronzon,Lecturer,https://oid.wharton.upenn.edu/profile/kronzon,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Ashley Marcovitz,Lecturer,https://oid.wharton.upenn.edu/profile/ashmarco,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Simone Marinesi,Lecturer,https://oid.wharton.upenn.edu/profile/marinesi,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Cade Massey,Practice Professor,https://oid.wharton.upenn.edu/profile/cadem,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Vitaly Meursault,Lecturer,https://oid.wharton.upenn.edu/profile/vitalym,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Ken Moon,Senior Fellow,https://oid.wharton.upenn.edu/profile/kenmoon,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Maria Rieders,Adjunct Professor,https://oid.wharton.upenn.edu/profile/rieders,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,David Robertson,Lecturer,https://oid.wharton.upenn.edu/profile/drobe,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Gerry Tsoukalas,Senior Fellow,https://oid.wharton.upenn.edu/profile/gtsouk,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Kristina Wald,Lecturer,https://oid.wharton.upenn.edu/profile/waldk,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Sean Willems,Lecturer,https://oid.wharton.upenn.edu/profile/willems,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Uri Zak,Lecturer,https://oid.wharton.upenn.edu/profile/zaku,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Eric K. Clemons,Professor Emeritus,https://oid.wharton.upenn.edu/profile/clemons,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Morris A. Cohen,Panasonic Professor Emeritus of Manufacturing & Logistics,https://oid.wharton.upenn.edu/profile/cohen,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Jehoshua Eliashberg,Professor Emeritus,https://oid.wharton.upenn.edu/profile/jehoshua,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,James Emery,"Professor Emeritus,",,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Marshall L. Fisher,UPS Professor,https://oid.wharton.upenn.edu/profile/fisher,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Monique Guignard-Spielberg,Professor Emeritus,https://oid.wharton.upenn.edu/profile/guignard,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,John C. Hershey,Professor Emeritus,https://oid.wharton.upenn.edu/profile/hershey,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Abba M. Krieger,Robert Steinberg Professor Emeritus of Statistics and Data Science,https://oid.wharton.upenn.edu/profile/krieger,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,James Laing,"Professor Emeritus,",,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
-wharton_oid,Yu-Sheng Zheng,"Professor Emeritus,",,webfetch:https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Gad Allon,"UPS Professor, Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/gadallon,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Gérard Cachon,"Fred R. Sullivan Professor, Professor of Operations, Information and Decisions, Professor of Marketing, Department Chair",https://oid.wharton.upenn.edu/profile/cachon,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Angela Duckworth,Rosa Lee and Egbert Chang Professor,https://oid.wharton.upenn.edu/profile/duckwort,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Noah Gans,"Anheuser-Busch Professor of Management Science at Wharton, Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/gans,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Lorin M. Hitt,"Zhang Jindong Professor, Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/lhitt,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Steven O. Kimbrough,"Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/sok,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Katherine L. Milkman,"James G. Dinan Endowed Professor, Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/kmilkman,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Daniel Rock,"Assistant Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/rockdi,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Erik Santoro,"Assistant Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/santoroe,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Sergei Savin,"Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/savin,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Neha Sharma,Assistant Professor,https://oid.wharton.upenn.edu/profile/nehash,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Joseph Simmons,"Dorothy Silberberg Professor of Applied Statistics, Professor of Operations, Information, and Decisions",https://oid.wharton.upenn.edu/profile/jsimmo,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Gal Smitizsky,"Assistant Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/gsmitizs,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Hummy Song,"Associate Professor of Operations, Information and Decisions, Associate Professor of Health Care Management",https://oid.wharton.upenn.edu/profile/hummy,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Xuanming Su,"Murrel J. Ades Professor, Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/xuanming,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Alp Sungu,"Assistant Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/alpsungu,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Karl Ulrich,"CIBC Endowed Professor, Professor of Operations, Information and Decisions, Professor of Management",https://oid.wharton.upenn.edu/profile/ulrich,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Senthil Veeraraghavan,"Panasonic Professor of Manufacturing and Logistics, Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/senthilv,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Lynn Wu,"Associate Professor of Operations, Information and Decisions, Director of Embodied AI and Robotics at the Mack Institute",https://oid.wharton.upenn.edu/profile/wulynn,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Sophie Yu,"Assistant Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/hysophie,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Michael Kearns,"Professor of Computer and Information Science, Professor of Operations, Information and Decisions",http://www.seas.upenn.edu/directory/profile.php?ID=46,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Clay Burns,Lecturer,https://oid.wharton.upenn.edu/profile/clayburn,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Ziv Katalan,"Adjunct Professor, Operations, Information and Decisions, Managing Director, Wharton Global Initiatives",https://oid.wharton.upenn.edu/profile/katalan,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Edwin Keh,Lecturer,https://oid.wharton.upenn.edu/profile/edwinkeh,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Shirit Kronzon,Lecturer,https://oid.wharton.upenn.edu/profile/kronzon,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Ashley Marcovitz,Lecturer,https://oid.wharton.upenn.edu/profile/ashmarco,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Simone Marinesi,Lecturer,https://oid.wharton.upenn.edu/profile/marinesi,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Cade Massey,"Practice Professor, Faculty Director, Wharton People Lab",https://oid.wharton.upenn.edu/profile/cadem,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Vitaly Meursault,Lecturer,https://oid.wharton.upenn.edu/profile/vitalym,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Ken Moon,Senior Fellow,https://oid.wharton.upenn.edu/profile/kenmoon,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Maria Rieders,"Adjunct Professor, Faculty Fellow, Undergraduate Advisor",https://oid.wharton.upenn.edu/profile/rieders,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,David Robertson,Lecturer,https://oid.wharton.upenn.edu/profile/drobe,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Gerry Tsoukalas,Senior Fellow,https://oid.wharton.upenn.edu/profile/gtsouk,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Kristina Wald,Lecturer,https://oid.wharton.upenn.edu/profile/waldk,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Sean Willems,Lecturer,https://oid.wharton.upenn.edu/profile/willems,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Uri Zak,Lecturer,https://oid.wharton.upenn.edu/profile/zaku,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Eric K. Clemons,"Professor Emeritus of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/clemons,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Morris A. Cohen,"Panasonic Professor Emeritus of Manufacturing & Logistics, Professor Emeritus of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/cohen,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Jehoshua Eliashberg,"Sebastian S. Kresge Professor Emeritus of Marketing, Professor Emeritus of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/jehoshua,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Marshall L. Fisher,"UPS Professor, Professor of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/fisher,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Monique Guignard-Spielberg,"Professor Emeritus of Operations, Information and Decisions",https://oid.wharton.upenn.edu/profile/guignard,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Abba M. Krieger,Robert Steinberg Professor Emeritus of Statistics and Data Science,https://oid.wharton.upenn.edu/profile/krieger,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,James Emery,Professor Emeritus,,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,James Laing,Professor Emeritus,,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Yu-Sheng Zheng,Professor Emeritus,,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,E Gerald Hurst,Associate Professor Emeritus,,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Aron Katsenelinboigen,Professor Emeritus,,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,Paul Kleindorfer,Anheuser-Busch Professor Emeritus of Management Science at Wharton,,https://oid.wharton.upenn.edu/faculty/faculty-list/
+wharton_oid,David Ness,Associate Professor,,https://oid.wharton.upenn.edu/faculty/faculty-list/
