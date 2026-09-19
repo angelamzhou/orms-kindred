@@ -82,8 +82,19 @@ class Embedder:
         from transformers import AutoTokenizer
 
         self._tokenizer = AutoTokenizer.from_pretrained("allenai/specter2_base")
-        model = AutoAdapterModel.from_pretrained("allenai/specter2_base")
-        model.load_adapter("allenai/specter2", source="hf", load_as="proximity", set_active=True)
+        try:
+            model = AutoAdapterModel.from_pretrained("allenai/specter2_base")
+            model.load_adapter("allenai/specter2", source="hf", load_as="proximity", set_active=True)
+        except ValueError as e:
+            # allenai/specter2_base and allenai/specter2 are only published as pickled
+            # .bin files; transformers>=4.52 refuses to torch.load those on torch<2.6
+            # (CVE-2025-32434). scincl ships safetensors and is unaffected.
+            if "torch.load" in str(e) or "CVE-2025-32434" in str(e):
+                raise RuntimeError(
+                    "specter2 weights are pickled .bin files that transformers will not load on "
+                    "torch<2.6; run `pip install 'torch>=2.6'` or use backend 'scincl'"
+                ) from e
+            raise
         model.eval().to(self.device)
         self._model = model
 

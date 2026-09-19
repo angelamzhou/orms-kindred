@@ -26,6 +26,8 @@ def main(argv=None):
     ap.add_argument("--out", default="data/index")
     ap.add_argument("--backend", default="auto")
     ap.add_argument("--batch-size", type=int, default=16)
+    ap.add_argument("--device", default="auto", help="cpu | cuda | auto (cuda if available)")
+    ap.add_argument("--no-fallback", action="store_true", help="fail instead of falling back specter2 -> scincl")
     ap.add_argument("--limit", type=int, default=None, help="only embed first N papers (debug)")
     args = ap.parse_args(argv)
 
@@ -36,8 +38,23 @@ def main(argv=None):
     ids = papers["openalex_work_id"].astype(str).tolist()
     print(f"{len(ids)} papers; loading embedder ({args.backend})...", flush=True)
 
+    device = args.device
+    if device == "auto":
+        try:
+            import torch
+            device = "cuda" if torch.cuda.is_available() else "cpu"
+        except ImportError:
+            device = "cpu"
+    print(f"device={device}", flush=True)
+
     t0 = time.time()
-    emb = Embedder(args.backend, batch_size=args.batch_size)
+    try:
+        emb = Embedder(args.backend, device=device, batch_size=args.batch_size)
+    except RuntimeError as e:
+        if args.backend != "specter2" or args.no_fallback:
+            raise
+        print(f"specter2 unavailable ({e}); falling back to scincl", flush=True)
+        emb = Embedder("scincl", device=device, batch_size=args.batch_size)
     t_load = time.time() - t0
     print(f"backend={emb.backend} loaded in {t_load:.1f}s", flush=True)
 

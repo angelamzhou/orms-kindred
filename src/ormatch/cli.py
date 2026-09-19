@@ -34,8 +34,12 @@ def _load_tables(index_dir: Path):
 
 def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | None = None,
                     exclude_authors: set[str] | None = None, index_dir: Path = DEFAULT_INDEX,
-                    backend: str = "specter2", k_hits: int = 200) -> dict:
-    """Full pipeline: PDF -> title/abstract -> embed -> search -> rank reviewers."""
+                    backend: Optional[str] = None, k_hits: int = 200) -> dict:
+    """Full pipeline: PDF -> title/abstract -> embed -> search -> rank reviewers.
+
+    ``backend`` defaults to the backend recorded in the index's meta.json so the query is
+    embedded with the same model as the index (mixing models gives meaningless scores).
+    """
     from ormatch.embed import Embedder
     from ormatch.index import PaperIndex
     from ormatch.match import ReviewerMatcher
@@ -43,6 +47,9 @@ def suggest_for_pdf(pdf: Path, n: int = 20, exclude_institutions: set[str] | Non
 
     q = pdf_to_query(pdf)
     idx = PaperIndex.load(str(index_dir))
+    backend = backend or idx.meta.get("backend") or "specter2"
+    if idx.meta.get("backend") and backend != idx.meta["backend"]:
+        console.print(f"[yellow]warning:[/yellow] index was built with {idx.meta['backend']} but querying with {backend}")
     embedder = Embedder(backend)
     if embedder.backend == "tfidf":  # fitted vectorizer is stored beside the index
         tfidf_path = index_dir / "tfidf.pkl"
@@ -98,7 +105,7 @@ def suggest(
     exclude_author: list[str] = typer.Option([], "--exclude-author", help="OpenAlex author ID (repeatable)"),
     json_out: bool = typer.Option(False, "--json", help="Emit JSON on stdout"),
     index_dir: Path = typer.Option(DEFAULT_INDEX, "--index-dir"),
-    backend: str = typer.Option("specter2", "--backend", help="specter2 | scincl | tfidf"),
+    backend: Optional[str] = typer.Option(None, "--backend", help="specter2 | scincl | tfidf (default: backend recorded in the index)"),
 ):
     """Suggest reviewers for one PDF. Runs entirely offline against the local index."""
     res = suggest_for_pdf(pdf, n, set(exclude_institution), set(exclude_author), index_dir, backend)
@@ -110,7 +117,7 @@ def batch(
     directory: Path = typer.Argument(..., exists=True, file_okay=False),
     n: int = typer.Option(20, "--n"),
     index_dir: Path = typer.Option(DEFAULT_INDEX, "--index-dir"),
-    backend: str = typer.Option("specter2", "--backend"),
+    backend: Optional[str] = typer.Option(None, "--backend"),
     out: Optional[Path] = typer.Option(None, "--out", help="Write JSONL here (default: stdout)"),
 ):
     """Suggest reviewers for every PDF in DIR; one JSON object per line."""
@@ -130,7 +137,7 @@ def batch(
 def verify_offline(
     pdf: Path = typer.Argument(..., exists=True),
     index_dir: Path = typer.Option(DEFAULT_INDEX, "--index-dir"),
-    backend: str = typer.Option("specter2", "--backend"),
+    backend: Optional[str] = typer.Option(None, "--backend"),
     n: int = typer.Option(5, "--n"),
 ):
     """Run `suggest` with all socket creation disabled to prove no network is used."""

@@ -16,7 +16,9 @@ st.caption("Your manuscript never leaves this machine. Only the public paper ind
 
 with st.sidebar:
     index_dir = Path(st.text_input("Index directory", os.environ.get("ORMATCH_INDEX_DIR", "data/index")))
-    backend = st.selectbox("Embedding backend", ["specter2", "scincl", "tfidf"])
+    backend = st.selectbox("Embedding backend", ["index default", "specter2", "scincl", "tfidf"],
+                           help="'index default' uses the backend recorded in the index's meta.json")
+    backend = None if backend == "index default" else backend
     n = st.slider("Number of reviewers", 5, 50, 20)
     excl_inst = st.text_area("Exclude institutions (OpenAlex IDs, one per line)", height=80)
     excl_auth = st.text_area("Exclude authors (OpenAlex IDs, one per line)", height=80)
