@@ -31,9 +31,26 @@ def _prepare(pdf_bytes: bytes, index_dirs: tuple[str, ...], backend: str | None,
         tmp.write(pdf_bytes)
         tmp_path = Path(tmp.name)
     try:
-        return prepare_query(tmp_path, [Path(d) for d in index_dirs], backend)
+        prep = prepare_query(tmp_path, [Path(d) for d in index_dirs], backend)
     finally:
         tmp_path.unlink(missing_ok=True)
+    pp = prep["papers"]
+    ids = pp["openalex_work_id"].astype(str)
+    prep["abstracts"] = dict(zip(ids, pp["abstract"].fillna("")))
+    prep["venues"] = dict(zip(ids, pp["venue"].fillna("").astype(str) + " " + pp["year"].astype("Int64").astype(str)))
+    prep["rank_cache"] = {}
+    return prep
+
+
+def _rank_cached(prep: dict, **kw) -> dict:
+    """Re-rank only when a parameter changed; clicking a row must not re-rank."""
+    key = json.dumps({k: sorted(v) if isinstance(v, (set, list)) else v for k, v in kw.items()}, sort_keys=True, default=str)
+    cache = prep["rank_cache"]
+    if key not in cache:
+        if len(cache) > 50:
+            cache.clear()
+        cache[key] = rank_prepared(prep, **kw)
+    return cache[key]
 
 
 with st.sidebar:
@@ -97,8 +114,8 @@ if uploaded is not None:
         if not index_dirs:
             st.error("Select at least one index"); st.stop()
         prep = _prepare(uploaded.getvalue(), tuple(index_dirs), backend, _code_version())
-        res = rank_prepared(
-            prep, n,
+        res = _rank_cached(
+            prep, n=n,
             exclude_institutions={s.strip() for s in excl_inst.splitlines() if s.strip()},
             exclude_authors={s.strip() for s in excl_auth.splitlines() if s.strip()},
             lam=lam, k=k, half_life=half_life, cite_weight=cite_weight, min_papers=min_papers,
@@ -115,9 +132,7 @@ if uploaded is not None:
         st.error(f"Failed: {e!r}")
         st.stop()
 
-    abstracts = dict(zip(prep["papers"]["openalex_work_id"].astype(str), prep["papers"]["abstract"].fillna("")))
-    venues = dict(zip(prep["papers"]["openalex_work_id"].astype(str),
-                      prep["papers"]["venue"].fillna("").astype(str) + " " + prep["papers"]["year"].astype("Int64").astype(str)))
+    abstracts, venues = prep["abstracts"], prep["venues"]
 
     # ---- header -----------------------------------------------------------------------
     st.subheader(res["title"] or "(no title found)")
@@ -143,6 +158,31 @@ if uploaded is not None:
     if prep.get("n_author_stats") == 0 and seniority_weight:
         st.warning("No data/authors.parquet found; run scripts/fetch_author_stats.py for the seniority penalty.")
 
+    # ---- the objective with the current weights, and the scale it operates on -------------
+    prm = res["params"]
+    base = [r["components"].get("best paper (1-lam)*max", 0) + r["components"].get("top-k mean lam*mean", 0) for r in res["reviewers"]]
+    terms = [f"{1 - prm['lam']:.2f} · max_sim + {prm['lam']:.2f} · mean_top{prm['k']}"]
+    if prm["cite_weight"]:
+        terms.append(f"+ {prm['cite_weight']:.2f} · (1 − 0.5^n_cited)")
+    if prm.get("seed_weight"):
+        terms.append(f"+ {prm['seed_weight']:.2f} · sim_to_seed")
+    if prm.get("early_career_weight"):
+        terms.append(f"+ {prm['early_career_weight']:.3f} · early_career")
+    if prm.get("volume_correction"):
+        terms.append(f"− {prm['volume_correction']:.2f} · E[max of n random]")
+    if prm.get("editor_weight"):
+        terms.append(f"− {prm['editor_weight']:.2f} · editor_roles")
+    if prm.get("seniority_weight"):
+        terms.append(f"− {prm['seniority_weight']:.3f} · log_works_above_median")
+    with st.container(border=True):
+        st.markdown("**score = " + " ".join(terms) + "**")
+        if base:
+            st.caption(f"Scale: among the {len(base)} listed, the text-similarity part ranges {min(base):.3f} to {max(base):.3f} "
+                       f"(spread {max(base) - min(base):.3f}). A weight of 0.05 is therefore about "
+                       f"{(0.05 / max(max(base) - min(base), 1e-6)):.1f}x the whole gap between #1 and #{len(base)}; "
+                       "the detail panel shows each term per person."
+                       + (f"  Diversity {prm['diversity']:.2f}: order re-ranked by marginal relevance." if prm.get("diversity") else ""))
+
     # ---- ranked list (left) + details of the selected row (right) -----------------------
     rows = []
     for i, r in enumerate(res["reviewers"], 1):
@@ -166,24 +206,28 @@ if uploaded is not None:
     with right:
         r = res["reviewers"][picked] if res["reviewers"] else None
         if r:
-            st.markdown(f"### {r['author_name']}")
-            st.write(r.get("institution") or "institution unknown")
-            facts = [f"score {float(r['score']):.3f}", f"{r['n_papers']} indexed papers"]
-            if r.get("n_cited"):
-                facts.append(f"cited {r['n_cited']}x by this manuscript")
-            if r.get("seniority") is not None:
-                facts.append(f"{int(r['seniority'])} works on OpenAlex")
-            if r.get("n_editor_roles"):
-                facts.append(f"{r['n_editor_roles']} editorial role(s)")
-            if r.get("or_links") is not None:
-                facts.append(f"{r['or_links']} links to OR literature")
-            st.caption(" · ".join(facts) + f"  ·  OpenAlex {r['author_id']}")
+            st.markdown(f"#### {r['author_name']}")
+            st.caption((r.get("institution") or "institution unknown") + f"  ·  {r['n_papers']} indexed papers"
+                       + (f"  ·  cited {r['n_cited']}x here" if r.get("n_cited") else ""))
             if r.get("coi"):
-                st.error(f"Potential conflict: {r['coi']}. Please verify.")
-            st.markdown("**Why this person**")
+                st.warning(f"Possible conflict: {r['coi']}")
             for pid, title, score in r.get("evidence") or []:
-                with st.expander(f"{title}  (sim {float(score):.2f}, {venues.get(pid, '')})", expanded=True):
+                with st.expander(f"{title}  ({venues.get(pid, '')}, sim {float(score):.2f})", expanded=False):
                     st.write(abstracts.get(pid) or "_no abstract in the index_")
+            with st.expander("Score breakdown", expanded=False):
+                comp = r.get("components") or {}
+                st.table(pd.DataFrame({"term": list(comp), "value": [f"{v:+.3f}" for v in comp.values()]}).set_index("term"))
+                st.caption(f"total {float(r['score']):.3f}")
+            with st.expander("More about this person", expanded=False):
+                facts = [f"score {float(r['score']):.3f}"]
+                if r.get("seniority") is not None:
+                    facts.append(f"{int(r['seniority'])} works on OpenAlex")
+                if r.get("n_editor_roles"):
+                    facts.append(f"{r['n_editor_roles']:g} editorial role(s)")
+                if r.get("or_links") is not None:
+                    facts.append(f"{r['or_links']} links to OR literature")
+                facts.append(f"OpenAlex {r['author_id']}")
+                st.write(" · ".join(facts))
 
     # ---- downloads ------------------------------------------------------------------------
     flat = []

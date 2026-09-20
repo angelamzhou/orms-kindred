@@ -47,6 +47,7 @@ class ReviewerCandidate:
     n_editor_roles: int = 0  # current editorial positions known from data/editors.csv
     seniority: Optional[float] = None  # works_count from data/authors.parquet, if loaded
     or_links: Optional[int] = None  # core-venue papers + citation links to core (add-on authors)
+    components: Dict[str, float] = field(default_factory=dict)  # score = sum of these terms
 
     def to_dict(self) -> Dict:
         return {
@@ -60,6 +61,7 @@ class ReviewerCandidate:
             "n_editor_roles": self.n_editor_roles,
             "seniority": self.seniority,
             "or_links": self.or_links,
+            "components": {k: round(v, 4) for k, v in self.components.items()},
         }
 
 
@@ -147,6 +149,11 @@ class ReviewerMatcher:
                 rows[au].append(pos)
                 self.coauthors[au].update(auths - {au})
         self.author_rows = {au: np.array(sorted(set(p)), dtype=np.int64) for au, p in rows.items()}
+        # flat layout for vectorised per-author max: rows concatenated, with segment starts
+        self._authors_flat = list(self.author_rows)
+        lens = np.array([len(self.author_rows[a]) for a in self._authors_flat], dtype=np.int64)
+        self._flat_rows = np.concatenate([self.author_rows[a] for a in self._authors_flat]) if lens.size else np.zeros(0, np.int64)
+        self._flat_starts = np.concatenate([[0], np.cumsum(lens)[:-1]]) if lens.size else np.zeros(0, np.int64)
 
         self.ref_year = ref_year
         self.set_recency(recency_half_life, papers)
@@ -319,8 +326,25 @@ class ReviewerMatcher:
                 for au in self.paper_authors.get(pid, ()):
                     cited_count[au] += 1
 
+        # Candidate pool: the exact per-author score needs a Python loop, so restrict it to the
+        # authors whose best (weighted) paper is in the top `pool` by a vectorised max, plus
+        # anyone the manuscript cites or a seed resembles (bonuses can lift them in). Penalties
+        # only lower scores, so nobody outside the pool could have ranked above it.
+        flat = wsims[self._flat_rows]
+        flat_nan = np.where(np.isnan(flat), -np.inf, flat)
+        best = np.maximum.reduceat(flat_nan, self._flat_starts) if len(self._flat_starts) else np.zeros(0)
+        pool = max(2000, 100 * (top_n or 20))
+        if len(best) > pool:
+            idx = np.argpartition(-best, pool - 1)[:pool]
+        else:
+            idx = np.arange(len(best))
+        candidates = {self._authors_flat[i] for i in idx if np.isfinite(best[i])}
+        candidates |= set(cited_count)
+        if seed_author_ids and seed_weight:
+            candidates |= set(self.author_rows)  # seed bonus applies to everyone; keep exact
         out: List[ReviewerCandidate] = []
-        for au, rows in self.author_rows.items():
+        for au in candidates:
+            rows = self.author_rows[au]
             if au in conflicted:
                 continue
             if bad_inst and (self.author_inst.get(au, set()) & bad_inst):
@@ -334,29 +358,33 @@ class ReviewerMatcher:
             s, r = s[ok], rows[ok]
             order = np.argsort(-s)
             topk = s[order[: self.k]]
-            score = (1 - self.lam) * float(s[order[0]]) + self.lam * float(topk.mean())
+            comp: Dict[str, float] = {
+                "best paper (1-lam)*max": (1 - self.lam) * float(s[order[0]]),
+                "top-k mean lam*mean": self.lam * float(topk.mean()),
+            }
             nc = cited_count.get(au, 0)
             if nc:
-                score += cite_weight * (1 - 0.5 ** nc)
+                comp["cited bonus"] = cite_weight * (1 - 0.5 ** nc)
             if exp_gain is not None:
-                score -= volume_correction * float(exp_gain[min(int(ok.sum()), len(exp_gain)) - 1])
+                comp["volume correction"] = -volume_correction * float(exp_gain[min(int(ok.sum()), len(exp_gain)) - 1])
             ne = self.editor_roles.get(au, 0)
             if ne and editor_weight:
-                score -= editor_weight * ne
+                comp["editor penalty"] = -editor_weight * ne
             sen = self.author_stats.get(au)
             if sen is not None and seniority_weight and sen_med is not None:
-                score -= seniority_weight * max(0.0, float(np.log1p(sen)) - sen_med)
+                comp["seniority penalty"] = -seniority_weight * max(0.0, float(np.log1p(sen)) - sen_med)
             if sen is not None and early_career_weight:
                 # bonus that fades linearly in log(works): full at 1 work, zero at early_career_max_works
                 frac = 1.0 - float(np.log1p(sen)) / float(np.log1p(early_career_max_works))
                 if frac > 0:
-                    score += early_career_weight * frac
+                    comp["early-career bonus"] = early_career_weight * frac
+            score = float(sum(comp.values()))
             ev = [(self.index.paper_ids[r[i]], float(sims[r[i]])) for i in order[:n_evidence]]
             out.append(
                 ReviewerCandidate(
                     au, self.author_name.get(au, au), score, int(len(rows)), ev,
                     sorted(self.author_inst_names.get(au, set())), nc, ne,
-                    self.author_stats.get(au), self.or_links.get(au) if self.or_links else None,
+                    self.author_stats.get(au), self.or_links.get(au) if self.or_links else None, comp,
                 )
             )
         out.sort(key=lambda c: -c.score)
@@ -377,6 +405,7 @@ class ReviewerMatcher:
             Sd = np.stack([profile(a) for a in seeds])
             seed_sim = (P @ Sd.T).max(axis=1)
             for c, ss in zip(pool, seed_sim):
+                c.components["seed bonus"] = seed_weight * float(ss)
                 c.score += seed_weight * float(ss)
             pool.sort(key=lambda c: -c.score)
             P = np.stack([profile(c.author_id) for c in pool])

@@ -220,6 +220,7 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
     for c in cands:
         reviewers.append({
             "coi": coi.get(c.author_id),
+            "components": {k: round(v, 4) for k, v in c.components.items()},
             "n_editor_roles": c.n_editor_roles,
             "seniority": c.seniority,
             "or_links": c.or_links,
