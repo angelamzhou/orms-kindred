@@ -71,6 +71,21 @@ def load_indexes(index_dirs: list[Path]):
     return concat_indexes(idxs), authorships, papers, references, core_ids
 
 
+PERSONAL_COI = Path.home() / ".ormatch" / "conflicts.txt"
+
+
+def load_personal_conflicts(path: Path = PERSONAL_COI) -> list[str]:
+    """Names/ids the user declares as conflicts, one per line (# comments allowed). Local only."""
+    if not path.exists():
+        return []
+    return [ln.strip() for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip() and not ln.startswith("#")]
+
+
+def save_personal_conflicts(names: list[str], path: Path = PERSONAL_COI) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("# ORMatch personal conflicts: one name or OpenAlex author id per line\n" + "\n".join(names) + "\n", encoding="utf-8")
+
+
 def _load_side_tables(index_dir: Path) -> tuple[dict, dict, list]:
     """Optional local tables next to the core index:
     editors.csv (author_id or name, journal, role) from scripts/scrape_editorial_boards.py,
@@ -167,7 +182,7 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
                   min_or_links: Optional[int] = None, volume_correction: float = 0.0,
                   early_career_weight: float = 0.0, early_career_max_works: int = 15,
                   seed_reviewers: Optional[list[str]] = None, seed_weight: float = 0.2,
-                  diversity: float = 0.0) -> dict:
+                  diversity: float = 0.0, personal_conflicts: Optional[list[str]] = None) -> dict:
     """Cheap half: aggregate similarities into reviewer scores with the given weights.
 
     lam          0 = score an author by their single most similar paper; 1 = by the mean of their
@@ -200,6 +215,11 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
     ms_ids = {i for ids in resolved.values() for i in ids} | set(exclude_authors or [])
     coi = matcher.conflicts_for(ms_ids, coauthor_years=coi_years, same_institution=coi_same_institution,
                                 extra_pairs=[(a, b) for a, b, *_ in prep.get("genealogy_pairs", [])]) if ms_ids else {}
+    # user-declared conflicts (personal list): always flagged, whatever the data says
+    pc = personal_conflicts if personal_conflicts is not None else load_personal_conflicts()
+    for q, ids in matcher.resolve_authors(pc).items():
+        for i in ids:
+            coi[i] = f"declared conflict ({q})"
     if min_or_links is None:
         min_or_links = 1 if prep.get("multi") else 0
     hard_exclude = set(coi) if coi_mode == "exclude" else set(ms_ids)  # authors themselves always out
@@ -310,9 +330,12 @@ def suggest(
     seed: list[str] = typer.Option([], "--seed", help="Reviewer you already have in mind (name or OpenAlex id, repeatable); pulls the list toward similar people"),
     seed_weight: float = typer.Option(0.2, "--seed-weight", help="Bonus = weight x cosine between a candidate's profile and the closest seed profile"),
     diversity: float = typer.Option(0.0, "--diversity", min=0.0, max=1.0, help="0..1 maximal-marginal-relevance re-ranking: penalise candidates close to seeds or already-picked reviewers"),
+    conflict: list[str] = typer.Option([], "--conflict", help="Declare a conflict (name or id, repeatable); added to ~/.ormatch/conflicts.txt for future runs"),
 ):
     """Suggest reviewers for one PDF. Runs entirely offline against the local index."""
     dirs = discover_index_dirs(index_dir[0]) if all_collections else list(index_dir)
+    if conflict:
+        save_personal_conflicts(sorted(set(load_personal_conflicts()) | set(conflict)))
     res = suggest_for_pdf(pdf, n, set(exclude_institution), set(exclude_author), dirs, backend,
                           cite_weight=cite_weight, lam=lam, k=k, half_life=half_life,
                           manuscript_authors=list(author), coi_years=coi_years, coi_mode=coi,

@@ -9,7 +9,7 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from ormatch.cli import discover_index_dirs, prepare_query, rank_prepared
+from ormatch.cli import PERSONAL_COI, discover_index_dirs, load_personal_conflicts, prepare_query, rank_prepared, save_personal_conflicts
 
 st.set_page_config(page_title="ORMatch", layout="wide")
 st.title("ORMatch: reviewer suggestions")
@@ -104,6 +104,12 @@ with st.sidebar:
     coi_years = st.slider("Co-authorship window (years)", 1, 20, 5)
     coi_same_inst = st.checkbox("Flag same institution", value=True)
     coi_mode = st.radio("Conflicted candidates", ["flag with evidence", "exclude"], index=0, horizontal=True)
+    personal = st.text_area("My declared conflicts (names or IDs, one per line; saved locally)",
+                            value="\n".join(load_personal_conflicts()), height=90,
+                            help=f"Always flagged regardless of what the data shows. Stored in {PERSONAL_COI}.")
+    personal_list = [a.strip() for a in personal.splitlines() if a.strip()]
+    if personal_list != load_personal_conflicts():
+        save_personal_conflicts(personal_list)
     excl_inst = st.text_area("Always exclude institutions (OpenAlex IDs, one per line)", height=60)
     excl_auth = st.text_area("Always exclude authors (OpenAlex IDs, one per line)", height=60)
 
@@ -126,7 +132,7 @@ if uploaded is not None:
             min_or_links=min_or_links, volume_correction=volume_correction,
             early_career_weight=early_career_weight, early_career_max_works=early_career_max_works,
             seed_reviewers=[a.strip() for a in seeds_txt.splitlines() if a.strip()],
-            seed_weight=seed_weight, diversity=diversity,
+            seed_weight=seed_weight, diversity=diversity, personal_conflicts=personal_list,
         )
     except Exception as e:  # show, do not crash
         st.error(f"Failed: {e!r}")
