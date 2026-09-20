@@ -74,6 +74,13 @@ with st.sidebar:
     min_or_links = st.slider("Add-on authors: minimum links to OR literature", 0, 10, 1,
                              help="Core-venue papers plus citations to/from core papers. Only applies when add-on collections are searched.")
 
+    st.markdown("### Seeds and diversity")
+    seeds_txt = st.text_area("Reviewers you already have in mind (names or IDs, one per line)", height=70,
+                             help="Pulls the list toward people whose body of work resembles these seeds.")
+    seed_weight = st.slider("Seed pull", 0.0, 0.5, 0.2, 0.05)
+    diversity = st.slider("Diversity", 0.0, 1.0, 0.0, 0.05,
+                          help="Re-ranks so consecutive picks cover different neighbourhoods rather than clones of the seeds (maximal marginal relevance).")
+
     st.markdown("### Conflicts of interest")
     ms_authors = st.text_area("Manuscript authors (names or OpenAlex IDs, one per line)", height=90,
                               help="Resolved against the index. Their co-authors, colleagues and genealogy links are flagged.")
@@ -101,6 +108,8 @@ if uploaded is not None:
             editor_weight=editor_weight, seniority_weight=seniority_weight,
             min_or_links=min_or_links, volume_correction=volume_correction,
             early_career_weight=early_career_weight, early_career_max_works=early_career_max_works,
+            seed_reviewers=[a.strip() for a in seeds_txt.splitlines() if a.strip()],
+            seed_weight=seed_weight, diversity=diversity,
         )
     except Exception as e:  # show, do not crash
         st.error(f"Failed: {e!r}")

@@ -67,6 +67,15 @@ citation boost at 0.1, baseline MRR 0.317 / recall@10 0.324):
 
 The leave-one-out metric rewards finding a paper's *actual* authors, who are disproportionately prolific, so every knob that de-emphasises volume or seniority lowers it. That is expected: these are preferences about who should review, not accuracy tuning.
 
+### Seeds and diversity
+
+`--seed "Name"` (repeatable) names reviewers you already have in mind. Each candidate gets
+`--seed-weight` x cosine between their profile (mean embedding of their indexed papers) and the closest seed's
+profile, so the list tilts toward the *kind* of reviewer the seeds represent, which the abstract alone cannot
+express; the seeds themselves are removed from the output. `--diversity d` (0..1) re-ranks the top pool by
+maximal marginal relevance, `(1-d) * score - d * max cosine to seeds and already-picked reviewers`, so
+consecutive picks cover different neighbourhoods instead of clones of the seeds. Both are sliders in the UI.
+
 ### Conflicts of interest
 
 `ormatch suggest PAPER.pdf --author "Jane Doe" --author A5012345678 ...` resolves the manuscript's authors against the

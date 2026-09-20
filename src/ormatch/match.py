@@ -265,6 +265,10 @@ class ReviewerMatcher:
         volume_correction: float = 0.0,
         early_career_weight: float = 0.0,
         early_career_max_works: int = 15,
+        seed_author_ids: Optional[Iterable[str]] = None,
+        seed_weight: float = 0.0,
+        diversity: float = 0.0,
+        pool_factor: int = 5,
     ) -> List[ReviewerCandidate]:
         """Rank authors for one query vector.
 
@@ -356,7 +360,46 @@ class ReviewerMatcher:
                 )
             )
         out.sort(key=lambda c: -c.score)
-        return out[:top_n] if top_n else out
+
+        seeds = [str(x) for x in (seed_author_ids or []) if str(x) in self.author_rows]
+        if not (seeds and seed_weight) and not diversity:
+            return out[:top_n] if top_n else out
+
+        # --- seeds and diversity work on author profiles (mean of their paper embeddings) ---
+        pool = out[: max(top_n * pool_factor, 50)] if top_n else out
+        def profile(au: str) -> np.ndarray:
+            v = self.index.embeddings[self.author_rows[au]].mean(axis=0)
+            n = float(np.linalg.norm(v)) or 1.0
+            return v / n
+        P = np.stack([profile(c.author_id) for c in pool]) if pool else np.zeros((0, self.index.embeddings.shape[1]))
+        if seeds and seed_weight:
+            # bonus = seed_weight * best cosine to any seed profile: "people like these"
+            Sd = np.stack([profile(a) for a in seeds])
+            seed_sim = (P @ Sd.T).max(axis=1)
+            for c, ss in zip(pool, seed_sim):
+                c.score += seed_weight * float(ss)
+            pool.sort(key=lambda c: -c.score)
+            P = np.stack([profile(c.author_id) for c in pool])
+        if diversity and pool:
+            # maximal marginal relevance: greedily pick the candidate maximising
+            # (1 - d) * score - d * max cosine to (seeds + already picked), so the list covers
+            # different neighbourhoods instead of the seeds' clones
+            d = float(min(max(diversity, 0.0), 1.0))
+            chosen: List[int] = []
+            taken = [profile(a) for a in seeds]
+            scores = np.array([c.score for c in pool], dtype=np.float32)
+            remaining = list(range(len(pool)))
+            while remaining and len(chosen) < (top_n or len(pool)):
+                if taken:
+                    T = np.stack(taken)
+                    red = (P[remaining] @ T.T).max(axis=1)
+                else:
+                    red = np.zeros(len(remaining), dtype=np.float32)
+                mmr = (1 - d) * scores[remaining] - d * red
+                j = remaining[int(np.argmax(mmr))]
+                chosen.append(j); remaining.remove(j); taken.append(P[j])
+            pool = [pool[j] for j in chosen]
+        return pool[:top_n] if top_n else pool
 
     def rank_frame(self, *args, **kwargs) -> pd.DataFrame:
         return pd.DataFrame([c.to_dict() for c in self.rank(*args, **kwargs)])

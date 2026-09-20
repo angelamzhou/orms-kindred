@@ -165,7 +165,9 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
                   coi_same_institution: bool = True, coi_mode: str = "flag",
                   editor_weight: float = 0.0, seniority_weight: float = 0.0,
                   min_or_links: Optional[int] = None, volume_correction: float = 0.0,
-                  early_career_weight: float = 0.0, early_career_max_works: int = 15) -> dict:
+                  early_career_weight: float = 0.0, early_career_max_works: int = 15,
+                  seed_reviewers: Optional[list[str]] = None, seed_weight: float = 0.2,
+                  diversity: float = 0.0) -> dict:
     """Cheap half: aggregate similarities into reviewer scores with the given weights.
 
     lam          0 = score an author by their single most similar paper; 1 = by the mean of their
@@ -193,12 +195,15 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
     matcher.lam, matcher.k, matcher.min_papers = lam, k, min_papers
     matcher.set_recency(half_life, prep["papers"])
     resolved = matcher.resolve_authors(manuscript_authors or [])
+    seeds_resolved = matcher.resolve_authors(seed_reviewers or [])
+    seed_ids = {i for ids in seeds_resolved.values() for i in ids}
     ms_ids = {i for ids in resolved.values() for i in ids} | set(exclude_authors or [])
     coi = matcher.conflicts_for(ms_ids, coauthor_years=coi_years, same_institution=coi_same_institution,
                                 extra_pairs=[(a, b) for a, b, *_ in prep.get("genealogy_pairs", [])]) if ms_ids else {}
     if min_or_links is None:
         min_or_links = 1 if prep.get("multi") else 0
     hard_exclude = set(coi) if coi_mode == "exclude" else set(ms_ids)  # authors themselves always out
+    hard_exclude |= seed_ids  # the user already has the seeds; show who else is like them
     cands = matcher.rank(
         prep["qvec"], top_n=n,
         manuscript_author_ids=None,
@@ -208,6 +213,7 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
         exclude_ids=hard_exclude, editor_weight=editor_weight, seniority_weight=seniority_weight,
         min_or_links=min_or_links, volume_correction=volume_correction,
         early_career_weight=early_career_weight, early_career_max_works=early_career_max_works,
+        seed_author_ids=seed_ids, seed_weight=seed_weight if seed_ids else 0.0, diversity=diversity,
     )
     titles = prep["titles"]
     reviewers = []
@@ -231,12 +237,14 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
             "n_references": len(prep["references"]), "n_references_in_index": len(prep["cited_ids"]),
             "cited_papers": [(pid, titles.get(pid, pid)) for pid in prep["cited_ids"]],
             "manuscript_authors": {q: ids for q, ids in resolved.items()},
+            "seed_reviewers": {q: ids for q, ids in seeds_resolved.items()},
             "n_conflicts_flagged": sum(1 for r in reviewers if r["coi"]),
             "params": {"n": n, "lam": lam, "k": k, "half_life": half_life, "cite_weight": cite_weight,
                        "min_papers": min_papers, "coi_years": coi_years, "coi_mode": coi_mode,
                        "editor_weight": editor_weight, "seniority_weight": seniority_weight,
                        "min_or_links": min_or_links, "volume_correction": volume_correction,
-                       "early_career_weight": early_career_weight, "early_career_max_works": early_career_max_works},
+                       "early_career_weight": early_career_weight, "early_career_max_works": early_career_max_works,
+                       "seed_weight": seed_weight if seed_ids else 0.0, "diversity": diversity},
             "reviewers": reviewers}
 
 
@@ -298,6 +306,9 @@ def suggest(
     volume_correction: float = typer.Option(0.0, "--volume-correction", min=0.0, max=1.0, help="0..1: remove the chance advantage of prolific authors (surfaces close fits with few papers)"),
     early_career_weight: float = typer.Option(0.0, "--early-career-weight", help="Bonus for authors with few OpenAlex works (PhD students, postdocs); fades to 0 at --early-career-max-works"),
     early_career_max_works: int = typer.Option(15, "--early-career-max-works"),
+    seed: list[str] = typer.Option([], "--seed", help="Reviewer you already have in mind (name or OpenAlex id, repeatable); pulls the list toward similar people"),
+    seed_weight: float = typer.Option(0.2, "--seed-weight", help="Bonus = weight x cosine between a candidate's profile and the closest seed profile"),
+    diversity: float = typer.Option(0.0, "--diversity", min=0.0, max=1.0, help="0..1 maximal-marginal-relevance re-ranking: penalise candidates close to seeds or already-picked reviewers"),
 ):
     """Suggest reviewers for one PDF. Runs entirely offline against the local index."""
     dirs = discover_index_dirs(index_dir[0]) if all_collections else list(index_dir)
@@ -306,7 +317,8 @@ def suggest(
                           manuscript_authors=list(author), coi_years=coi_years, coi_mode=coi,
                           editor_weight=editor_weight, seniority_weight=seniority_weight, min_or_links=min_or_links,
                           volume_correction=volume_correction, early_career_weight=early_career_weight,
-                          early_career_max_works=early_career_max_works)
+                          early_career_max_works=early_career_max_works, seed_reviewers=list(seed),
+                          seed_weight=seed_weight, diversity=diversity)
     _print_result(res, json_out)
 
 
