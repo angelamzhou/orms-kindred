@@ -404,8 +404,11 @@ class ReviewerMatcher:
             # bonus = seed_weight * best cosine to any seed profile: "people like these"
             Sd = np.stack([profile(a) for a in seeds])
             seed_sim = (P @ Sd.T).max(axis=1)
+            # profile cosines cluster near 1 for everyone in the pool, so use the deviation from
+            # the pool median: candidates *unusually* like a seed gain, unlike ones lose
+            seed_sim = seed_sim - float(np.median(seed_sim))
             for c, ss in zip(pool, seed_sim):
-                c.components["seed bonus"] = seed_weight * float(ss)
+                c.components["seed bonus (vs pool median)"] = seed_weight * float(ss)
                 c.score += seed_weight * float(ss)
             pool.sort(key=lambda c: -c.score)
             P = np.stack([profile(c.author_id) for c in pool])
