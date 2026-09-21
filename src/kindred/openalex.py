@@ -75,7 +75,7 @@ class OpenAlexClient:
         self.max_tries = max_tries
         self.timeout = timeout
         self.session = session or requests.Session()
-        self.session.headers["User-Agent"] = "ormatch/0.1 (python-requests)"
+        self.session.headers["User-Agent"] = "kindred/0.1 (python-requests)"
         self._verify: bool | str = True
         self.calls = 0
 

@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ormatch"
+name = "orms-kindred"
 version = "0.1.0"
 description = "Local, privacy-preserving reviewer matching for OR/MS/OM papers"
 readme = "README.md"
@@ -28,10 +28,10 @@ ui = ["streamlit"]
 dev = ["pytest"]
 
 [project.scripts]
-ormatch = "ormatch.cli:app"
+kindred = "kindred.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.setuptools.package-data]
-ormatch = ["*.py"]
+kindred = ["*.py"]

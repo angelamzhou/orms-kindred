@@ -31,8 +31,8 @@ AUTHORSHIPS = [
 
 
 def build_tiny_index(index_dir: Path) -> None:
-    from ormatch.embed import Embedder
-    from ormatch.index import build_index
+    from kindred.embed import Embedder
+    from kindred.index import build_index
 
     index_dir.mkdir(parents=True, exist_ok=True)
     papers = pd.DataFrame(PAPERS, columns=["openalex_work_id", "title", "abstract", "year"])
@@ -46,7 +46,7 @@ def build_tiny_index(index_dir: Path) -> None:
 
 
 def test_pdf_extraction():
-    from ormatch.pdf import extract_text, guess_title_abstract
+    from kindred.pdf import extract_text, guess_title_abstract
 
     title, abstract = guess_title_abstract(extract_text(FIX))
     assert title.startswith("Robust Vehicle Routing under Demand Uncertainty")
@@ -58,7 +58,7 @@ def test_suggest_and_verify_offline(tmp_path: Path):
     idx = tmp_path / "index"
     build_tiny_index(idx)
     out = subprocess.run(
-        [sys.executable, "-m", "ormatch.cli", "suggest", str(FIX), "--backend", "tfidf", "--index-dir", str(idx),
+        [sys.executable, "-m", "kindred.cli", "suggest", str(FIX), "--backend", "tfidf", "--index-dir", str(idx),
          "--json", "--n", "5", "--exclude-institution", "I2"],
         capture_output=True, text=True, check=True,
     )
@@ -69,7 +69,7 @@ def test_suggest_and_verify_offline(tmp_path: Path):
     assert res["reviewers"][0]["evidence"][0][1].startswith("Robust vehicle routing")
 
     off = subprocess.run(
-        [sys.executable, "-m", "ormatch.cli", "verify-offline", str(FIX), "--backend", "tfidf", "--index-dir", str(idx)],
+        [sys.executable, "-m", "kindred.cli", "verify-offline", str(FIX), "--backend", "tfidf", "--index-dir", str(idx)],
         capture_output=True, text=True,
     )
     assert off.returncode == 0, off.stderr
@@ -81,5 +81,5 @@ if __name__ == "__main__":
 
     d = Path(tempfile.mkdtemp()) / "index"
     build_tiny_index(d)
-    subprocess.run([sys.executable, "-m", "ormatch.cli", "suggest", str(FIX), "--backend", "tfidf", "--index-dir", str(d), "--n", "5"])
-    subprocess.run([sys.executable, "-m", "ormatch.cli", "verify-offline", str(FIX), "--backend", "tfidf", "--index-dir", str(d)])
+    subprocess.run([sys.executable, "-m", "kindred.cli", "suggest", str(FIX), "--backend", "tfidf", "--index-dir", str(d), "--n", "5"])
+    subprocess.run([sys.executable, "-m", "kindred.cli", "verify-offline", str(FIX), "--backend", "tfidf", "--index-dir", str(d)])

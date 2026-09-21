@@ -146,7 +146,7 @@ def main() -> int:
         return 0
 
     session = requests.Session()
-    session.headers["User-Agent"] = "ormatch-backfill/0.1 (https://github.com/; mailto:ormatch@localhost)"
+    session.headers["User-Agent"] = "kindred-backfill/0.1 (https://github.com/; mailto:kindred@localhost)"
     s2_key = os.environ.get("S2_API_KEY")
     if s2_key:
         session.headers["x-api-key"] = s2_key

@@ -1,11 +1,11 @@
-# Reviewer matching: how existing systems score and weight, and where ORMatch's weights come from
+# Reviewer matching: how existing systems score and weight, and where Kindred's weights come from
 
-*Compiled 2026-09-18 while building ORMatch. Numbers quoted from the sources are as reported
-there; ORMatch numbers are leave-one-out on the 2014+ OR/MS index (31,649 papers, n=200 sample).*
+*Compiled 2026-09-18 while building Kindred. Numbers quoted from the sources are as reported
+there; Kindred numbers are leave-one-out on the 2014+ OR/MS index (31,649 papers, n=200 sample).*
 
 ## 1. The question
 
-ORMatch scores an author for a manuscript as
+Kindred scores an author for a manuscript as
 
     score = (1 - lam) * max_i sim_i + lam * mean(top-k sim_i) + cite_weight * (1 - 0.5^n_cited)
 
@@ -30,7 +30,7 @@ the same choices.
 - **Combination with other signals.** TPMS returns scores; CMT's matcher combines them linearly
   with reviewer bids and subject-area scores. No citation signal; the paper cites Rodriguez &
   Bollen (2008) as prior work that uses references.
-- **Takeaway for ORMatch.** Weights are either fixed linear mixes or learned *only* from elicited
+- **Takeaway for Kindred.** Weights are either fixed linear mixes or learned *only* from elicited
   reviewer scores, which a journal-side tool does not have.
 
 ### OpenReview expertise model (SPECTER + MFR)
@@ -44,13 +44,13 @@ the same choices.
 ### ACL / ACL Rolling Review matcher
 - Contrastive encoder trained on ACL Anthology abstracts; reviewer score = weighted sum of the
   **top-3** cosines with weights 1, 1/2, 1/3 (as described in Stelmakh et al.). This is the same
-  diminishing-returns idea as ORMatch's `lam`/`k` mixture and its saturating citation bonus.
+  diminishing-returns idea as Kindred's `lam`/`k` mixture and its saturating citation bonus.
 
 ### Rodriguez & Bollen (2008), "An algorithm to determine peer-reviewers"
 - Builds a co-authorship network starting from the **authors of the manuscript's references**,
   expands to co-authors of co-authors, and runs a relative-rank particle-swarm walk to rank experts.
   Not limited to a preselected pool; can surface conflicts of interest.
-- **Takeaway.** The bibliography as the primary reviewer signal has a 2008 pedigree; ORMatch's
+- **Takeaway.** The bibliography as the primary reviewer signal has a 2008 pedigree; Kindred's
   `cite_weight` is a one-hop, linear version of this idea combined with text similarity.
 
 ### Stelmakh, Wieting, Xing & Shah, "A Gold Standard Dataset for the Reviewer Assignment Problem"
@@ -76,7 +76,7 @@ the same choices.
   coupling between the manuscript and index papers is a natural next signal beyond the one-hop
   cited-author bonus.
 
-## 3. What this implies for ORMatch's weights
+## 3. What this implies for Kindred's weights
 
 | weight | default | provenance |
 |---|---|---|
@@ -84,7 +84,7 @@ the same choices.
 | `k` | 3 | ACL's top-3 (1, 1/2, 1/3). k=5 did not help in our grid. |
 | `cite_weight` | 0.1 | Our addition (Rodriguez & Bollen lineage). Saturating form `1 - 0.5^n` is a design choice. LOO with the held-out paper's OpenAlex references as bibliography: MRR 0.196 -> 0.295 (0.05) -> 0.317 (0.1) -> 0.320 (0.2); recall@10 0.259 -> 0.324; recall@20 0.303 -> 0.396. Plateau from 0.1. |
 | `half_life` | off | Not in any of the systems above; a product preference for active reviewers. Implemented as shrinkage toward the query's mean similarity (multiplying raw cosines is meaningless for dense encoders whose cosines sit in [0.7, 1]). Costs LOO accuracy (MRR 0.070 at 8 years). |
-| ensemble | linear | Every deployed system mixes signals linearly with hand-set weights; weights are learned only where elicited reviewer ratings exist. Hence ORMatch exposes them (CLI flags, Streamlit sliders) instead of fixing them. |
+| ensemble | linear | Every deployed system mixes signals linearly with hand-set weights; weights are learned only where elicited reviewer ratings exist. Hence Kindred exposes them (CLI flags, Streamlit sliders) instead of fixing them. |
 
 ## 4. Open questions
 1. A human-judged evaluation on OR manuscripts (editor-chosen reviewers or self-rated expertise,

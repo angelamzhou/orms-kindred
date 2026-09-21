@@ -14,8 +14,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from ormatch.openalex import OpenAlexClient  # noqa: E402
-from ormatch.sources import SOURCES  # noqa: E402
+from kindred.openalex import OpenAlexClient  # noqa: E402
+from kindred.sources import SOURCES  # noqa: E402
 
 
 def main() -> int:

@@ -22,8 +22,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from ormatch.openalex import WORK_FIELDS, OpenAlexClient  # noqa: E402
-from ormatch.sources import resolve_source, source_name  # noqa: E402
+from kindred.openalex import WORK_FIELDS, OpenAlexClient  # noqa: E402
+from kindred.sources import resolve_source, source_name  # noqa: E402
 
 
 def load_state(path: Path) -> dict:

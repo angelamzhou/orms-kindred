@@ -1,6 +1,6 @@
 """Learn ranking weights from the user's own reviewer ratings, locally.
 
-Feedback rows (~/.ormatch/feedback.jsonl): one per rated candidate, with the unweighted
+Feedback rows (~/.kindred/feedback.jsonl): one per rated candidate, with the unweighted
 features the matcher computed for it (max_sim, topk_mean, cited, volume, editor_roles,
 seniority, early_career, seed) and a label +1 (good fit) / -1 (poor fit). Unrated candidates
 that were shown alongside a rated one are stored with label 0 and used as weak negatives.
@@ -8,7 +8,7 @@ that were shown alongside a rated one are stored with label 0 and used as weak n
 Fitting: pairwise logistic regression on feature differences (good minus bad) with an L2
 penalty that pulls the weights toward the user's current slider settings, so a handful of
 ratings moves the weights a little and many ratings move them a lot. The learned weight
-vector is mapped back onto the slider parameters and saved to ~/.ormatch/weights.json.
+vector is mapped back onto the slider parameters and saved to ~/.kindred/weights.json.
 Nothing here leaves the machine.
 """
 from __future__ import annotations
@@ -21,8 +21,8 @@ from typing import Dict, Iterable, List, Optional
 
 import numpy as np
 
-FEEDBACK = Path.home() / ".ormatch" / "feedback.jsonl"
-WEIGHTS = Path.home() / ".ormatch" / "weights.json"
+FEEDBACK = Path.home() / ".kindred" / "feedback.jsonl"
+WEIGHTS = Path.home() / ".kindred" / "weights.json"
 FEATURES = ["max_sim", "topk_mean", "cited", "volume", "editor_roles", "seniority", "early_career", "seed"]
 # slider name -> (feature, sign): score += sign * slider * feature
 SLIDER_MAP = {"cite_weight": ("cited", +1), "volume_correction": ("volume", -1), "editor_weight": ("editor_roles", -1),

@@ -94,7 +94,7 @@ def main():
     roster = list(csv.DictReader(open(ROOT / "data" / "rosters_raw" / f"{args.dept_id}.csv", encoding="utf-8")))
     out_path = ROOT / "data" / f"reviewers_{args.dept_id}.csv"
     session = requests.Session()
-    session.headers["User-Agent"] = "ORMatch-resolver/0.1"
+    session.headers["User-Agent"] = "Kindred-resolver/0.1"
 
     with open(out_path, "w", newline="", encoding="utf-8") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS); w.writeheader(); f.flush()

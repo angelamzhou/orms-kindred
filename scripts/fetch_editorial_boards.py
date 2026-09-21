@@ -29,12 +29,12 @@ from bs4 import BeautifulSoup
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from ormatch.match import normalize_name  # noqa: E402
+from kindred.match import normalize_name  # noqa: E402
 
 log = logging.getLogger("boards")
 SNAP = ROOT / "data" / "editorial_snapshots"
 OUT = ROOT / "data" / "editors.csv"
-UA = "ORMatch-boards/0.1 (academic; reads Internet Archive snapshots only)"
+UA = "Kindred-boards/0.1 (academic; reads Internet Archive snapshots only)"
 
 BOARDS = {  # journal key -> (display name, live URL that the archive indexes)
     "opre": ("Operations Research", "https://pubsonline.informs.org/page/opre/editorial-board"),

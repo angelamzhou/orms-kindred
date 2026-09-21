@@ -1,6 +1,6 @@
-# ORMatch
+# orms-kindred
 
-Local, privacy-preserving reviewer matching for Operations Research / Management Science /
+Abstract-based, privacy-preserving reviewer ranking for Operations Research / Management Science /
 Operations Management papers.
 
 Give it a manuscript PDF; it returns a ranked list of candidate reviewers drawn from the
@@ -15,8 +15,8 @@ match. Conflicts can be excluded by institution or author.
 * **Private query.** The manuscript is processed entirely on your machine: text extraction
   (`pypdfium2`), embedding (a local SPECTER2/SciNCL model or TF-IDF), nearest-neighbour search
   and reviewer aggregation. No text, embedding or metadata about the submission is sent anywhere.
-  `ormatch verify-offline` runs the whole pipeline with Python sockets disabled to prove it.
-* The only network calls the tool ever makes are `ormatch fetch-index` (download the public
+  `kindred verify-offline` runs the whole pipeline with Python sockets disabled to prove it.
+* The only network calls the tool ever makes are `kindred fetch-index` (download the public
   index) and, optionally, the first download of the embedding model weights from Hugging Face.
 
 ## Install
@@ -29,18 +29,18 @@ pip install -e ".[embed]"     # + torch/transformers/adapters for SPECTER2 / Sci
                               #   In an environment pinned to an older torch, use a venv:
                               #   python -m venv .venv && .venv/bin/pip install -e ".[embed]" "torch>=2.6"
 pip install -e ".[ui]"        # + streamlit drag-and-drop UI
-ormatch fetch-index https://example.org/ormatch-index-v1.tar.gz   # downloads into data/index
+kindred fetch-index https://example.org/orms-kindred-index-v1.tar.gz   # downloads into data/index
 ```
 
 ## Commands
 
 | Command | What it does |
 |---|---|
-| `ormatch suggest PAPER.pdf [--n 20] [--exclude-institution I123]... [--exclude-author A456]... [--backend specter2\|scincl\|tfidf] [--index-dir data/index] [--json] [--cite-weight 0.1] [--lam 0.3] [--k 3] [--half-life YEARS]` | Rank reviewers for one PDF; prints a table (or JSON) with per-reviewer evidence papers and the weights used. |
-| `ormatch batch DIR [--out results.jsonl]` | Run `suggest` on every PDF in a directory, one JSON object per line. |
-| `ormatch verify-offline PAPER.pdf` | Same as `suggest`, but with `socket.socket` monkeypatched to raise; exits non-zero if anything tries to reach the network. |
-| `ormatch fetch-index URL [--sha256 HEX]` | Download the public index tarball, verify its SHA-256 (from `--sha256` or `URL.sha256`), unpack into `--index-dir`. |
-| `ormatch ui` | Launch the Streamlit app (`src/ormatch/ui_app.py`): drop a PDF, get a reviewer table with expandable evidence. Sidebar sliders change the weights below and re-rank instantly (the PDF is embedded once and cached). |
+| `kindred suggest PAPER.pdf [--n 20] [--exclude-institution I123]... [--exclude-author A456]... [--backend specter2\|scincl\|tfidf] [--index-dir data/index] [--json] [--cite-weight 0.1] [--lam 0.3] [--k 3] [--half-life YEARS]` | Rank reviewers for one PDF; prints a table (or JSON) with per-reviewer evidence papers and the weights used. |
+| `kindred batch DIR [--out results.jsonl]` | Run `suggest` on every PDF in a directory, one JSON object per line. |
+| `kindred verify-offline PAPER.pdf` | Same as `suggest`, but with `socket.socket` monkeypatched to raise; exits non-zero if anything tries to reach the network. |
+| `kindred fetch-index URL [--sha256 HEX]` | Download the public index tarball, verify its SHA-256 (from `--sha256` or `URL.sha256`), unpack into `--index-dir`. |
+| `kindred ui` | Launch the Streamlit app (`src/kindred/ui_app.py`): drop a PDF, get a reviewer table with expandable evidence. Sidebar sliders change the weights below and re-rank instantly (the PDF is embedded once and cached). |
 
 ### Ranking weights
 
@@ -78,7 +78,7 @@ consecutive picks cover different neighbourhoods instead of clones of the seeds.
 
 ### Conflicts of interest
 
-`ormatch suggest PAPER.pdf --author "Jane Doe" --author A5012345678 ...` resolves the manuscript's authors against the
+`kindred suggest PAPER.pdf --author "Jane Doe" --author A5012345678 ...` resolves the manuscript's authors against the
 index (exact normalised name, then surname + initials; ambiguous names are reported) and flags, with the evidence in a
 `COI?` column: their co-authors on papers from the last `--coi-years` (default 5), people at the same institution, and
 advisor/student pairs from `data/coi/genealogy.csv` (fill it by hand or with `scripts/fetch_genealogy.py NAME ...`, which
@@ -88,7 +88,7 @@ The manuscript authors themselves are always removed.
 ### Add-on collections
 
 The core index covers 29 OR/MS venues (73,643 papers from 2014; abstract coverage 62.5% after the Semantic Scholar backfill, the gap being Elsevier titles). Only ~29% of the references in the original 17-venue sample pointed back into those venues. Add-on
-collections (`src/ormatch/sources.py: COLLECTIONS`: `applied-or`, `econ-finance`, `stats-ml`, `algorithms`) are built as
+collections (`src/kindred/sources.py: COLLECTIONS`: `applied-or`, `econ-finance`, `stats-ml`, `algorithms`) are built as
 self-contained directories with `scripts/build_collection.sh NAME` -> `data/index_NAME/` (embeddings plus their own
 parquet tables) and can be distributed and downloaded separately. Query several at once with repeated `--index-dir`
 or `--all-collections`; the UI lists every collection it finds. Authors who appear only in add-ons must have at least
@@ -101,13 +101,13 @@ Kong, Singapore, Korea, Japan, India, Australia, Latin America) with roster URLs
 (`scripts/fill_openalex_ids.py`, `scripts/scrape_rosters.py`, `scripts/resolve_authors.py`). Rosters identify who holds
 a faculty position where; many university sites block scripts, so expect failures and use `--html-dir` with saved pages.
 
-Title/abstract extraction (`ormatch.pdf`) is heuristic: the title is the leading lines before
+Title/abstract extraction (`kindred.pdf`) is heuristic: the title is the leading lines before
 "Abstract" (stopping at author-looking lines), the abstract is the text between "Abstract" and
 "Introduction"/"1."/"Keywords" capped at 400 words, falling back to the first 300 words.
 
 ## How the index is built
 
-Scripts live in `scripts/` and use the modules in `src/ormatch/`:
+Scripts live in `scripts/` and use the modules in `src/kindred/`:
 
 1. `openalex.py` / `sources.py` pull works from OpenAlex for a curated list of OR/MS/OM venues
    (e.g. Operations Research, Management Science, M&SOM, MOR, POM, Transportation Science,
@@ -125,7 +125,7 @@ Scripts live in `scripts/` and use the modules in `src/ormatch/`:
    each held-out paper's OpenAlex references as the bibliography: MRR 0.20 -> 0.32,
    recall@10 0.26 -> 0.32, recall@20 0.30 -> 0.40 at the default weight 0.1 (17-venue index;
    on the 29-venue, 73,643-paper index: MRR 0.324, recall@10 0.327, recall@20 0.388).
-5. `tar czf ormatch-index-vN.tar.gz -C data index && sha256sum ... > ormatch-index-vN.tar.gz.sha256`
+5. `tar czf orms-kindred-index-vN.tar.gz -C data index && sha256sum ... > orms-kindred-index-vN.tar.gz.sha256`
    publishes a new index version.
 
 ## Licence

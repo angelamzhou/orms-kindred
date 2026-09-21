@@ -1,4 +1,4 @@
-"""Paper embedding backends for ORMatch.
+"""Paper embedding backends for Kindred.
 
 Backends
 --------
@@ -33,7 +33,7 @@ def _l2norm(x: np.ndarray) -> np.ndarray:
 
 def _from_pretrained(cls, name: str, **kw):
     """Load from the local Hugging Face cache without touching the network; download only
-    if the model is not cached yet. Keeps `ormatch suggest` / `verify-offline` fully offline
+    if the model is not cached yet. Keeps `kindred suggest` / `verify-offline` fully offline
     after the first download."""
     try:
         return cls.from_pretrained(name, local_files_only=True, **kw)

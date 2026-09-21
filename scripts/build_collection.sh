@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
-# Build a self-contained add-on index for one collection from src/ormatch/sources.py:
+# Build a self-contained add-on index for one collection from src/kindred/sources.py:
 #   scripts/build_collection.sh stats-ml [--backend specter2] [--from-year 2014]
 # Produces data/index_<name>/ with embeddings.npy, paper_ids.json, meta.json AND its own
 # papers/authorships/references.parquet, so it can be tarred and downloaded on its own and
-# queried together with the core index: ormatch suggest X.pdf --index-dir data/index --index-dir data/index_stats-ml
+# queried together with the core index: kindred suggest X.pdf --index-dir data/index --index-dir data/index_stats-ml
 set -euo pipefail
 cd "$(dirname "$0")/.."
 NAME="${1:?collection name}"; shift
@@ -12,7 +12,7 @@ while [ $# -gt 0 ]; do case "$1" in --backend) BACKEND="$2"; shift 2;; --from-ye
 PY="${PYTHON:-python3}"; [ -x .venv/bin/python ] && PY=.venv/bin/python
 RAW="data/collections/$NAME/raw"; OUT="data/index_$NAME"
 mkdir -p "$RAW" "$OUT"
-SOURCES=$($PY -c "import sys; sys.path.insert(0,'src'); from ormatch.sources import collection_sources; print(' '.join(collection_sources('$NAME')))")
+SOURCES=$($PY -c "import sys; sys.path.insert(0,'src'); from kindred.sources import collection_sources; print(' '.join(collection_sources('$NAME')))")
 for S in $SOURCES; do
   for mode in "" "--non-primary"; do
     for attempt in 1 2 3; do

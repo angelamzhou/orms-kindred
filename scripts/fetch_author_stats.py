@@ -19,7 +19,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
-from ormatch.openalex import OpenAlexClient  # noqa: E402
+from kindred.openalex import OpenAlexClient  # noqa: E402
 
 log = logging.getLogger("authors")
 OUT = ROOT / "data" / "authors.parquet"

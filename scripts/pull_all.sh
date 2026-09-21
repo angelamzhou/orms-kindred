@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Pull every journal in src/ormatch/sources.py from 2014 onward, one source at a time,
+# Pull every journal in src/kindred/sources.py from 2014 onward, one source at a time,
 # retrying each up to 4 times. Resumable: pull_journal_works.py keeps a cursor per source,
 # so rerunning this script only fetches what is missing. Then normalize.
 set -uo pipefail
 cd "$(dirname "$0")/.."
-SOURCES=$(python3 -c "import sys; sys.path.insert(0,'src'); from ormatch.sources import SOURCES; print(' '.join(SOURCES))")
+SOURCES=$(python3 -c "import sys; sys.path.insert(0,'src'); from kindred.sources import SOURCES; print(' '.join(SOURCES))")
 FROM_YEAR="${FROM_YEAR:-2014}"
 FAILED=""
 for S in $SOURCES; do

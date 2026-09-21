@@ -68,7 +68,7 @@ ALIASES: dict[str, str] = {
 
 
 # Add-on collections. Each becomes its own self-contained index directory that users can
-# download in addition to the core OR/MS index (see docs and `ormatch suggest --index-dir`).
+# download in addition to the core OR/MS index (see docs and `kindred suggest --index-dir`).
 # Source IDs are OpenAlex sources. Chosen from what indexed OR papers cite most outside the
 # core venues (300-paper sample, 2026-09): econ/finance ~6% of references, statistics/ML ~2%.
 # Applied-OR venues (another ~6%) were folded into the core list above.

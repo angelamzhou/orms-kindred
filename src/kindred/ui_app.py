@@ -1,4 +1,4 @@
-"""Streamlit UI for ORMatch. Launched via `ormatch ui`; run directly with `streamlit run ui_app.py`."""
+"""Streamlit UI for Kindred. Launched via `kindred ui`; run directly with `streamlit run ui_app.py`."""
 from __future__ import annotations
 
 import copy
@@ -10,19 +10,19 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
-from ormatch import learn
-from ormatch.cli import PERSONAL_COI, discover_index_dirs, load_personal_conflicts, prepare_query, rank_prepared, save_personal_conflicts
+from kindred import learn
+from kindred.cli import PERSONAL_COI, discover_index_dirs, load_personal_conflicts, prepare_query, rank_prepared, save_personal_conflicts
 
-st.set_page_config(page_title="ORMatch", layout="wide")
-st.title("ORMatch: reviewer suggestions")
+st.set_page_config(page_title="Kindred", layout="wide")
+st.title("Kindred: reviewer suggestions")
 st.caption("Your manuscript never leaves this machine. Only the public paper index is used.")
 
 
 def _code_version() -> str:
-    """mtimes of the ormatch sources; part of the cache key so a code edit never leaves a stale
+    """mtimes of the kindred sources; part of the cache key so a code edit never leaves a stale
     matcher object (old class) inside Streamlit's cache."""
-    import ormatch
-    root = Path(ormatch.__file__).parent
+    import kindred
+    root = Path(kindred.__file__).parent
     return str(max(p.stat().st_mtime for p in root.glob("*.py")))
 
 
@@ -105,7 +105,7 @@ def _d(name, default):
 with st.sidebar:
     if SAVED:
         st.caption(f"Slider defaults come from your learned weights ({learn.WEIGHTS}).")
-    index_dir = st.text_input("Core index directory", os.environ.get("ORMATCH_INDEX_DIR", "data/index"))
+    index_dir = st.text_input("Core index directory", os.environ.get("KINDRED_INDEX_DIR", "data/index"))
     available = [str(d) for d in discover_index_dirs(Path(index_dir))]
     index_dirs = st.multiselect("Indexes to search", available, default=available[:1] or None,
                                 help="The core OR/MS index plus any add-on collections you have downloaded (data/index_<name>)")
@@ -387,6 +387,6 @@ if have_input:
                           "abstract": abstracts.get(pid, "")} for pid, t, sc in r.get("evidence") or []]
     c1, c2 = st.columns(2)
     c1.download_button("Download CSV (names, evidence titles and abstracts)", data=pd.DataFrame(flat).to_csv(index=False),
-                       file_name="ormatch_suggestions.csv", mime="text/csv")
+                       file_name="kindred_suggestions.csv", mime="text/csv")
     c2.download_button("Download JSON (everything, incl. weights used)", data=json.dumps(full, indent=1, default=str),
-                       file_name="ormatch_suggestions.json", mime="application/json")
+                       file_name="kindred_suggestions.json", mime="application/json")

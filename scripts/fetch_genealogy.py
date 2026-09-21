@@ -7,7 +7,7 @@ Usage: python scripts/fetch_genealogy.py "Jane Q. Researcher" ["Another Name" ..
 
 MGP is name-keyed and covers mathematics/OR/statistics PhDs; matches are heuristic (first hit
 with the same surname), so rows carry the MGP id for checking. The file is read by
-`ormatch suggest --author ...`: a candidate linked to a manuscript author is flagged (not
+`kindred suggest --author ...`: a candidate linked to a manuscript author is flagged (not
 dropped) with the relation as evidence. Network is used only by this script, never by suggest.
 """
 from __future__ import annotations
@@ -25,7 +25,7 @@ from bs4 import BeautifulSoup
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "coi" / "genealogy.csv"
 BASE = "https://www.mathgenealogy.org"
-UA = "ORMatch-genealogy/0.1 (academic; local reviewer matching)"
+UA = "Kindred-genealogy/0.1 (academic; local reviewer matching)"
 
 
 def search(session: requests.Session, name: str) -> list[tuple[str, str]]:

@@ -8,10 +8,10 @@ import pandas as pd
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "src"))
 
-from ormatch.embed import Embedder  # noqa: E402
-from ormatch.eval import leave_one_out  # noqa: E402
-from ormatch.index import PaperIndex, build_index  # noqa: E402
-from ormatch.match import ReviewerMatcher  # noqa: E402
+from kindred.embed import Embedder  # noqa: E402
+from kindred.eval import leave_one_out  # noqa: E402
+from kindred.index import PaperIndex, build_index  # noqa: E402
+from kindred.match import ReviewerMatcher  # noqa: E402
 
 FIX = os.path.join(HERE, "fixtures")
 

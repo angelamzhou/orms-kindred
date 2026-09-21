@@ -1,4 +1,4 @@
-"""ORMatch command-line interface (typer)."""
+"""Kindred command-line interface (typer)."""
 from __future__ import annotations
 
 import hashlib
@@ -11,7 +11,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-app = typer.Typer(help="ORMatch: local reviewer matching for OR/MS/OM papers.", no_args_is_help=True)
+app = typer.Typer(help="Kindred: local reviewer matching for OR/MS/OM papers.", no_args_is_help=True)
 console = Console(stderr=True)
 
 DEFAULT_INDEX = Path("data/index")
@@ -51,7 +51,7 @@ def load_indexes(index_dirs: list[Path]):
     """Load one or more self-contained index dirs and return (index, authorships, papers)."""
     import pandas as pd
 
-    from ormatch.index import PaperIndex, concat_indexes
+    from kindred.index import PaperIndex, concat_indexes
 
     idxs, auths, paps, refs = [], [], [], []
     for d in index_dirs:
@@ -71,7 +71,7 @@ def load_indexes(index_dirs: list[Path]):
     return concat_indexes(idxs), authorships, papers, references, core_ids
 
 
-PERSONAL_COI = Path.home() / ".ormatch" / "conflicts.txt"
+PERSONAL_COI = Path.home() / ".kindred" / "conflicts.txt"
 
 
 def load_personal_conflicts(path: Path = PERSONAL_COI) -> list[str]:
@@ -83,7 +83,7 @@ def load_personal_conflicts(path: Path = PERSONAL_COI) -> list[str]:
 
 def save_personal_conflicts(names: list[str], path: Path = PERSONAL_COI) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text("# ORMatch personal conflicts: one name or OpenAlex author id per line\n" + "\n".join(names) + "\n", encoding="utf-8")
+    path.write_text("# orms-kindred personal conflicts: one name or OpenAlex author id per line\n" + "\n".join(names) + "\n", encoding="utf-8")
 
 
 def _load_side_tables(index_dir: Path) -> tuple[dict, dict, list]:
@@ -131,9 +131,9 @@ def prepare_query(pdf: Optional[Path] = None, index_dir: Path | list[Path] = DEF
     the bibliography matched to indexed papers. The manuscript is either a PDF or typed
     title/abstract (and optionally a pasted reference list); typing avoids handling the full
     PDF at all. The result can be re-ranked many times with different weights (rank_prepared)."""
-    from ormatch.embed import Embedder
-    from ormatch.index import PaperIndex
-    from ormatch.pdf import extract_references, match_references, parse_reference_text, pdf_to_query
+    from kindred.embed import Embedder
+    from kindred.index import PaperIndex
+    from kindred.pdf import extract_references, match_references, parse_reference_text, pdf_to_query
 
     if pdf is not None:
         q = pdf_to_query(pdf)
@@ -162,7 +162,7 @@ def prepare_query(pdf: Optional[Path] = None, index_dir: Path | list[Path] = DEF
         refs = []
     cited_ids = match_references(refs, papers) if refs else []
     titles = dict(zip(papers["openalex_work_id"].astype(str), papers["title"].astype(str))) if "title" in papers.columns else {}
-    from ormatch.match import ReviewerMatcher
+    from kindred.match import ReviewerMatcher
 
     # Built once; rank_prepared only flips its cheap parameters, so re-ranking is ~instant.
     matcher = ReviewerMatcher(idx, authorships, papers)
@@ -346,7 +346,7 @@ def suggest(
     seed: list[str] = typer.Option([], "--seed", help="Reviewer you already have in mind (name or OpenAlex id, repeatable); pulls the list toward similar people"),
     seed_weight: float = typer.Option(0.2, "--seed-weight", help="Bonus = weight x cosine between a candidate's profile and the closest seed profile"),
     diversity: float = typer.Option(0.0, "--diversity", min=0.0, max=1.0, help="0..1 maximal-marginal-relevance re-ranking: penalise candidates close to seeds or already-picked reviewers"),
-    conflict: list[str] = typer.Option([], "--conflict", help="Declare a conflict (name or id, repeatable); added to ~/.ormatch/conflicts.txt for future runs"),
+    conflict: list[str] = typer.Option([], "--conflict", help="Declare a conflict (name or id, repeatable); added to ~/.kindred/conflicts.txt for future runs"),
 ):
     """Suggest reviewers for one PDF. Runs entirely offline against the local index."""
     dirs = discover_index_dirs(index_dir[0]) if all_collections else list(index_dir)
@@ -461,10 +461,10 @@ def fetch_index(
 @app.command("learn-weights")
 def learn_weights(
     l2: float = typer.Option(1.0, "--l2", help="Pull toward the current defaults (higher = smaller change)"),
-    save: bool = typer.Option(False, "--save", help="Write the learned weights to ~/.ormatch/weights.json"),
+    save: bool = typer.Option(False, "--save", help="Write the learned weights to ~/.kindred/weights.json"),
 ):
-    """Fit ranking weights to the +/- reviewer ratings recorded in the UI (~/.ormatch/feedback.jsonl)."""
-    from ormatch import learn
+    """Fit ranking weights to the +/- reviewer ratings recorded in the UI (~/.kindred/feedback.jsonl)."""
+    from kindred import learn
 
     rows = learn.load()
     base = learn.load_params() or {"lam": 0.3, "cite_weight": 0.1, "volume_correction": 0.0, "editor_weight": 0.0,
@@ -482,13 +482,13 @@ def learn_weights(
 
 @app.command()
 def ui(index_dir: Path = typer.Option(DEFAULT_INDEX, "--index-dir"), port: int = typer.Option(8501, "--port"),
-       watch: bool = typer.Option(True, "--watch/--no-watch", help="Rerun the app automatically when ormatch source files change")):
-    """Launch the Streamlit drag-and-drop UI (requires `pip install ormatch[ui]`)."""
+       watch: bool = typer.Option(True, "--watch/--no-watch", help="Rerun the app automatically when kindred source files change")):
+    """Launch the Streamlit drag-and-drop UI (requires `pip install "orms-kindred[ui]"`)."""
     import os
     import subprocess
 
     app_path = Path(__file__).with_name("ui_app.py")
-    env = {**os.environ, "ORMATCH_INDEX_DIR": str(index_dir)}
+    env = {**os.environ, "KINDRED_INDEX_DIR": str(index_dir)}
     cmd = [sys.executable, "-m", "streamlit", "run", str(app_path), "--server.port", str(port),
            "--browser.gatherUsageStats", "false",
            "--server.runOnSave", "true" if watch else "false",

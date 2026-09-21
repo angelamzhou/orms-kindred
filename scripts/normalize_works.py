@@ -18,8 +18,8 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from ormatch.openalex import reconstruct_abstract  # noqa: E402
-from ormatch.sources import ALL_SOURCES as SOURCES, source_name  # noqa: E402
+from kindred.openalex import reconstruct_abstract  # noqa: E402
+from kindred.sources import ALL_SOURCES as SOURCES, source_name  # noqa: E402
 
 log = logging.getLogger("normalize")
 

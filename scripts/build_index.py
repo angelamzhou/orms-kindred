@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the ORMatch paper index: papers.parquet -> data/index/{embeddings.npy,paper_ids.json,meta.json}.
+"""Build the Kindred paper index: papers.parquet -> data/index/{embeddings.npy,paper_ids.json,meta.json}.
 
 Usage: python scripts/build_index.py [--papers data/papers.parquet] [--out data/index] [--backend auto|specter2|scincl|tfidf]
 """
@@ -16,8 +16,8 @@ import pandas as pd
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "src"))
 
-from ormatch.embed import Embedder  # noqa: E402
-from ormatch.index import build_index  # noqa: E402
+from kindred.embed import Embedder  # noqa: E402
+from kindred.index import build_index  # noqa: E402
 
 
 def main(argv=None):
