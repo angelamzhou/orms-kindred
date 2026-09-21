@@ -10,7 +10,7 @@ Contents (all public OpenAlex-derived data, nothing about any manuscript):
 that directory or its parent, so the layout below is unpacked with --index-dir data.
 
 Usage: python scripts/package_index.py [--version v1] [--out dist/]
-       python scripts/package_index.py --collection stats-ml   # package data/index_stats-ml/
+       python scripts/package_index.py --collection stats   # package data/index_stats/
 """
 from __future__ import annotations
 

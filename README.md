@@ -37,7 +37,7 @@ python -m venv .venv && source .venv/bin/activate
 pip install -e ".[embed,ui]"        # SPECTER2 needs torch>=2.6; add "torch>=2.6" if your torch is older
                                      # CPU-only machines: pip install torch --index-url https://download.pytorch.org/whl/cpu  first
 kindred fetch-index                  # core index -> data/  (sha256 verified against the .sha256 published next to it)
-kindred fetch-index --collection stats-ml   # optional add-on (18 MB) -> data/index_stats-ml/
+kindred fetch-index --collection stats   # optional add-on (18 MB) -> data/index_stats/
 kindred ui                           # http://localhost:8501
 ```
 
@@ -55,7 +55,7 @@ Internet Archive snapshots. `scripts/package_index.py` produces the release tarb
 
 ```bash
 python scripts/package_index.py --version v2            # -> dist/kindred-index-v2.tar.gz + .sha256
-python scripts/package_index.py --version v2 --collection stats-ml
+python scripts/package_index.py --version v2 --collection stats
 ```
 Create a GitHub release tagged `index-v2` and upload the `.tar.gz` and `.sha256` files as assets, then bump
 `DEFAULT_INDEX_URL` in `src/kindred/cli.py`. Release assets (not git LFS) because they allow 2 GB files and unlimited downloads.
@@ -116,7 +116,7 @@ The manuscript authors themselves are always removed.
 ### Add-on collections
 
 The core index covers 29 OR/MS venues (73,643 papers from 2014; abstract coverage 62.5% after the Semantic Scholar backfill, the gap being Elsevier titles). Only ~29% of the references in the original 17-venue sample pointed back into those venues. Add-on
-collections (`src/kindred/sources.py: COLLECTIONS`: `applied-or`, `econ-finance`, `stats-ml`, `algorithms`) are built as
+collections (`src/kindred/sources.py: COLLECTIONS`: `applied-or`, `econ-finance`, `stats`, `algorithms`) are built as
 self-contained directories with `scripts/build_collection.sh NAME` -> `data/index_NAME/` (embeddings plus their own
 parquet tables) and can be distributed and downloaded separately. Query several at once with repeated `--index-dir`
 or `--all-collections`; the UI lists every collection it finds. Authors who appear only in add-ons must have at least

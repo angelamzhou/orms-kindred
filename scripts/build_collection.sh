@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Build a self-contained add-on index for one collection from src/kindred/sources.py:
-#   scripts/build_collection.sh stats-ml [--backend specter2] [--from-year 2014]
+#   scripts/build_collection.sh stats [--backend specter2] [--from-year 2014]
 # Produces data/index_<name>/ with embeddings.npy, paper_ids.json, meta.json AND its own
 # papers/authorships/references.parquet, so it can be tarred and downloaded on its own and
-# queried together with the core index: kindred suggest X.pdf --index-dir data/index --index-dir data/index_stats-ml
+# queried together with the core index: kindred suggest X.pdf --index-dir data/index --index-dir data/index_stats
 set -euo pipefail
 cd "$(dirname "$0")/.."
 NAME="${1:?collection name}"; shift

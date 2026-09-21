@@ -432,7 +432,7 @@ def fetch_index(
     url: str = typer.Argument(DEFAULT_INDEX_URL, help="URL of an index tarball (.tar.gz); default: the latest core index release"),
     sha256: Optional[str] = typer.Option(None, "--sha256", help="Expected digest; if omitted, tries URL + '.sha256'"),
     index_dir: Path = typer.Option(Path("data"), "--index-dir", help="Unpack here (core tarball contains index/ plus the tables)"),
-    collection: Optional[str] = typer.Option(None, "--collection", help="Fetch an add-on collection instead, e.g. stats-ml (unpacks into data/index_<name>)"),
+    collection: Optional[str] = typer.Option(None, "--collection", help="Fetch an add-on collection instead, e.g. stats (unpacks into data/index_<name>)"),
 ):
     """Download the public reviewer index (about 165 MB), verify its sha256, unpack into --index-dir.
 

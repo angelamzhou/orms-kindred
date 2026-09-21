@@ -85,7 +85,7 @@ COLLECTIONS: dict[str, dict[str, str]] = {
         "S163534328": "Marketing Science",
         "S119950638": "Journal of Marketing Research",
     },
-    "stats-ml": {
+    "stats": {
         "S118988714": "Journal of Machine Learning Research",
         "S4394736638": "Journal of the American Statistical Association",
         "S119757635": "The Annals of Statistics",
