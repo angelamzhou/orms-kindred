@@ -36,7 +36,16 @@ Given the manuscript vector $q$, the task is to rank the authors $a$ in the auth
 \]
 that is, a mix of the author's single most similar paper and the mean of their $k$ most similar papers. With $\lambda=0$ this is max pooling. Ranking authors by this score is the whole task: it is a nearest-neighbour search over papers, aggregated to authors. ORMatch does not solve an assignment problem. There is no assignment or capacity constraint; the tool proposes a list and a person decides.
 
-Further terms adjust the score and are all optional. A bonus for authors of papers the manuscript cites, taken from the reference list. A correction for prolific authors, who get more chances at a high $\max s_i$ by having more papers. Penalties for editorial roles and seniority, and a bonus for early-career researchers. A bonus for authors whose body of work resembles seed reviewers named by the user. An optional diversity re-ranking spreads the list across different research neighbourhoods. The exact form of each term is in Appendix~\ref{app:score}. All terms are in cosine units, and the interface displays the objective with the current weights and the contribution of each term for each candidate.
+Further terms adjust the score. All are optional and all are in cosine units, so they are comparable with each other and with $s_i$. Appendix~\ref{app:score} gives the exact form of each.
+\begin{itemize}
+\item \textbf{Citation bonus.} Authors of papers the manuscript cites, taken from its reference list. This is the largest single improvement in the evaluation.
+\item \textbf{Volume correction.} Removes the advantage of prolific authors, who get more chances at a high $\max s_i$ by having more papers.
+\item \textbf{Editorial and seniority penalties.} Reduce the score of authors with current or past editorial roles, and of authors with many publications.
+\item \textbf{Early-career bonus.} Raises the score of authors with few publications, such as PhD students and postdocs.
+\item \textbf{Seed bonus.} Raises the score of authors whose body of work resembles seed reviewers named by the user.
+\item \textbf{Diversity re-ranking.} Re-orders the list so consecutive candidates come from different research neighbourhoods.
+\end{itemize}
+The interface displays the objective with the current weights and, for each candidate, the contribution of each term.
 
 \paragraph{Conflicts.} The user enters the manuscript's authors. The tool resolves them to author IDs and flags their co-authors on papers from the last five years, people at the same institution, advisor/student links, and names on the user's declared conflict list. Flags show the reason. An exclude mode drops them. Details in Appendix~\ref{app:coi}.
 
