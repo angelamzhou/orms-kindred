@@ -2,45 +2,67 @@
 \usepackage[margin=1in]{geometry}
 \usepackage{amsmath,amssymb,booktabs,hyperref,url}
 \hypersetup{colorlinks=true,linkcolor=blue,urlcolor=blue}
-\title{ORMatch: local reviewer matching for OR/MS papers\\[2pt]\large How it works, where the data comes from, and how well it does}
-\author{Technical note, September 2026}
-\date{}
+\title{ORMatch: local reviewer matching for OR/MS papers\\[2pt]\large Technical note}
+\author{}
+\date{September 2026}
 \begin{document}\maketitle
 
-\section{Overview and privacy model}
-ORMatch takes a manuscript PDF and returns a ranked list of candidate reviewers drawn from the authors of recent OR/MS papers, each with the papers that justify the match and any potential conflict of interest flagged with its evidence. The design separates a \emph{public index} (titles, abstracts, authorships, references and precomputed embeddings of published papers, built offline and distributed as a versioned archive) from a \emph{private query}: text extraction, embedding, search and ranking all run on the user's machine, and no text, embedding or metadata about the manuscript leaves it. The command \texttt{ormatch verify-offline} runs the full pipeline with Python's socket layer disabled to demonstrate this. The only network calls the tool ever makes are the one-time download of the index and of the embedding model weights.
+\section{What the tool does}
+ORMatch reads a manuscript PDF. It returns a ranked list of candidate reviewers. Each candidate comes with the papers that support the match. Candidates with a possible conflict of interest are flagged, and the reason is shown.
 
-\section{Data and provenance}
-\paragraph{Source.} All bibliographic data come from OpenAlex (\url{https://openalex.org}, CC0), pulled through its REST API with cursor pagination (no result cap) for works with \texttt{publication\_year}$\ge$2014 whose primary location is one of 29 venues: the INFORMS journals (Operations Research, Management Science, M\&SOM, MOR, Transportation Science, IJOC, Stochastic Systems), Mathematical Programming, SIAM J.\ Optimization, SIAM J.\ Control and Optimization, POM, JOM, Decision Sciences, NRL, IISE/IIE Transactions, EJOR, ORL, Computers \& OR, Annals of OR, Omega, IJPE, IJPR, Computers \& IE, Transportation Research B and E, JOTA, JORS and Networks. Works that list a venue only as a non-primary location are included when they carry a DOI (this drops RePEc and repository records misattributed to the journals). Each pull is resumable and its state (cursor, counts, filter) is stored alongside the raw JSONL; \texttt{scripts/check\_pull.py} compares saved counts with live counts to detect drift.
+The tool has two parts. The \emph{index} is public. It holds titles, abstracts, authorships, reference lists and precomputed embeddings of published papers. It is built offline and shipped as a versioned archive. The \emph{query} is private. Text extraction, embedding, search and ranking run on the user's machine. The manuscript, its embedding and its metadata never leave the machine. The command \texttt{ormatch verify-offline} runs the full pipeline with network sockets disabled and fails if any network call is attempted. The tool uses the network only to download the index and the model weights once.
 
-\paragraph{Fields kept.} Title, abstract (reconstructed from OpenAlex's inverted index), year, venue, DOI, open-access URL, citation count, the full authorship list with author IDs and first-listed institution, and the outgoing reference list (\texttt{referenced\_works}).
+\section{Data}
+\subsection{Source}
+All bibliographic data come from OpenAlex (\url{https://openalex.org}, CC0 licence). The tool pulls works through the OpenAlex REST API with cursor pagination. Cursor pagination has no result cap. The filter is: publication year 2014 or later, and primary location in one of 29 venues.
 
-\paragraph{Abstract backfill.} OpenAlex carries no abstracts for most Elsevier titles (EJOR 17\%, ORL 11\% before backfill). Missing abstracts are requested from the Semantic Scholar Graph API in batches of 500 DOIs; Crossref recovers essentially nothing for Elsevier and is optional. An optional pass against the Elsevier Article Retrieval API (institutional key) is implemented but has not been run.
+The venues are: Operations Research, Management Science, M\&SOM, Mathematics of Operations Research, Transportation Science, INFORMS Journal on Computing, Stochastic Systems, Mathematical Programming, SIAM Journal on Optimization, SIAM Journal on Control and Optimization, Production and Operations Management, Journal of Operations Management, Decision Sciences, Naval Research Logistics, IISE Transactions, IIE Transactions, European Journal of Operational Research, Operations Research Letters, Computers \& Operations Research, Annals of Operations Research, Omega, International Journal of Production Economics, International Journal of Production Research, Computers \& Industrial Engineering, Transportation Research Part B, Transportation Research Part E, Journal of Optimization Theory and Applications, Journal of the Operational Research Society, and Networks.
 
-\paragraph{Side tables.} Per-author statistics (works count, citations, $h$-index) come from the OpenAlex authors endpoint. Editorial-board membership is parsed from yearly Internet Archive snapshots (2016--2026) of 14 journals' board pages, since the publishers' sites refuse scripted access; each (journal, role, person) row records the first and last year seen. Advisor/student links come from the Mathematics Genealogy Project on request. Department rosters (167 OR/IE/OM departments in 25 countries) are scraped where sites permit.
+Some works list a venue only as a non-primary location. The tool includes these works only if they have a DOI. This rule removes RePEc and repository records that OpenAlex attributes to the journals by mistake.
+
+Each pull is resumable. The tool stores the cursor, the counts and the filter next to the raw JSONL file. The script \texttt{check\_pull.py} compares the stored counts with the live OpenAlex counts and reports any difference.
+
+\subsection{Fields}
+For each work the tool keeps: title, abstract, year, venue, DOI, open-access URL, citation count, the full author list with OpenAlex author IDs and first-listed institution, and the list of referenced works. OpenAlex stores abstracts as an inverted index. The tool rebuilds the plain text from it.
+
+\subsection{Missing abstracts}
+OpenAlex has no abstracts for most Elsevier papers. Before backfill, EJOR had abstracts for 17\% of its papers and ORL for 11\%. The tool requests missing abstracts from the Semantic Scholar Graph API in batches of 500 DOIs. Crossref returns almost no abstracts for Elsevier papers, so the Crossref pass is optional. A pass against the Elsevier Article Retrieval API is implemented. It needs an institutional API key and has not been run.
+
+\subsection{Side tables}
+\begin{itemize}
+\item \textbf{Author statistics.} Works count, citation count and $h$-index for each author, from the OpenAlex authors endpoint.
+\item \textbf{Editorial boards.} The publishers' board pages block scripted access. The tool reads yearly Internet Archive snapshots (2016--2026) of 14 journals' board pages instead. It parses role headings and names. Each row records journal, role, person, first year seen and last year seen.
+\item \textbf{Academic genealogy.} Advisor and student links from the Mathematics Genealogy Project, fetched by name on request.
+\item \textbf{Department rosters.} Faculty lists from 167 OR, IE and OM departments in 25 countries, scraped where the sites permit it.
+\end{itemize}
 
 \begin{table}[h]\centering\small
 \begin{tabular}{lr}\toprule
-papers (29 venues, 2014--2026) & 74{,}127 \\
+papers, 29 venues, 2014--2026 & 74{,}127 \\
 \quad with a title (embedded) & 73{,}643 \\
-\quad with an abstract & 46{,}302 (62.5\%; 27{,}703 gaps, almost all Elsevier) \\
-\quad with an OA PDF link & 23{,}554 (31.8\%) \\
-authorship rows / distinct authors & 191k / 101{,}183 \\
-outgoing references kept & 1.25M (from 28{,}387 citing papers, 17-venue count) \\
-editorial-board rows / people & 2{,}667 / 1{,}964 (1{,}323 with a role seen in 2025--26) \\
-add-on collection \texttt{stats-ml} & 8{,}621 papers (JMLR, JASA, AoS, JRSS-B, Biometrika, AAP) \\
+\quad with an abstract & 46{,}302 (62.5\%) \\
+\quad with an open-access PDF link & 23{,}554 (31.8\%) \\
+distinct authors & 101{,}183 \\
+editorial-board rows / people & 2{,}667 / 1{,}964 \\
+\quad with a role seen in 2025 or 2026 & 1{,}323 \\
+add-on collection \texttt{stats-ml} & 8{,}621 papers \\
 \bottomrule\end{tabular}
-\caption{Index contents as of 2026-09-20.}\end{table}
+\caption{Index contents on 2026-09-20. The 27{,}703 missing abstracts are almost all Elsevier papers.}\end{table}
 
-\paragraph{Add-on collections.} Only about 29\% of the references in core papers point back into the core venues, so additional collections (statistics/ML, economics/finance, algorithms) can be built as self-contained index directories and searched together with the core. Authors who appear only in an add-on must have at least one link to the core literature (a core paper, or a citation to or from one) to be proposed, so the pool widens to people connected to OR rather than to arbitrary outsiders.
+\subsection{Add-on collections}
+Only 29\% of the references in core papers point to core venues. The tool can build additional collections as separate index directories. Each directory holds its own embeddings and tables. Defined collections are statistics and machine learning, economics and finance, and algorithms. The user can search the core and any add-ons together. An author who appears only in an add-on is proposed only if they have at least one link to the core literature. A link is a core paper, a citation to a core paper, or a citation from a core paper.
 
 \section{Embeddings}
-Each paper is represented by the SPECTER2 encoder (\texttt{allenai/specter2\_base} with the \texttt{proximity} adapter), a SciBERT-based model trained with citation-based contrastive objectives on titles and abstracts. The input is \texttt{title [SEP] abstract} (title only when the abstract is missing), truncated to 512 tokens; the embedding is the final-layer \texttt{[CLS]} vector, $\ell_2$-normalised, stored in float16 (768 dimensions, 47~MB for 31k papers, about 110~MB at the current size). SciNCL (\texttt{malteos/scincl}) is a drop-in alternative and TF-IDF+SVD a dependency-free fallback; the index records which backend built it and queries always use the same one. On an RTX~4090 the corpus embeds in about 200~s.
+The encoder is SPECTER2: \texttt{allenai/specter2\_base} with the \texttt{proximity} adapter. It is a SciBERT model trained with a citation-based contrastive objective on titles and abstracts. The input for each paper is the title, the separator token, and the abstract. If the abstract is missing, the input is the title only. The input is truncated to 512 tokens. The embedding is the final-layer \texttt{[CLS]} vector, normalised to unit length. Embeddings have 768 dimensions and are stored in float16. The full corpus embeds in about 200 seconds on one RTX 4090.
 
-The manuscript is processed identically: \texttt{pypdfium2} extracts the first pages, heuristics recover title and abstract (the title is the leading lines before ``Abstract'' that do not look like an author line; the abstract runs to ``Introduction''/``Keywords''), and the same encoder produces the query vector $q$. Separately, the bibliography is parsed from the trailing pages (entries split on author-line starts, DOIs by regex, otherwise the sentence after the year as a title guess) and matched to indexed papers by DOI or normalised title.
+SciNCL (\texttt{malteos/scincl}) is an alternative encoder. TF-IDF with SVD is a fallback that needs no deep-learning libraries. The index records which encoder built it. A query always uses the same encoder as the index.
+
+The manuscript follows the same path. \texttt{pypdfium2} extracts the text of the first pages. A heuristic finds the title and the abstract. The title is the leading lines before the word ``Abstract'' that do not look like an author line. The abstract runs from ``Abstract'' to ``Introduction'' or ``Keywords''. The same encoder maps title and abstract to the query vector $q$.
+
+The tool also parses the bibliography from the last pages. It splits entries where a line starts like an author list and the previous text ends a sentence. It reads DOIs with a regular expression. If there is no DOI, it takes the sentence after the year as the title. It matches entries to indexed papers by DOI, then by normalised title.
 
 \section{Matching}
-Let $s_i=\langle q, e_i\rangle$ be the cosine between the manuscript and indexed paper $i$, and $P_a$ the papers of author $a$. The score is a linear combination of interpretable terms, all in cosine units:
+Let $s_i$ be the cosine similarity between the manuscript vector $q$ and the embedding of paper $i$. Let $P_a$ be the indexed papers of author $a$. The score of author $a$ is a sum of terms. All terms are in cosine units.
 \begin{align*}
 \mathrm{score}(a) \;=\;& (1-\lambda)\max_{i\in P_a}s_i \;+\; \lambda\,\mathrm{mean}_{\text{top-}k}(s_i)
  \;+\; w_{\mathrm{cite}}\bigl(1-0.5^{\,n_{\mathrm{cited}}(a)}\bigr)
@@ -50,32 +72,49 @@ Let $s_i=\langle q, e_i\rangle$ be the cosine between the manuscript and indexed
  \;-\; w_{\mathrm{ed}}\,\mathrm{roles}_a
  \;-\; w_{\mathrm{sen}}\,\bigl[\log(1+\mathrm{works}_a)-\mathrm{med}\bigr]_+ .
 \end{align*}
-\emph{Text similarity} ($\lambda$, $k$): max pooling versus top-$k$ mean, the standard design choice (OpenReview defaults to max; the ACL matcher weights the top three cosines $1,\tfrac12,\tfrac13$). \emph{Citation bonus}: authors of papers the manuscript cites, saturating in the count; this is how editors find reviewers by hand and needs no full text on the index side. \emph{Seeds}: $\sigma_a$ is the cosine between $a$'s profile (mean paper embedding) and the closest user-named seed reviewer, centred on the candidate pool because profile cosines cluster near~1. \emph{Volume correction}: the expected best-of-$n$ cosine of $n$ random papers, from the query's own similarity distribution under a normal approximation, removes the advantage prolific authors get from having many draws. \emph{Editorial and seniority penalties} use the side tables (current roles count 1, past roles 0.5). \emph{Early-career bonus} $\phi$ fades linearly in $\log$ works to zero at a cutoff. Optional recency weighting shrinks $s_i$ toward $\mu_s$ by $0.5^{\text{age}/h}$; multiplying raw cosines instead is meaningless because dense-encoder cosines all lie in roughly $[0.7,1]$.
 
-Scoring is exact but restricted to a candidate pool: a vectorised per-author maximum selects the top 2{,}000 (or $100n$) authors plus anyone cited or seeded; penalties only lower scores, so nothing outside the pool could rank above it. Re-ranking 100k authors takes about 40~ms. If a diversity parameter $d$ is set, the pool is re-ordered by maximal marginal relevance, $(1-d)\,\mathrm{score}(a)-d\max_{b\in\text{picked}\cup\text{seeds}}\cos(a,b)$, so consecutive picks cover different neighbourhoods.
+\begin{description}
+\item[Text similarity.] $\lambda$ mixes the author's best paper with the mean of their top-$k$ papers. Max pooling and mean pooling are the two standard choices. OpenReview uses max by default. The ACL matcher uses the top three cosines with weights $1, \tfrac12, \tfrac13$.
+\item[Citation bonus.] $n_{\mathrm{cited}}(a)$ is the number of the author's indexed papers that the manuscript cites. The bonus saturates. This term needs no full text on the index side.
+\item[Seeds.] The user can name reviewers they already have in mind. $\sigma_a$ is the cosine between author $a$'s profile and the closest seed's profile. A profile is the mean embedding of an author's papers. Profile cosines cluster near 1, so the term uses the deviation from the candidate-pool median. Seeds are removed from the output.
+\item[Volume correction.] An author with $n$ papers has $n$ chances at a high cosine. The term subtracts the expected best-of-$n$ cosine of $n$ random papers, computed from the query's own similarity distribution with a normal approximation.
+\item[Editorial and seniority penalties.] Current editorial roles count 1. Past roles count 0.5. The seniority penalty grows with $\log$ works count above the median author.
+\item[Early-career bonus.] $\phi$ is 1 for one work and falls linearly in $\log$ works to 0 at a cutoff.
+\item[Recency (optional).] $s_i$ is shrunk toward the query mean $\mu_s$ by $0.5^{\mathrm{age}/h}$. Multiplying the raw cosine does not work: dense-encoder cosines all lie in about $[0.7, 1]$, so the weight would dominate the topic.
+\end{description}
 
-\paragraph{Conflicts.} The user names the manuscript's authors; they are resolved to index authors by normalised name (exact, then surname+initials; ambiguities reported). Their co-authors on papers within a window (default 5 years), people at the same institution, genealogy links, and a persistent user-declared list are \emph{flagged} with the reason rather than dropped, because name resolution is fuzzy; an exclude mode removes them.
+The scoring loop is exact but runs on a candidate pool. A vectorised pass computes each author's best paper. The pool is the top 2{,}000 authors (or $100n$ for a list of $n$), plus every author who is cited or seeded. Penalties only lower scores, so no author outside the pool can rank above the pool. Re-ranking 100{,}000 authors takes about 40~ms.
+
+If the user sets a diversity value $d$, the tool re-orders the pool by maximal marginal relevance. It picks the candidate that maximises $(1-d)\,\mathrm{score}(a) - d\max_{b}\cos(a,b)$, where $b$ ranges over the seeds and the candidates already picked. This spreads the list over different neighbourhoods.
+
+\paragraph{Conflicts of interest.} The user enters the manuscript's authors. The tool resolves each name to index authors by normalised name, first exact, then surname plus initials. Ambiguous names are reported. The tool flags: co-authors on papers within a window (default 5 years), people at the same institution, genealogy links, and names on the user's declared conflict list. The declared list persists between sessions. Flags show the reason. An exclude mode removes flagged candidates instead. Name resolution is fuzzy, so flagging is the default.
 
 \section{Evaluation}
-Leave-one-out: sample 200 indexed papers; for each, mask it, use its own embedding as the manuscript and its OpenAlex reference list as the bibliography, rank all authors, and record where its true authors land (authors whose only paper is the held-out one are unreachable and excluded). This rewards recovering the \emph{actual} authors among 100k candidates, which favours prolific people; it is a proxy for fit, not a measure of it.
+The protocol is leave-one-out. Sample 200 indexed papers. For each paper: mask it, use its embedding as the manuscript, use its OpenAlex reference list as the bibliography, rank all authors, and record the ranks of its true authors. Authors whose only paper is the held-out paper cannot be found and are excluded. This protocol rewards finding the actual authors among 100{,}000 candidates. It favours prolific authors. It is a proxy for fit, not a measure of fit.
 
 \begin{table}[h]\centering\small
 \begin{tabular}{llrrr}\toprule
 index & configuration & MRR & recall@10 & recall@20 \\\midrule
-17 venues, SciNCL & $\lambda{=}0.3,k{=}3$ & 0.189 & 0.210 & 0.273 \\
-17 venues, SPECTER2 & $\lambda{=}0.3,k{=}3$ & 0.193 & 0.259 & 0.303 \\
+17 venues, SciNCL & $\lambda{=}0.3,\ k{=}3$ & 0.189 & 0.210 & 0.273 \\
+17 venues, SPECTER2 & $\lambda{=}0.3,\ k{=}3$ & 0.193 & 0.259 & 0.303 \\
 17 venues, SPECTER2 & $\lambda{=}0$ & 0.214 & 0.256 & 0.320 \\
 17 venues, SPECTER2 & $+\,w_{\mathrm{cite}}{=}0.1$ & 0.317 & 0.324 & 0.396 \\
 29 venues, SPECTER2 & $+\,w_{\mathrm{cite}}{=}0.1$ & 0.324 & 0.327 & 0.388 \\
 17 venues, SPECTER2 & $w_{\mathrm{cite}}{=}0.1,\ w_{\mathrm{vol}}{=}0.5$ & 0.263 & 0.303 & 0.350 \\
 17 venues, SPECTER2 & $w_{\mathrm{cite}}{=}0.1,\ w_{\mathrm{sen}}{=}0.01$ & 0.292 & 0.309 & 0.351 \\
-17 venues, SPECTER2 & $w_{\mathrm{cite}}{=}0.1,\ h{=}8$ (recency) & 0.070 & 0.087 & 0.137 \\
+17 venues, SPECTER2 & $w_{\mathrm{cite}}{=}0.1,\ h{=}8$ & 0.070 & 0.087 & 0.137 \\
 \bottomrule\end{tabular}
-\caption{Leave-one-out, $n{=}200$, seed 0. The citation bonus is the largest single gain; the preference knobs (volume, seniority, recency) lower this metric by construction.}\end{table}
+\caption{Leave-one-out results, $n{=}200$, seed 0. The citation bonus gives the largest gain. The volume, seniority and recency terms lower this metric by design.}\end{table}
 
-In the only controlled human comparison we know of (Stelmakh et al., \emph{A Gold Standard Dataset for the Reviewer Assignment Problem}), title-plus-abstract SPECTER-family models with max pooling were the best performers and full-text TPMS gained only modestly from full text; ORMatch is in that family. Full-text indexing is further limited here by 18\% strict OA-PDF coverage and the absence of any text-mining route for INFORMS journals.
+Stelmakh et al.\ (\emph{A Gold Standard Dataset for the Reviewer Assignment Problem}) compared matching algorithms against self-reported reviewer expertise. SPECTER-family models on titles and abstracts with max pooling performed best. Full text gave TPMS a small gain. ORMatch belongs to that family. Full-text indexing is also limited here: 18\% of the corpus has a direct open-access PDF, and INFORMS journals offer no text-mining access.
 
 \section{Limitations}
-Abstract coverage of Elsevier venues (37\% missing) until an Elsevier key is used; OpenAlex author disambiguation splits and merges people; PhD students appear only if they have an indexed paper; roster and board scraping is blocked by many sites; all weights are hand-set (no elicited reviewer ratings), so they are exposed as controls with the objective displayed rather than fixed.
+\begin{itemize}
+\item 37\% of papers have no abstract. Almost all are Elsevier papers. An Elsevier API key would fill most of them.
+\item OpenAlex author disambiguation sometimes splits one person into several IDs or merges several people into one.
+\item PhD students appear only if they have a paper in an indexed venue.
+\item Many university and publisher sites block scripted access. Roster and board data are incomplete.
+\item All weights are set by hand. There are no elicited reviewer ratings to learn them from. The interface shows the objective with the current weights and lets the user change them.
+\end{itemize}
 
 \end{document}
