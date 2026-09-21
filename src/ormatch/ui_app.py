@@ -284,7 +284,7 @@ if have_input:
     # ---- feedback and learned weights ------------------------------------------------------------
     fb = learn.load()
     n_rated = sum(1 for x in fb if x["label"] != 0)
-    with st.expander(f"Learn weights from my ratings ({n_rated} ratings on {len({x['manuscript'] for x in fb})} manuscripts)", expanded=False):
+    with st.expander(f"Learn locally from my ratings ({n_rated} ratings on {len({x['manuscript'] for x in fb})} manuscripts)", expanded=False):
         st.caption("Rate candidates with the buttons in the detail panel. The fit is a pairwise logistic regression "
                    "that pulls the current slider settings toward weights ranking your 👍 above your 👎 (and above unrated "
                    "candidates shown at the time). Everything stays on this machine.")
