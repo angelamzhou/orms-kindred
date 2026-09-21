@@ -21,16 +21,44 @@ match. Conflicts can be excluded by institution or author.
 
 ## Install
 
+Everything runs on your machine. Installing means three downloads, listed here so nothing is a surprise:
+
+| what | size | from | when |
+|---|---|---|---|
+| Python packages (torch, transformers, adapters, streamlit, ...) | ~2.5 GB with CUDA, ~300 MB CPU-only | PyPI | `pip install` |
+| the public paper index (embeddings + paper/author tables; OpenAlex-derived, CC0) | 165 MB | this repository's [GitHub Releases](https://github.com/angelamzhou/orms-kindred/releases) | `kindred fetch-index` |
+| the SPECTER2 embedding model | ~440 MB | Hugging Face (`allenai/specter2_base`, `allenai/specter2`) | first `kindred suggest` or `kindred ui`, cached afterwards |
+
+After that the tool makes no network calls. `kindred verify-offline` proves it by running a full query with sockets disabled.
+
 ```bash
-pip install -e .              # core: PDF parsing, TF-IDF backend, CLI
-pip install -e ".[embed]"     # + torch/transformers/adapters for SPECTER2 / SciNCL
-                              #   SPECTER2 needs torch>=2.6 (its weights are pickled .bin files that
-                              #   transformers refuses to load on older torch); SciNCL works on any torch.
-                              #   In an environment pinned to an older torch, use a venv:
-                              #   python -m venv .venv && .venv/bin/pip install -e ".[embed]" "torch>=2.6"
-pip install -e ".[ui]"        # + streamlit drag-and-drop UI
-kindred fetch-index https://example.org/orms-kindred-index-v1.tar.gz   # downloads into data/index
+git clone git@github.com:angelamzhou/orms-kindred.git && cd orms-kindred
+python -m venv .venv && source .venv/bin/activate
+pip install -e ".[embed,ui]"        # SPECTER2 needs torch>=2.6; add "torch>=2.6" if your torch is older
+                                     # CPU-only machines: pip install torch --index-url https://download.pytorch.org/whl/cpu  first
+kindred fetch-index                  # core index -> data/  (sha256 verified against the .sha256 published next to it)
+kindred fetch-index --collection stats-ml   # optional add-on (18 MB) -> data/index_stats-ml/
+kindred ui                           # http://localhost:8501
 ```
+
+Requirements: Python 3.10+. A GPU is not needed: embedding one manuscript takes about 0.1 s on CPU. A GPU only matters for
+*building* an index (200 s on an RTX 4090 vs. about 1.6 h on a 24-core CPU for 73k papers).
+
+### Building the index yourself instead
+
+`scripts/pull_all.sh` pulls the 29 venues from OpenAlex (set `OPENALEX_API_KEY` in `.env` for the polite pool; unauthenticated
+works too), backfills abstracts from Semantic Scholar, and normalises; `scripts/build_index.py --backend specter2` embeds;
+`scripts/fetch_author_stats.py` adds author statistics; `scripts/fetch_editorial_boards.py` reads editorial boards from
+Internet Archive snapshots. `scripts/package_index.py` produces the release tarball and its sha256.
+
+### Publishing a new index version (maintainers)
+
+```bash
+python scripts/package_index.py --version v2            # -> dist/kindred-index-v2.tar.gz + .sha256
+python scripts/package_index.py --version v2 --collection stats-ml
+```
+Create a GitHub release tagged `index-v2` and upload the `.tar.gz` and `.sha256` files as assets, then bump
+`DEFAULT_INDEX_URL` in `src/kindred/cli.py`. Release assets (not git LFS) because they allow 2 GB files and unlimited downloads.
 
 ## Commands
 
@@ -39,7 +67,7 @@ kindred fetch-index https://example.org/orms-kindred-index-v1.tar.gz   # downloa
 | `kindred suggest PAPER.pdf [--n 20] [--exclude-institution I123]... [--exclude-author A456]... [--backend specter2\|scincl\|tfidf] [--index-dir data/index] [--json] [--cite-weight 0.1] [--lam 0.3] [--k 3] [--half-life YEARS]` | Rank reviewers for one PDF; prints a table (or JSON) with per-reviewer evidence papers and the weights used. |
 | `kindred batch DIR [--out results.jsonl]` | Run `suggest` on every PDF in a directory, one JSON object per line. |
 | `kindred verify-offline PAPER.pdf` | Same as `suggest`, but with `socket.socket` monkeypatched to raise; exits non-zero if anything tries to reach the network. |
-| `kindred fetch-index URL [--sha256 HEX]` | Download the public index tarball, verify its SHA-256 (from `--sha256` or `URL.sha256`), unpack into `--index-dir`. |
+| `kindred fetch-index [URL] [--collection NAME] [--sha256 HEX]` | Download the public index tarball (default: latest release), verify its SHA-256 (from `--sha256` or `URL.sha256`), unpack into `--index-dir` (default `data/`). |
 | `kindred ui` | Launch the Streamlit app (`src/kindred/ui_app.py`): drop a PDF, get a reviewer table with expandable evidence. Sidebar sliders change the weights below and re-rank instantly (the PDF is embedded once and cached). |
 
 ### Ranking weights

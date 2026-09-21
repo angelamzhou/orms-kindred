@@ -13,3 +13,4 @@ data/editorial_snapshots/
 docs/*.aux
 docs/*.log
 docs/*.out
+dist/

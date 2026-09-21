@@ -15,6 +15,10 @@ app = typer.Typer(help="Kindred: local reviewer matching for OR/MS/OM papers.", 
 console = Console(stderr=True)
 
 DEFAULT_INDEX = Path("data/index")
+# Public index releases: https://github.com/angelamzhou/orms-kindred/releases (GitHub release
+# assets, not git LFS: assets allow 2 GB files and unlimited downloads).
+INDEX_RELEASES = "https://github.com/angelamzhou/orms-kindred/releases/download"
+DEFAULT_INDEX_URL = f"{INDEX_RELEASES}/index-v1/kindred-index-v1.tar.gz"
 
 
 # --------------------------------------------------------------------------- core
@@ -425,16 +429,26 @@ def verify_offline(
 
 @app.command("fetch-index")
 def fetch_index(
-    url: str = typer.Argument(..., help="URL of an index tarball (.tar.gz)"),
+    url: str = typer.Argument(DEFAULT_INDEX_URL, help="URL of an index tarball (.tar.gz); default: the latest core index release"),
     sha256: Optional[str] = typer.Option(None, "--sha256", help="Expected digest; if omitted, tries URL + '.sha256'"),
-    index_dir: Path = typer.Option(DEFAULT_INDEX, "--index-dir"),
+    index_dir: Path = typer.Option(Path("data"), "--index-dir", help="Unpack here (core tarball contains index/ plus the tables)"),
+    collection: Optional[str] = typer.Option(None, "--collection", help="Fetch an add-on collection instead, e.g. stats-ml (unpacks into data/index_<name>)"),
 ):
-    """Download the public reviewer index, verify sha256, unpack into --index-dir."""
+    """Download the public reviewer index (about 165 MB), verify its sha256, unpack into --index-dir.
+
+    This is one of only two downloads the tool ever makes; the other is the embedding model
+    (about 440 MB from Hugging Face, on first use). No manuscript data is ever uploaded.
+    """
     import tarfile
     import tempfile
 
     import requests
 
+    if collection:
+        if url == DEFAULT_INDEX_URL:
+            url = f"{INDEX_RELEASES}/index-v1/kindred-index-{collection}-v1.tar.gz"
+        index_dir = index_dir / f"index_{collection}" if index_dir.name == "data" else index_dir
+    console.print(f"downloading {url} -> {index_dir}")
     index_dir.mkdir(parents=True, exist_ok=True)
     if sha256 is None:
         r = requests.get(url + ".sha256", timeout=30)
