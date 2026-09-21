@@ -291,10 +291,8 @@ if have_input:
     left, right = st.columns([3, 2], gap="large")
     with left:
         st.markdown("### Ranked reviewers")
-        if n_coi:
-            st.error(f"{n_coi} of {len(rows)} candidates have a potential conflict of interest (red rows; reason in the last column). "
-                     "Verify before inviting, or switch the sidebar to 'exclude'.")
-        st.caption("Click a row to see why this person is suggested.")
+        st.caption("Click a row to see why this person is suggested."
+                   + (f"  Red rows ({n_coi}) have a potential conflict; the reason is in the last column." if n_coi else ""))
         sel = st.dataframe(styled, use_container_width=True, hide_index=True,
                            on_select="rerun", selection_mode="single-row", height=min(38 * (len(rows) + 1), 900))
         picked = sel.selection.rows[0] if sel and sel.selection and sel.selection.rows else 0
