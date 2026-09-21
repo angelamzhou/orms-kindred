@@ -1,6 +1,7 @@
 """Streamlit UI for ORMatch. Launched via `ormatch ui`; run directly with `streamlit run ui_app.py`."""
 from __future__ import annotations
 
+import copy
 import json
 import os
 import tempfile
@@ -255,7 +256,7 @@ if uploaded is not None:
             row[f"evidence{j}_similarity"] = round(float(score), 4)
             row[f"evidence{j}_abstract"] = abstracts.get(pid, "")
         flat.append(row)
-    full = dict(res)
+    full = copy.deepcopy(res)  # res is memoised; never mutate it
     for r in full["reviewers"]:
         r["evidence"] = [{"paper_id": pid, "title": t, "venue": venues.get(pid, ""), "similarity": float(sc),
                           "abstract": abstracts.get(pid, "")} for pid, t, sc in r.get("evidence") or []]
