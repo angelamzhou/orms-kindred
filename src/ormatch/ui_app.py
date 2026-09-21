@@ -60,6 +60,42 @@ def _rank_cached(prep: dict, **kw) -> dict:
     return cache[key]
 
 
+def _describe(prep: dict, aid: str) -> str:
+    m = prep["matcher"]
+    rows = m.author_rows.get(aid)
+    n = len(rows) if rows is not None else 0
+    inst = "; ".join(sorted(m.author_inst_names.get(aid, set())))[:45] or "institution unknown"
+    sample = ""
+    if n:
+        pid = prep["index"].paper_ids[int(rows[0])]
+        sample = (prep["titles"].get(pid) or "")[:60]
+    return f"{m.author_name.get(aid, aid)} — {inst} — {n} paper{'s' if n != 1 else ''} — e.g. {sample} [{aid}]"
+
+
+def _confirm(prep: dict, names: list[str], label: str) -> list[str]:
+    """For each typed name, show the OpenAlex authors it matches and let the user pick one, all, or none.
+    Returns the confirmed author ids. Ambiguous names default to 'all matches' (conservative)."""
+    if not names:
+        return []
+    resolved = prep["matcher"].resolve_authors(names)
+    chosen: list[str] = []
+    st.markdown(f"**Confirm {label}**")
+    for q, ids in resolved.items():
+        if not ids:
+            st.warning(f"{q}: no author with this name in the index (check spelling, or paste the OpenAlex ID).")
+            continue
+        if len(ids) == 1:
+            st.caption(f"{q} → {_describe(prep, ids[0])}")
+            chosen.append(ids[0]); continue
+        opts = [f"all {len(ids)} matches"] + [_describe(prep, i) for i in ids] + ["none of these"]
+        pick = st.selectbox(f"{q} matches {len(ids)} OpenAlex authors", opts, index=0, key=f"confirm_{label}_{q}")
+        if pick.startswith("all "):
+            chosen.extend(ids)
+        elif pick != "none of these":
+            chosen.append(ids[opts.index(pick) - 1])
+    return chosen
+
+
 SAVED = learn.load_params() or {}
 def _d(name, default):
     """slider default: learned/saved weight if present, else the built-in default"""
@@ -151,18 +187,26 @@ if have_input:
             st.error("Select at least one index"); st.stop()
         prep = _prepare(uploaded.getvalue() if uploaded is not None else None, q_title, q_abstract, q_refs,
                         tuple(index_dirs), backend, _code_version())
+        typed_authors = [a.strip() for a in ms_authors.splitlines() if a.strip()]
+        typed_seeds = [a.strip() for a in seeds_txt.splitlines() if a.strip()]
+        if typed_authors or typed_seeds:
+            with st.container(border=True):
+                author_ids = _confirm(prep, typed_authors, "manuscript authors")
+                seed_ids = _confirm(prep, typed_seeds, "seed reviewers")
+        else:
+            author_ids, seed_ids = [], []
         res = _rank_cached(
             prep, n=n,
             exclude_institutions={s.strip() for s in excl_inst.splitlines() if s.strip()},
             exclude_authors={s.strip() for s in excl_auth.splitlines() if s.strip()},
             lam=lam, k=k, half_life=half_life, cite_weight=cite_weight, min_papers=min_papers,
-            manuscript_authors=[a.strip() for a in ms_authors.splitlines() if a.strip()],
+            manuscript_authors=author_ids,
             coi_years=float(coi_years), coi_same_institution=coi_same_inst,
             coi_mode="exclude" if coi_mode == "exclude" else "flag",
             editor_weight=editor_weight, seniority_weight=seniority_weight,
             min_or_links=min_or_links, volume_correction=volume_correction,
             early_career_weight=early_career_weight, early_career_max_works=early_career_max_works,
-            seed_reviewers=[a.strip() for a in seeds_txt.splitlines() if a.strip()],
+            seed_reviewers=seed_ids,
             seed_weight=seed_weight, diversity=diversity, personal_conflicts=personal_list,
         )
     except Exception as e:  # show, do not crash
@@ -184,7 +228,7 @@ if have_input:
                 st.write(f"- {title} ({venues.get(pid, '')})")
     if res.get("manuscript_authors"):
         unresolved = [q for q, ids in res["manuscript_authors"].items() if not ids]
-        multi = {q: len(ids) for q, ids in res["manuscript_authors"].items() if len(ids) > 1}
+        multi = {}
         msg = f"{res['n_conflicts_flagged']} potential conflicts flagged (COI column; evidence is a hint to follow up, not a verdict)."
         if unresolved:
             msg += f" Not found in index: {', '.join(unresolved)}."
