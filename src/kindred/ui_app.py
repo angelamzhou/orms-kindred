@@ -282,13 +282,19 @@ if have_input:
             "Reviewer": r.get("author_name"),
             "Institution": (r.get("institution") or "").split(";")[0][:40],
             "Score": round(float(r["score"]), 3),
-            "Cited": r.get("n_cited", 0) or None,
+            "Cited": str(r["n_cited"]) if r.get("n_cited") else "",
             "Conflict?": r.get("coi") or "",
         })
     table = pd.DataFrame(rows)
     n_coi = sum(1 for r in res["reviewers"] if r.get("coi"))
+    # columns that carry no information for this manuscript are hidden so the rest has room
+    if not any(r.get("n_cited") for r in res["reviewers"]):
+        table = table.drop(columns=["Cited"])
+    if not n_coi:
+        table = table.drop(columns=["Conflict?"])
     def _hl(row):
-        return ["background-color: #ffe0e0; color: #7a0000" if row["Conflict?"] else "" for _ in row]
+        flag = row.get("Conflict?", "") if hasattr(row, "get") else ""
+        return ["background-color: #ffe0e0; color: #7a0000" if flag else "" for _ in row]
     styled = table.style.apply(_hl, axis=1)
     left, right = st.columns([5, 2], gap="medium")
     with left:
@@ -302,7 +308,7 @@ if have_input:
                                "Reviewer": st.column_config.TextColumn(width="medium"),
                                "Institution": st.column_config.TextColumn(width="medium"),
                                "Score": st.column_config.NumberColumn(width="small", format="%.3f"),
-                               "Cited": st.column_config.NumberColumn(width="small"),
+                               "Cited": st.column_config.TextColumn(width="small"),
                                "Conflict?": st.column_config.TextColumn(width="large"),
                            })
         picked = sel.selection.rows[0] if sel and sel.selection and sel.selection.rows else 0
