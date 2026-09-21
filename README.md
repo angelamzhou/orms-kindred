@@ -59,6 +59,10 @@ them, and optional penalties and corrections. Ranking authors by this score is t
 and evaluation: [`docs/kindred.pdf`](docs/kindred.pdf); maintenance, index building and publishing: [`docs/MAINTAINING.md`](docs/MAINTAINING.md);
 the literature behind the design: [`docs/literature_review.md`](docs/literature_review.md).
 
+## Acknowledgments
+
+Thanks to Vishal Gupta for raising the idea, and to everyone at lunch and on the group chat for the discussions.
+
 ## Licence
 
 Code: Apache-2.0. Index: derived from OpenAlex metadata (CC0) and Semantic Scholar abstracts. Model weights: SPECTER2 and
