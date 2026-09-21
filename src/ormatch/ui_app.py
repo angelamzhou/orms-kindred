@@ -229,12 +229,8 @@ if have_input:
     if res.get("manuscript_authors"):
         unresolved = [q for q, ids in res["manuscript_authors"].items() if not ids]
         multi = {}
-        msg = f"{res['n_conflicts_flagged']} potential conflicts flagged (COI column; evidence is a hint to follow up, not a verdict)."
         if unresolved:
-            msg += f" Not found in index: {', '.join(unresolved)}."
-        if multi:
-            msg += " Ambiguous names matched several OpenAlex authors: " + ", ".join(f"{q} ({v})" for q, v in multi.items()) + "."
-        st.info(msg)
+            st.warning(f"Not found in index: {', '.join(unresolved)}.")
     if prep.get("n_editors_known") == 0 and editor_weight:
         st.warning("No data/editors.csv found; the editorial penalty has no effect.")
     if prep.get("n_author_stats") == 0 and seniority_weight:
@@ -243,27 +239,39 @@ if have_input:
     # ---- the objective with the current weights, and the scale it operates on -------------
     prm = res["params"]
     base = [r["components"].get("best paper (1-lam)*max", 0) + r["components"].get("top-k mean lam*mean", 0) for r in res["reviewers"]]
-    terms = [f"{1 - prm['lam']:.2f} · max_sim + {prm['lam']:.2f} · mean_top{prm['k']}"]
+    lam = prm["lam"]
+    if lam == 0:
+        text_part = "the similarity of the author's single closest paper"
+    elif lam == 1:
+        text_part = f"the mean similarity of the author's {prm['k']} closest papers"
+    else:
+        text_part = (f"{(1 - lam):.0%} of the similarity of the author's closest paper plus {lam:.0%} of the mean "
+                     f"similarity of their {prm['k']} closest papers")
+    parts = [f"Each candidate's score starts from {text_part}."]
     if prm["cite_weight"]:
-        terms.append(f"+ {prm['cite_weight']:.2f} · (1 − 0.5^n_cited)")
+        w = prm["cite_weight"]
+        parts.append(f"Authors the manuscript cites gain up to {w:.2f}: {w/2:.3f} for one cited paper, {0.75*w:.3f} for two.")
     if prm.get("seed_weight"):
-        terms.append(f"+ {prm['seed_weight']:.2f} · sim_to_seed")
+        parts.append(f"Authors whose work resembles a seed reviewer gain {prm['seed_weight']:.2f} times how much closer they are to the seed than the typical candidate.")
     if prm.get("early_career_weight"):
-        terms.append(f"+ {prm['early_career_weight']:.3f} · early_career")
+        parts.append(f"Authors with few publications gain up to {prm['early_career_weight']:.3f} (nothing beyond {prm['early_career_max_works']} works).")
     if prm.get("volume_correction"):
-        terms.append(f"− {prm['volume_correction']:.2f} · E[max of n random]")
+        parts.append(f"Prolific authors lose {prm['volume_correction']:.0%} of the advantage that having many papers gives them by chance.")
     if prm.get("editor_weight"):
-        terms.append(f"− {prm['editor_weight']:.2f} · editor_roles")
+        parts.append(f"Each current editorial role costs {prm['editor_weight']:.2f} (past roles half that).")
     if prm.get("seniority_weight"):
-        terms.append(f"− {prm['seniority_weight']:.3f} · log_works_above_median")
+        parts.append(f"Seniority costs {prm['seniority_weight']:.3f} per doubling of publication count above the median author.")
+    if prm.get("half_life"):
+        parts.append(f"A paper's advantage over an average paper halves every {prm['half_life']:g} years.")
+    if prm.get("diversity"):
+        parts.append(f"The list is then re-ordered with diversity {prm['diversity']:.2f} so neighbours in the list come from different research areas.")
     with st.container(border=True):
-        st.markdown("**score = " + " ".join(terms) + "**")
+        st.markdown("**How the score is computed.** " + " ".join(parts))
         if base:
-            st.caption(f"Scale: among the {len(base)} listed, the text-similarity part ranges {min(base):.3f} to {max(base):.3f} "
-                       f"(spread {max(base) - min(base):.3f}). A weight of 0.05 is therefore about "
-                       f"{(0.05 / max(max(base) - min(base), 1e-6)):.1f}x the whole gap between #1 and #{len(base)}; "
-                       "the detail panel shows each term per person."
-                       + (f"  Diversity {prm['diversity']:.2f}: order re-ranked by marginal relevance." if prm.get("diversity") else ""))
+            spread = max(base) - min(base)
+            st.caption(f"Scale: the text-similarity part ranges {min(base):.3f} to {max(base):.3f} among the {len(base)} listed "
+                       f"(spread {spread:.3f}). A bonus of 0.05 is about {0.05 / max(spread, 1e-6):.1f} times the whole gap between #1 and #{len(base)}. "
+                       "Click a row and open 'Score breakdown' to see each term for that person.")
 
     # ---- ranked list (left) + details of the selected row (right) -----------------------
     rows = []
@@ -275,14 +283,21 @@ if have_input:
             "Score": round(float(r["score"]), 3),
             "Cited": r.get("n_cited", 0) or None,
             "Papers": r.get("n_papers"),
-            "COI?": "⚠" if r.get("coi") else "",
+            "Conflict?": (r.get("coi") or "")[:48],
         })
     table = pd.DataFrame(rows)
+    n_coi = sum(1 for r in res["reviewers"] if r.get("coi"))
+    def _hl(row):
+        return ["background-color: #ffe0e0; color: #7a0000" if row["Conflict?"] else "" for _ in row]
+    styled = table.style.apply(_hl, axis=1)
     left, right = st.columns([3, 2], gap="large")
     with left:
         st.markdown("### Ranked reviewers")
-        st.caption("Click a row to see why.")
-        sel = st.dataframe(table, use_container_width=True, hide_index=True,
+        if n_coi:
+            st.error(f"{n_coi} of {len(rows)} candidates have a potential conflict of interest (red rows; reason in the last column). "
+                     "Verify before inviting, or switch the sidebar to 'exclude'.")
+        st.caption("Click a row to see why this person is suggested.")
+        sel = st.dataframe(styled, use_container_width=True, hide_index=True,
                            on_select="rerun", selection_mode="single-row", height=min(38 * (len(rows) + 1), 900))
         picked = sel.selection.rows[0] if sel and sel.selection and sel.selection.rows else 0
     with right:
@@ -292,7 +307,7 @@ if have_input:
             st.caption((r.get("institution") or "institution unknown") + f"  ·  {r['n_papers']} indexed papers"
                        + (f"  ·  cited {r['n_cited']}x here" if r.get("n_cited") else ""))
             if r.get("coi"):
-                st.warning(f"Possible conflict: {r['coi']}")
+                st.error(f"⚠ Potential conflict of interest: {r['coi']}. Verify before inviting.")
             for pid, title, score in r.get("evidence") or []:
                 with st.expander(f"{title}  ({venues.get(pid, '')}, sim {float(score):.2f})", expanded=False):
                     st.write(abstracts.get(pid) or "_no abstract in the index_")
