@@ -240,33 +240,31 @@ if have_input:
     prm = res["params"]
     base = [r["components"].get("best paper (1-lam)*max", 0) + r["components"].get("top-k mean lam*mean", 0) for r in res["reviewers"]]
     lam = prm["lam"]
-    if lam == 0:
-        text_part = "the similarity of the author's single closest paper"
-    elif lam == 1:
-        text_part = f"the mean similarity of the author's {prm['k']} closest papers"
-    else:
-        text_part = (f"{(1 - lam):.0%} of the similarity of the author's closest paper plus {lam:.0%} of the mean "
-                     f"similarity of their {prm['k']} closest papers")
-    parts = [f"Each candidate's score starts from {text_part}."]
+    terms = []
+    if lam < 1:
+        terms.append(f"{1 - lam:.2f} × (best-paper similarity)")
+    if lam > 0:
+        terms.append(f"{lam:.2f} × (mean similarity of top {prm['k']} papers)")
     if prm["cite_weight"]:
-        w = prm["cite_weight"]
-        parts.append(f"Authors the manuscript cites gain up to {w:.2f}: {w/2:.3f} for one cited paper, {0.75*w:.3f} for two.")
+        terms.append(f"{prm['cite_weight']:.2f} × (1 − 0.5^(papers cited by manuscript))")
     if prm.get("seed_weight"):
-        parts.append(f"Authors whose work resembles a seed reviewer gain {prm['seed_weight']:.2f} times how much closer they are to the seed than the typical candidate.")
+        terms.append(f"{prm['seed_weight']:.2f} × (similarity to closest seed − pool median)")
     if prm.get("early_career_weight"):
-        parts.append(f"Authors with few publications gain up to {prm['early_career_weight']:.3f} (nothing beyond {prm['early_career_max_works']} works).")
+        terms.append(f"{prm['early_career_weight']:.3f} × (early-career factor, 1 → 0 by {prm['early_career_max_works']} works)")
     if prm.get("volume_correction"):
-        parts.append(f"Prolific authors lose {prm['volume_correction']:.0%} of the advantage that having many papers gives them by chance.")
+        terms.append(f"− {prm['volume_correction']:.2f} × (expected best-of-n similarity for n random papers)")
     if prm.get("editor_weight"):
-        parts.append(f"Each current editorial role costs {prm['editor_weight']:.2f} (past roles half that).")
+        terms.append(f"− {prm['editor_weight']:.2f} × (editorial roles; past roles count ½)")
     if prm.get("seniority_weight"):
-        parts.append(f"Seniority costs {prm['seniority_weight']:.3f} per doubling of publication count above the median author.")
+        terms.append(f"− {prm['seniority_weight']:.3f} × (log publications above median author)")
+    objective = "score = " + " ".join(t if i == 0 or t.startswith("−") else "+ " + t for i, t in enumerate(terms))
+    notes = []
     if prm.get("half_life"):
-        parts.append(f"A paper's advantage over an average paper halves every {prm['half_life']:g} years.")
+        notes.append(f"similarities shrink toward the average by ½ every {prm['half_life']:g} years of paper age")
     if prm.get("diversity"):
-        parts.append(f"The list is then re-ordered with diversity {prm['diversity']:.2f} so neighbours in the list come from different research areas.")
+        notes.append(f"list re-ordered with diversity {prm['diversity']:.2f} (marginal relevance against seeds and earlier picks)")
     with st.container(border=True):
-        st.markdown("**How the score is computed.** " + " ".join(parts))
+        st.markdown(f"**{objective}**" + (("  \n_" + "; ".join(notes) + "_") if notes else ""))
         if base:
             spread = max(base) - min(base)
             st.caption(f"Scale: the text-similarity part ranges {min(base):.3f} to {max(base):.3f} among the {len(base)} listed "
