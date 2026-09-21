@@ -277,24 +277,31 @@ if have_input:
         rows.append({
             "#": i,
             "Reviewer": r.get("author_name"),
-            "Institution": (r.get("institution") or "")[:60],
+            "Institution": (r.get("institution") or "").split(";")[0][:40],
             "Score": round(float(r["score"]), 3),
             "Cited": r.get("n_cited", 0) or None,
-            "Papers": r.get("n_papers"),
-            "Conflict?": (r.get("coi") or "")[:48],
+            "Conflict?": r.get("coi") or "",
         })
     table = pd.DataFrame(rows)
     n_coi = sum(1 for r in res["reviewers"] if r.get("coi"))
     def _hl(row):
         return ["background-color: #ffe0e0; color: #7a0000" if row["Conflict?"] else "" for _ in row]
     styled = table.style.apply(_hl, axis=1)
-    left, right = st.columns([3, 2], gap="large")
+    left, right = st.columns([5, 2], gap="medium")
     with left:
         st.markdown("### Ranked reviewers")
         st.caption("Click a row to see why this person is suggested."
                    + (f"  Red rows ({n_coi}) have a potential conflict; the reason is in the last column." if n_coi else ""))
         sel = st.dataframe(styled, use_container_width=True, hide_index=True,
-                           on_select="rerun", selection_mode="single-row", height=min(38 * (len(rows) + 1), 900))
+                           on_select="rerun", selection_mode="single-row", height=min(38 * (len(rows) + 1), 900),
+                           column_config={
+                               "#": st.column_config.NumberColumn(width="small"),
+                               "Reviewer": st.column_config.TextColumn(width="medium"),
+                               "Institution": st.column_config.TextColumn(width="medium"),
+                               "Score": st.column_config.NumberColumn(width="small", format="%.3f"),
+                               "Cited": st.column_config.NumberColumn(width="small"),
+                               "Conflict?": st.column_config.TextColumn(width="large"),
+                           })
         picked = sel.selection.rows[0] if sel and sel.selection and sel.selection.rows else 0
     with right:
         r = res["reviewers"][picked] if res["reviewers"] else None
