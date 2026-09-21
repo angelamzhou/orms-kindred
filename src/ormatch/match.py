@@ -48,6 +48,7 @@ class ReviewerCandidate:
     seniority: Optional[float] = None  # works_count from data/authors.parquet, if loaded
     or_links: Optional[int] = None  # core-venue papers + citation links to core (add-on authors)
     components: Dict[str, float] = field(default_factory=dict)  # score = sum of these terms
+    features: Dict[str, float] = field(default_factory=dict)  # unweighted terms, for learning weights
 
     def to_dict(self) -> Dict:
         return {
@@ -62,6 +63,7 @@ class ReviewerCandidate:
             "seniority": self.seniority,
             "or_links": self.or_links,
             "components": {k: round(v, 4) for k, v in self.components.items()},
+            "features": {k: round(v, 5) for k, v in self.features.items()},
         }
 
 
@@ -308,7 +310,7 @@ class ReviewerMatcher:
         # distribution (normal approximation), so a 2-paper author with one very close paper can
         # outrank a 40-paper author whose best paper is only moderately close.
         exp_gain = None
-        if volume_correction:
+        if True:  # always computed (cheap): the volume feature is stored for weight learning
             finite = sims[np.isfinite(sims)]
             mu, sd = float(np.mean(finite)), float(np.std(finite)) + 1e-9
             from scipy.stats import norm as _norm
@@ -317,7 +319,7 @@ class ReviewerMatcher:
             exp_gain -= exp_gain[0]  # a single paper is the reference point (no penalty)
         # seniority penalty: log works_count relative to the median author, in cosine units
         sen_med = None
-        if seniority_weight and self.author_stats:
+        if self.author_stats:
             sen_med = float(np.median(np.log1p(list(self.author_stats.values()))))
 
         cited_count: Dict[str, int] = defaultdict(int)
@@ -358,33 +360,39 @@ class ReviewerMatcher:
             s, r = s[ok], rows[ok]
             order = np.argsort(-s)
             topk = s[order[: self.k]]
-            comp: Dict[str, float] = {
-                "best paper (1-lam)*max": (1 - self.lam) * float(s[order[0]]),
-                "top-k mean lam*mean": self.lam * float(topk.mean()),
-            }
             nc = cited_count.get(au, 0)
-            if nc:
-                comp["cited bonus"] = cite_weight * (1 - 0.5 ** nc)
-            if exp_gain is not None:
-                comp["volume correction"] = -volume_correction * float(exp_gain[min(int(ok.sum()), len(exp_gain)) - 1])
             ne = self.editor_roles.get(au, 0)
-            if ne and editor_weight:
-                comp["editor penalty"] = -editor_weight * ne
             sen = self.author_stats.get(au)
-            if sen is not None and seniority_weight and sen_med is not None:
-                comp["seniority penalty"] = -seniority_weight * max(0.0, float(np.log1p(sen)) - sen_med)
-            if sen is not None and early_career_weight:
-                # bonus that fades linearly in log(works): full at 1 work, zero at early_career_max_works
-                frac = 1.0 - float(np.log1p(sen)) / float(np.log1p(early_career_max_works))
-                if frac > 0:
-                    comp["early-career bonus"] = early_career_weight * frac
+            feat: Dict[str, float] = {
+                "max_sim": float(s[order[0]]),
+                "topk_mean": float(topk.mean()),
+                "cited": (1 - 0.5 ** nc) if nc else 0.0,
+                "volume": float(exp_gain[min(int(ok.sum()), len(exp_gain)) - 1]) if exp_gain is not None else 0.0,
+                "editor_roles": float(ne),
+                "seniority": max(0.0, float(np.log1p(sen)) - sen_med) if (sen is not None and sen_med is not None) else 0.0,
+                "early_career": max(0.0, 1.0 - float(np.log1p(sen)) / float(np.log1p(early_career_max_works))) if sen is not None else 0.0,
+            }
+            comp: Dict[str, float] = {
+                "best paper (1-lam)*max": (1 - self.lam) * feat["max_sim"],
+                "top-k mean lam*mean": self.lam * feat["topk_mean"],
+            }
+            if nc:
+                comp["cited bonus"] = cite_weight * feat["cited"]
+            if volume_correction:
+                comp["volume correction"] = -volume_correction * feat["volume"]
+            if ne and editor_weight:
+                comp["editor penalty"] = -editor_weight * feat["editor_roles"]
+            if seniority_weight and feat["seniority"]:
+                comp["seniority penalty"] = -seniority_weight * feat["seniority"]
+            if early_career_weight and feat["early_career"]:
+                comp["early-career bonus"] = early_career_weight * feat["early_career"]
             score = float(sum(comp.values()))
             ev = [(self.index.paper_ids[r[i]], float(sims[r[i]])) for i in order[:n_evidence]]
             out.append(
                 ReviewerCandidate(
                     au, self.author_name.get(au, au), score, int(len(rows)), ev,
                     sorted(self.author_inst_names.get(au, set())), nc, ne,
-                    self.author_stats.get(au), self.or_links.get(au) if self.or_links else None, comp,
+                    self.author_stats.get(au), self.or_links.get(au) if self.or_links else None, comp, feat,
                 )
             )
         out.sort(key=lambda c: -c.score)
@@ -408,6 +416,7 @@ class ReviewerMatcher:
             # the pool median: candidates *unusually* like a seed gain, unlike ones lose
             seed_sim = seed_sim - float(np.median(seed_sim))
             for c, ss in zip(pool, seed_sim):
+                c.features["seed"] = float(ss)
                 c.components["seed bonus (vs pool median)"] = seed_weight * float(ss)
                 c.score += seed_weight * float(ss)
             pool.sort(key=lambda c: -c.score)

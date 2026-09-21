@@ -124,16 +124,23 @@ def _load_side_tables(index_dir: Path) -> tuple[dict, dict, list]:
     return editors, stats, pairs
 
 
-def prepare_query(pdf: Path, index_dir: Path | list[Path] = DEFAULT_INDEX, backend: Optional[str] = None,
-                  parse_references: bool = True) -> dict:
-    """Expensive, parameter-free half of the pipeline: PDF -> title/abstract -> embedding, plus the
-    parsed bibliography matched to indexed papers. The result can be re-ranked many times with
-    different weights (see rank_prepared) without touching the PDF or the model again."""
+def prepare_query(pdf: Optional[Path] = None, index_dir: Path | list[Path] = DEFAULT_INDEX, backend: Optional[str] = None,
+                  parse_references: bool = True, title: Optional[str] = None, abstract: Optional[str] = None,
+                  references_text: Optional[str] = None) -> dict:
+    """Expensive, parameter-free half of the pipeline: manuscript -> title/abstract -> embedding, plus
+    the bibliography matched to indexed papers. The manuscript is either a PDF or typed
+    title/abstract (and optionally a pasted reference list); typing avoids handling the full
+    PDF at all. The result can be re-ranked many times with different weights (rank_prepared)."""
     from ormatch.embed import Embedder
     from ormatch.index import PaperIndex
-    from ormatch.pdf import extract_references, match_references, pdf_to_query
+    from ormatch.pdf import extract_references, match_references, parse_reference_text, pdf_to_query
 
-    q = pdf_to_query(pdf)
+    if pdf is not None:
+        q = pdf_to_query(pdf)
+    elif title or abstract:
+        q = {"title": (title or "").strip(), "abstract": (abstract or "").strip()}
+    else:
+        raise ValueError("give a PDF or a title/abstract")
     index_dirs = [Path(d) for d in (index_dir if isinstance(index_dir, (list, tuple)) else [index_dir])]
     idx, authorships, papers, references, core_ids = load_indexes(index_dirs)
     index_dir = index_dirs[0]
@@ -147,7 +154,12 @@ def prepare_query(pdf: Path, index_dir: Path | list[Path] = DEFAULT_INDEX, backe
             raise FileNotFoundError(f"tfidf backend needs {tfidf_path} (built with the index)")
         embedder.load(str(tfidf_path))
     qvec = embedder.encode([q["title"]], [q["abstract"]])[0]
-    refs = extract_references(pdf) if parse_references else []
+    if references_text:
+        refs = parse_reference_text(references_text)
+    elif pdf is not None and parse_references:
+        refs = extract_references(pdf)
+    else:
+        refs = []
     cited_ids = match_references(refs, papers) if refs else []
     titles = dict(zip(papers["openalex_work_id"].astype(str), papers["title"].astype(str))) if "title" in papers.columns else {}
     from ormatch.match import ReviewerMatcher
@@ -165,7 +177,7 @@ def prepare_query(pdf: Path, index_dir: Path | list[Path] = DEFAULT_INDEX, backe
     matcher.set_author_stats(stats)
     if len(index_dirs) > 1:
         matcher.compute_or_links(core_ids, references)
-    return {"pdf": str(pdf), "title": q["title"], "abstract": q["abstract"], "qvec": qvec, "index": idx,
+    return {"pdf": str(pdf) if pdf else None, "title": q["title"], "abstract": q["abstract"], "qvec": qvec, "index": idx,
             "authorships": authorships, "papers": papers, "titles": titles, "references": refs,
             "cited_ids": cited_ids, "backend": embedder.backend, "matcher": matcher,
             "genealogy_pairs": pairs, "n_editors_known": len(ed_ids), "n_author_stats": len(stats),
@@ -241,6 +253,7 @@ def rank_prepared(prep: dict, n: int = 20, exclude_institutions: set[str] | None
         reviewers.append({
             "coi": coi.get(c.author_id),
             "components": {k: round(v, 4) for k, v in c.components.items()},
+            "features": {k: round(v, 5) for k, v in c.features.items()},
             "n_editor_roles": c.n_editor_roles,
             "seniority": c.seniority,
             "or_links": c.or_links,
@@ -306,7 +319,10 @@ def _print_result(res: dict, as_json: bool) -> None:
 # ----------------------------------------------------------------------- commands
 @app.command()
 def suggest(
-    pdf: Path = typer.Argument(..., exists=True, readable=True, help="Manuscript PDF"),
+    pdf: Optional[Path] = typer.Argument(None, exists=True, readable=True, help="Manuscript PDF (omit and pass --title/--abstract instead)"),
+    title: Optional[str] = typer.Option(None, "--title", help="Manuscript title (alternative to a PDF)"),
+    abstract: Optional[str] = typer.Option(None, "--abstract", help="Manuscript abstract (alternative to a PDF)"),
+    references: Optional[Path] = typer.Option(None, "--references", help="Text file with the reference list (optional, with --title/--abstract)"),
     n: int = typer.Option(20, "--n", help="Number of reviewers"),
     exclude_institution: list[str] = typer.Option([], "--exclude-institution", help="OpenAlex institution ID (repeatable)"),
     exclude_author: list[str] = typer.Option([], "--exclude-author", help="OpenAlex author ID (repeatable)"),
@@ -336,7 +352,11 @@ def suggest(
     dirs = discover_index_dirs(index_dir[0]) if all_collections else list(index_dir)
     if conflict:
         save_personal_conflicts(sorted(set(load_personal_conflicts()) | set(conflict)))
-    res = suggest_for_pdf(pdf, n, set(exclude_institution), set(exclude_author), dirs, backend,
+    if pdf is None and not (title or abstract):
+        raise typer.BadParameter("give a PDF path or --title/--abstract")
+    prep = prepare_query(pdf, dirs, backend, parse_references=bool(cite_weight), title=title, abstract=abstract,
+                         references_text=references.read_text(encoding="utf-8") if references else None)
+    res = rank_prepared(prep, n, set(exclude_institution), set(exclude_author),
                           cite_weight=cite_weight, lam=lam, k=k, half_life=half_life,
                           manuscript_authors=list(author), coi_years=coi_years, coi_mode=coi,
                           editor_weight=editor_weight, seniority_weight=seniority_weight, min_or_links=min_or_links,
@@ -436,6 +456,28 @@ def fetch_index(
         tf.extractall(index_dir, filter="data") if sys.version_info >= (3, 12) else tf.extractall(index_dir)
     tmp_path.unlink(missing_ok=True)
     console.print(f"[green]OK[/green] index unpacked into {index_dir} (sha256 verified)")
+
+
+@app.command("learn-weights")
+def learn_weights(
+    l2: float = typer.Option(1.0, "--l2", help="Pull toward the current defaults (higher = smaller change)"),
+    save: bool = typer.Option(False, "--save", help="Write the learned weights to ~/.ormatch/weights.json"),
+):
+    """Fit ranking weights to the +/- reviewer ratings recorded in the UI (~/.ormatch/feedback.jsonl)."""
+    from ormatch import learn
+
+    rows = learn.load()
+    base = learn.load_params() or {"lam": 0.3, "cite_weight": 0.1, "volume_correction": 0.0, "editor_weight": 0.0,
+                                   "seniority_weight": 0.0, "early_career_weight": 0.0, "seed_weight": 0.2}
+    res = learn.fit(rows, base, l2=l2)
+    console.print(f"{res['n_rated']} ratings on {res['n_manuscripts']} manuscripts -> {res['n_pairs']} preference pairs")
+    if res.get("train_acc") is not None:
+        console.print(f"pairs ordered correctly: current {res['base_acc']:.0%} -> learned {res['train_acc']:.0%}")
+    for k in ("lam", "cite_weight", "volume_correction", "editor_weight", "seniority_weight", "early_career_weight", "seed_weight"):
+        console.print(f"  {k:<22} {float(base.get(k, 0) or 0):.3f} -> {float(res['params'].get(k, 0) or 0):.3f}")
+    if save:
+        learn.save_params(res["params"])
+        console.print(f"saved {learn.WEIGHTS}")
 
 
 @app.command()

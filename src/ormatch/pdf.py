@@ -157,7 +157,13 @@ def extract_references(path: str | Path, max_pages: int = 60) -> list[dict]:
             page.close()
     finally:
         pdf.close()
-    text = _clean("\n".join(pages))
+    return parse_reference_text("\n".join(pages), require_heading=True)
+
+
+def parse_reference_text(text: str, require_heading: bool = False) -> list[dict]:
+    """Parse bibliography entries from plain text (a pasted reference list, or the tail of a PDF).
+    With require_heading, only text after the last 'References' heading is used."""
+    text = _clean(text)
     lines = text.split("\n")
     start = None
     for i in range(len(lines) - 1, -1, -1):  # last 'References' heading wins
@@ -165,7 +171,9 @@ def extract_references(path: str | Path, max_pages: int = 60) -> list[dict]:
             start = i + 1
             break
     if start is None:
-        return []
+        if require_heading:
+            return []
+        start = 0
     body = lines[start:]
     # Stop at appendix-like headings that follow the bibliography.
     for j, ln in enumerate(body):
