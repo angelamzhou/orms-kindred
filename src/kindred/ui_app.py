@@ -152,23 +152,7 @@ with st.sidebar:
     coi_same_inst = st.checkbox("Flag same institution", value=True)
     coi_mode = st.radio("Conflicted candidates", ["flag with evidence", "exclude"], index=0, horizontal=True)
 
-st.markdown("## 1. Who is involved")
-c1, c2, c3 = st.columns(3)
-ms_authors = c1.text_area("Manuscript authors", height=110, placeholder="one name or OpenAlex ID per line",
-                          help="Resolved against the index. Their co-authors, colleagues and genealogy links are flagged as conflicts.")
-personal = c2.text_area("My declared conflicts", value="\n".join(load_personal_conflicts()), height=110,
-                        placeholder="people the data cannot know about",
-                        help=f"Always flagged (or excluded). Remembered between sessions in {PERSONAL_COI}.")
-seeds_txt = c3.text_area("Reviewers already in mind (optional)", height=110, placeholder="seeds: pulls the list toward similar people",
-                         help="Seeds are removed from the output; the list tilts toward people whose work resembles them.")
-personal_list = [a.strip() for a in personal.splitlines() if a.strip()]
-if personal_list != load_personal_conflicts():
-    save_personal_conflicts(personal_list)
-with st.expander("Always exclude by OpenAlex ID (optional)"):
-    excl_inst = st.text_area("Institution IDs, one per line", height=60)
-    excl_auth = st.text_area("Author IDs, one per line", height=60)
-
-st.markdown("## 2. Manuscript")
+st.markdown("## 1. Manuscript (required)")
 mode = st.radio("Provide the manuscript as", ["title and abstract (typed)", "PDF upload"], horizontal=True,
                 help="Typing only the title and abstract means the tool never touches the full manuscript. "
                      "A PDF also gives the reference list, which improves the ranking.")
@@ -179,6 +163,25 @@ else:
     q_title = st.text_input("Title")
     q_abstract = st.text_area("Abstract", height=150)
     q_refs = st.text_area("Reference list (optional; paste the bibliography to enable the citation bonus)", height=100)
+st.markdown("## 2. Authors and conflicts")
+c1, c2 = st.columns(2)
+ms_authors = c1.text_area("Manuscript authors", height=110, placeholder="one name or OpenAlex ID per line",
+                          help="Resolved against the index. Their co-authors, colleagues and genealogy links are flagged as conflicts.")
+personal = c2.text_area("My declared conflicts", value="\n".join(load_personal_conflicts()), height=110,
+                        placeholder="people the data cannot know about",
+                        help=f"Always flagged (or excluded). Remembered between sessions in {PERSONAL_COI}.")
+personal_list = [a.strip() for a in personal.splitlines() if a.strip()]
+if personal_list != load_personal_conflicts():
+    save_personal_conflicts(personal_list)
+with st.expander("Always exclude by OpenAlex ID (optional)"):
+    excl_inst = st.text_area("Institution IDs, one per line", height=60)
+    excl_auth = st.text_area("Author IDs, one per line", height=60)
+
+
+with st.expander("3. Seed reviewers (optional)"):
+    seeds_txt = st.text_area("Reviewers you already have in mind, one per line",
+                             height=90, placeholder="pulls the list toward people whose work resembles these; the seeds themselves are removed",
+                             help="Adjust the pull strength and diversity in the sidebar.")
 have_input = uploaded is not None or bool(q_title.strip() or q_abstract.strip())
 
 if have_input:
@@ -216,7 +219,7 @@ if have_input:
     abstracts, venues = prep["abstracts"], prep["venues"]
 
     # ---- header -----------------------------------------------------------------------
-    st.markdown("## 3. Suggested reviewers")
+    st.markdown("## Suggested reviewers")
     st.subheader(res["title"] or "(no title found)")
     st.caption(f"{res['n_index_papers']:,} papers searched from: {', '.join(res['collections'])}  ·  "
                f"bibliography: {res['n_references']} entries, {res['n_references_in_index']} matched")
